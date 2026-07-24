@@ -1,0 +1,107 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { site } from '../../site.config';
+
+interface Props {
+  territories: CollectionEntry<'territori'>[];
+  structures: CollectionEntry<'strutture'>[];
+}
+
+const { territories, structures } = Astro.props;
+const markers = [
+  ...territories.map((entry) => ({
+    id: `territorio-${entry.slug}`,
+    name: entry.data.name,
+    href: `/territori/${entry.slug}`,
+    coords: entry.data.coords,
+    color: '#f5a623',
+  })),
+  ...structures.map((entry) => ({
+    id: `struttura-${entry.slug}`,
+    name: entry.data.name,
+    href: `/strutture/${entry.slug}`,
+    coords: entry.data.coords,
+    color: '#c74634',
+  })),
+];
+---
+
+<div class="map-hcard">
+  <div class="map-hcard-body">
+    <div class="mapleg">
+      <span><i class="dot" style="background:#f5a623"></i>Territories</span>
+      <span><i class="dot" style="background:#c74634"></i>Stays</span>
+      <span><i class="dot" style="background:#2d4a3e"></i>Map center</span>
+    </div>
+  </div>
+  <div id="map-el" data-markers={JSON.stringify(markers)}></div>
+</div>
+
+<script>
+  (function () {
+    const container = document.getElementById('map-el');
+    if (!container || !window.maplibregl) return;
+
+    const markers = JSON.parse(container.dataset.markers || '[]');
+    const map = new window.maplibregl.Map({
+      container: 'map-el',
+      style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+      center: [site.map.center[0], site.map.center[1]],
+      zoom: site.map.zoom,
+    });
+
+    map.addControl(new window.maplibregl.NavigationControl(), 'top-right');
+
+    map.on('load', function () {
+      markers.forEach(function (marker) {
+        const el = document.createElement('div');
+        el.setAttribute('role', 'button');
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('aria-label', `Open ${marker.name}`);
+        el.style.width = '16px';
+        el.style.height = '16px';
+        el.style.borderRadius = '50%';
+        el.style.background = marker.color;
+        el.style.border = '3px solid rgba(255,255,255,.95)';
+        el.style.boxShadow = '0 6px 18px rgba(0,0,0,.35)';
+        el.style.cursor = 'pointer';
+        el.style.position = 'relative';
+
+        const pulse = document.createElement('div');
+        pulse.style.position = 'absolute';
+        pulse.style.inset = '-8px';
+        pulse.style.borderRadius = '50%';
+        pulse.style.border = '1px solid ' + marker.color;
+        pulse.style.animation = 'pinpulse 2s ease-out infinite';
+        el.appendChild(pulse);
+
+        const pin = new window.maplibregl.Marker({ element: el })
+          .setLngLat([marker.coords.lng, marker.coords.lat])
+          .addTo(map);
+
+        function navigateToMarker() {
+          window.location.href = marker.href;
+        }
+
+        el.addEventListener('click', navigateToMarker);
+        el.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            navigateToMarker();
+          }
+        });
+        el.addEventListener('focus', function () {
+          el.style.outline = '3px solid rgba(245, 166, 35, 0.9)';
+          el.style.outlineOffset = '3px';
+        });
+        el.addEventListener('blur', function () {
+          el.style.outline = '';
+          el.style.outlineOffset = '';
+        });
+
+        const popup = new window.maplibregl.Popup({ offset: 18 }).setHTML(`<strong>${marker.name}</strong>`);
+        pin.setPopup(popup);
+      });
+    });
+  })();
+</script>

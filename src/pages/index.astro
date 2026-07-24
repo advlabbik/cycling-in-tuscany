@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Map from '../components/Map.astro';
 import { getCollection } from 'astro:content';
 
 const territori = await getCollection('territori');
@@ -80,7 +81,7 @@ const monterotondo = territori.find((item) => item.data.tier !== 'premium');
         <p style="color:var(--muted);font-size:.98rem;max-width:560px;margin:0 auto;line-height:1.55">Official territories and stays, all in one place. Click a pin for routes, details and booking.</p>
       </div>
     </div>
-    <div id="map-el"></div>
+    <Map territories={territori} structures={strutture} />
   </section>
 
   <section id="territories" style="background:var(--cream);padding:80px 0">

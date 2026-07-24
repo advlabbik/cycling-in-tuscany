@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import RouteCard from '../../components/RouteCard.astro';
+import { site } from '../../../site.config';
+
+export async function getStaticPaths() {
+  const strutture = await getCollection('strutture');
+  return strutture.map((struttura) => ({
+    params: { slug: struttura.id.replace(/\.md$/, '') },
+  }));
+}
+
+const strutture = await getCollection('strutture');
+const struttura = strutture.find((entry) => {
+  const id = entry.id?.replace(/\.md$/, '');
+  return id === Astro.params.slug || entry.slug === Astro.params.slug || entry.id === `${Astro.params.slug}.md`;
+});
+
+if (!struttura) {
+  throw new Error(`Structure not found for slug: ${Astro.params.slug}`);
+}
+
+const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${site.stay22Campaign}&lat=${struttura.data.coords.lat}&lng=${struttura.data.coords.lng}&product_medium=apps`;
+const heroImage = struttura.data.heroImage?.src ?? '/hero.jpg';
+const gravelCount = struttura.data.ridePack.filter((route) => route.type.toLowerCase() === 'gravel').length;
+const roadCount = struttura.data.ridePack.length - gravelCount;
+---
+
+<Base title={`${struttura.data.name} — Cycling in Tuscany`} description={struttura.data.intro}>
+  <div class="hero" style={`background-image:linear-gradient(rgba(20,10,15,.45),rgba(20,10,15,.72)),url('${heroImage}');background-size:cover;background-position:center`}>
+    <div class="wrap">
+      <div class="badge-verif">✔ Official Bike-Friendly Stay · verificata dal Tuscany Trail</div>
+      <div class="kick">Struttura · {struttura.data.town}</div>
+      <h1>{struttura.data.name}</h1>
+      <p class="lead">{struttura.data.intro}</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <h2 class="sec">Servizi bike-friendly</h2>
+      <p class="sub">{struttura.data.tagline}</p>
+      <div class="chips">
+        {struttura.data.services.map((service) => <span class="chip">{service}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section id="percorsi" style="background:#fff">
+    <div class="wrap">
+      <h2 class="sec">Il Ride Base Pack</h2>
+      <p class="sub">Partono dalla porta della struttura. Apri la traccia su Ride with GPS e vai.</p>
+      <div class="grid g2">
+        {struttura.data.ridePack.map((route) => <RouteCard route={route} />)}
+      </div>
+
+      <div class="pack-dl-bar">
+        <div class="pack-dl-bar-glow"></div>
+        <div class="pack-dl-bar-left">
+          <div class="pack-dl-label">Ride Base Pack · {gravelCount} gravel · {roadCount} road</div>
+          <h3 class="pack-dl-title">Scarica tutti i percorsi di {struttura.data.name}</h3>
+        </div>
+        <div class="pack-dl-bar-right">
+          <a class="pack-dl-btn" href={struttura.data.guidaPdf} target="_blank">
+            <span class="pack-dl-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+            </span>
+            Download PDF
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="cta-band">
+        <div>
+          <h3>Prenota il tuo soggiorno</h3>
+          <p>Prenota diretto con la struttura, oppure cerca alternative in zona.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn gold" href={struttura.data.site} target="_blank" rel="noopener">Prenota su {struttura.data.name} →</a>
+          <a class="btn dark" href={stay22Url} target="_blank" rel="noopener">Altri alloggi in zona</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

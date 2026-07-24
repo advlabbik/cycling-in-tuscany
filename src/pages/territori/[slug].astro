@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import RouteCard from '../../components/RouteCard.astro';
+import { site } from '../../../site.config';
+
+export async function getStaticPaths() {
+  const territori = await getCollection('territori');
+  return territori.map((territorio) => ({
+    params: { slug: territorio.id.replace(/\.md$/, '') },
+  }));
+}
+
+const territori = await getCollection('territori');
+const territorio = territori.find((entry) => {
+  const id = entry.id?.replace(/\.md$/, '');
+  return id === Astro.params.slug || entry.slug === Astro.params.slug || entry.id === `${Astro.params.slug}.md`;
+});
+
+if (!territorio) {
+  throw new Error(`Territory not found for slug: ${Astro.params.slug}`);
+}
+
+const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${site.stay22Campaign}&lat=${territorio.data.coords.lat}&lng=${territorio.data.coords.lng}&product_medium=apps`;
+const heroImage = territorio.data.heroImage?.src ?? '/hero.jpg';
+const premium = territorio.data.tier === 'premium';
+---
+
+<Base title={`${territorio.data.name} — Cycling in Tuscany`} description={territorio.data.intro}>
+  <div class={`hero ${premium ? 'premium' : ''}`} style={`background-image:linear-gradient(rgba(20,10,15,.45),rgba(20,10,15,.72)),url('${heroImage}');background-size:cover;background-position:center`}>
+    <div class="wrap">
+      <div class="ribbon">{premium ? '★ ' : ''}{territorio.data.tagline}</div>
+      <div class="kick">Territory · {territorio.data.area}</div>
+      <h1>{territorio.data.name}</h1>
+      <p class="lead">{territorio.data.intro}</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <h2 class="sec">What to see</h2>
+      <p class="sub">Explore the places that define this territory.</p>
+      <div class="grid g3">
+        {territorio.data.cosaVedere.map((item) => (
+          <div class="cvcard">
+            <div class="cvcard-img">
+              <img src={item.image?.src ?? heroImage} alt={item.titolo} loading="lazy" />
+            </div>
+            <div class="cvcard-body">
+              <h3>{item.titolo}</h3>
+              <p set:html={item.descrizione}></p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {territorio.data.ridePack?.length ? (
+    <section id="percorsi" style="background:#fff">
+      <div class="wrap">
+        <h2 class="sec">Official routes</h2>
+        <p class="sub">Four loops ready to download — open the track in Ride with GPS and ride.</p>
+        <div class="grid g2">
+          {territorio.data.ridePack.map((route) => <RouteCard route={route} />)}
+        </div>
+      </div>
+    </section>
+  ) : null}
+
+  <section style="background:#fff">
+    <div class="wrap">
+      <div class="cta-band">
+        <div>
+          <h3>Stay near {territorio.data.name}</h3>
+          <p>Book from verified bike-friendly stays in the area — tracked by Cycling in Tuscany.</p>
+        </div>
+        <a class="btn gold" href={stay22Url} target="_blank" rel="noopener">Find accommodation →</a>
+      </div>
+    </div>
+  </section>
+
+</Base>

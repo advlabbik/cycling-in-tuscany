@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cycling-in-tuscany.com/sitemap-index.xml
