@@ -1,0 +1,120 @@
+backend:
+  name: github
+  repo: advlabbik/cycling-in-tuscany
+  branch: main
+  base_url: https://sveltia-cms-auth.bikepacking-static.workers.dev
+  auth_endpoint: /auth/github
+
+media_folder: src/assets/images
+public_folder: /src/assets/images
+
+collections:
+  - name: territori
+    label: Territori
+    folder: src/content/territori
+    create: true
+    slug: "{{name}}"
+    fields:
+      - { name: name, label: Name, widget: string }
+      - { name: tier, label: Tier, widget: select, options: [premium, standard] }
+      - { name: area, label: Area, widget: string }
+      - { name: tagline, label: Tagline, widget: string }
+      - { name: intro, label: Intro, widget: text }
+      - name: coords
+        label: Coordinates
+        widget: object
+        fields:
+          - { name: lat, label: Latitude, widget: number, value_type: float }
+          - { name: lng, label: Longitude, widget: number, value_type: float }
+      - { name: heroImage, label: Hero image, widget: image, required: false }
+      - name: cosaVedere
+        label: What to see
+        widget: list
+        fields:
+          - { name: titolo, label: Title, widget: string }
+          - { name: descrizione, label: Description, widget: text }
+          - { name: image, label: Image, widget: image, required: false }
+      - name: ridePack
+        label: Ride pack
+        widget: list
+        required: false
+        fields:
+          - { name: name, label: Name, widget: string }
+          - { name: type, label: Type, widget: select, options: [Gravel, Road] }
+          - { name: km, label: KM, widget: string }
+          - { name: dislivello, label: Dislivello, widget: string }
+          - { name: diff, label: Difficulty, widget: string }
+          - { name: surface, label: Surface, widget: string }
+          - { name: hi, label: Highlight, widget: string }
+          - { name: url, label: Ride with GPS URL, widget: string }
+      - name: magazine
+        label: Magazine
+        widget: object
+        required: false
+        fields:
+          - { name: heroTitle, label: Hero title, widget: string }
+          - name: boxes
+            label: Boxes
+            widget: list
+            fields:
+              - { name: titolo, label: Title, widget: string }
+              - { name: testo, label: Text, widget: text }
+          - { name: fonte, label: Source, widget: string, required: false }
+      - name: channels
+        label: Channels
+        widget: list
+        required: false
+        fields:
+          - { name: label, label: Label, widget: string }
+          - { name: url, label: URL, widget: string }
+      - name: numeriUtili
+        label: Useful numbers
+        widget: list
+        required: false
+        fields:
+          - { name: label, label: Label, widget: string }
+          - { name: value, label: Value, widget: string }
+      - { name: guidaPdf, label: Guide PDF, widget: file }
+      - { name: body, label: Magazine body, widget: markdown }
+
+  - name: strutture
+    label: Strutture
+    folder: src/content/strutture
+    create: true
+    slug: "{{name}}"
+    fields:
+      - { name: name, label: Name, widget: string }
+      - { name: town, label: Town, widget: string }
+      - { name: tagline, label: Tagline, widget: string }
+      - { name: intro, label: Intro, widget: text }
+      - { name: site, label: Booking site, widget: string }
+      - name: coords
+        label: Coordinates
+        widget: object
+        fields:
+          - { name: lat, label: Latitude, widget: number, value_type: float }
+          - { name: lng, label: Longitude, widget: number, value_type: float }
+      - { name: heroImage, label: Hero image, widget: image, required: false }
+      - name: card
+        label: Card
+        widget: object
+        fields:
+          - { name: categoria, label: Category, widget: string }
+          - { name: promise, label: Promise, widget: string }
+          - { name: bullets, label: Bullets, widget: list }
+          - { name: caption, label: Caption, widget: string }
+          - { name: tint, label: Tint, widget: string }
+      - { name: services, label: Services, widget: list }
+      - name: ridePack
+        label: Ride pack
+        widget: list
+        fields:
+          - { name: name, label: Name, widget: string }
+          - { name: type, label: Type, widget: select, options: [Gravel, Road] }
+          - { name: km, label: KM, widget: string }
+          - { name: dislivello, label: Dislivello, widget: string }
+          - { name: diff, label: Difficulty, widget: string }
+          - { name: surface, label: Surface, widget: string }
+          - { name: hi, label: Highlight, widget: string }
+          - { name: url, label: Ride with GPS URL, widget: string }
+      - { name: guidaPdf, label: Guide PDF, widget: file }
