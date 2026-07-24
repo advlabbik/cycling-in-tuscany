@@ -1,0 +1,65 @@
+---
+name: "Villaggio Orizzonte"
+town: "Piombino · Riotorto"
+tagline: "Base camp sul mare del Golfo di Follonica"
+intro: "Accesso diretto alla spiaggia nel Parco Costiero della Sterpaia: mare e bici nello stesso giorno. Perfetto per famiglie e per chi vuole una base comoda sulla Costa degli Etruschi."
+site: "https://www.villaggioorizzonte.it/"
+coords:
+  lat: 42.945
+  lng: 10.624
+heroImage: ../../assets/images/villaggio-orizzonte.jpg
+card:
+  categoria: "Family & Groups"
+  promise: "A seaside holiday village built for easy logistics — families, groups and team stays."
+  bullets:
+    - "Plenty of on-site services for group comfort"
+    - "Coastal riding plus inland day trips"
+    - "Everything close, one relaxed base"
+  caption: "Villaggio Orizzonte — cyclist in a sunlit green field"
+  tint: "196 42% 18%"
+services:
+  - "Deposito bici sicuro"
+  - "Area bike wash"
+  - "Colazione presto / orari pasti flessibili"
+  - "Lavanderia e asciugatura"
+  - "Info percorsi e consigli locali"
+  - "Parcheggio"
+  - "Check-in/out flessibile"
+  - "Spiaggia privata"
+ridePack:
+  - name: "The Bandite Wetlands Route"
+    type: "Gravel"
+    km: "51"
+    dislivello: "237 m"
+    diff: "Facile"
+    surface: "44% sterrato"
+    hi: "Follonica, Cala Violina, Parco della Sterpaia"
+    url: "https://ridewithgps.com/routes/53933820?privacy_code=e3yJfifsBGyjhKqhLsKGDFV3uipus2Dc"
+  - name: "Etruscan Coast Gravel Loop"
+    type: "Gravel"
+    km: "51,6"
+    dislivello: "243 m"
+    diff: "Facile"
+    surface: "39% gravel"
+    hi: "Suvereto, Parco della Sterpaia"
+    url: "https://ridewithgps.com/routes/53933835?privacy_code=QcHzIOdGSNGbZYlBZyyEh2sJf12pClQY"
+  - name: "Golden Hills of Bolgheri"
+    type: "Road"
+    km: "108"
+    dislivello: "668 m"
+    diff: "Facile"
+    surface: "asfalto"
+    hi: "Bolgheri, Castagneto Carducci, Sassetta, Suvereto"
+    url: "https://ridewithgps.com/routes/53934291"
+  - name: "Monteverdi & Canneto Loop"
+    type: "Road"
+    km: "90"
+    dislivello: "658 m"
+    diff: "Facile"
+    surface: "asfalto"
+    hi: "Suvereto, Sassetta, Monteverdi Marittimo"
+    url: "https://ridewithgps.com/routes/53934346"
+guidaPdf: "/guide-pdf/Ride-Base-Pack-Villaggio-Orizzonte.pdf"
+---
+
+Villaggio Orizzonte

@@ -1,0 +1,37 @@
+:root {
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-handwritten: 'Caveat', cursive;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ev: #c74634;
+  --ev-dark: #a63828;
+  --dark: #2d4a3e;
+  --dark-muted: #3d3d3d;
+  --gold: #b8860b;
+  --cream: #f7f3eb;
+  --cream-light: #faf8f4;
+  --surface: #fff;
+  --muted: #6b6b6b;
+  --border: #e8e0d4;
+  --fg: #1a1a1a;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--font-body); color: var(--fg); background: var(--cream); line-height: 1.55; }
+a { color: var(--ev); }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 22px; }
+section { padding: 64px 0; }
+.btn { display: inline-block; text-decoration: none; font-weight: 700; font-size: .88rem; padding: 12px 22px; border-radius: 8px; text-align: center; }
+.btn.gold { background: var(--gold); color: #1a1a1a; }
+.btn.dark { background: var(--dark); color: #fff; }
+.btn.ghost-white { background: transparent; border: 1px solid rgba(255,255,255,.22); color: rgba(255,255,255,.78); }
+.hero { color: #fff; padding: 70px 0 60px; background: linear-gradient(120deg, var(--dark), #1a3a2e); }
+.hero h1 { font-size: 2.4rem; margin: .3em 0 .3em; line-height: 1.05; max-width: 760px; }
+.hero p.lead { font-size: 1.06rem; max-width: 640px; color: #c8dcd2; margin: 0; }
+.hero.premium { background: linear-gradient(120deg, #2d4a3e, #6b4a10 120%); border-bottom: 4px solid var(--gold); }
+.kick { font-family: var(--font-handwritten); font-size: 1.25rem; font-weight: 500; color: #e6c98a; margin-bottom: 10px; }
+.ribbon { display: inline-block; background: var(--gold); color: #1a1a1a; font-weight: 700; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; padding: 6px 13px; border-radius: 999px; margin-bottom: 14px; }
+.banner { background: var(--dark); color: #fff; border-radius: 16px; padding: 28px 30px; display: flex; align-items: center; justify-content: space-between; gap: 22px; flex-wrap: wrap; }
+.grid { display: grid; gap: 20px; }
+.g2 { grid-template-columns: repeat(2, 1fr); }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 900px) { .g3 { grid-template-columns: 1fr; } .g2 { grid-template-columns: 1fr; } }
