@@ -1,0 +1,19 @@
+---
+interface Props {
+  tag: string;
+  title: string;
+  description: string;
+}
+
+const { tag, title, description } = Astro.props;
+---
+
+<div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:36px 40px;text-align:center;box-shadow:var(--shadow-sm);margin-bottom:36px">
+  <div style="display:inline-flex;align-items:center;gap:13px;margin-bottom:14px">
+    <div style="height:1px;width:38px;background:#f5a623"></div>
+    <span style="font-size:.65rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:#f5a623;font-family:var(--font-body)">{tag}</span>
+    <div style="height:1px;width:38px;background:#f5a623"></div>
+  </div>
+  <h2 style="font-size:2.2rem;margin:0 0 11px;color:var(--fg);font-family:var(--font-display)">{title}</h2>
+  <p style="color:var(--muted);font-size:.98rem;max-width:560px;margin:0 auto;line-height:1.55" set:html={description} />
+</div>

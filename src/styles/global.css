@@ -35,3 +35,8 @@ section { padding: 64px 0; }
 .g2 { grid-template-columns: repeat(2, 1fr); }
 .g3 { grid-template-columns: repeat(3, 1fr); }
 @media (max-width: 900px) { .g3 { grid-template-columns: 1fr; } .g2 { grid-template-columns: 1fr; } }
+
+@keyframes pinpulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}

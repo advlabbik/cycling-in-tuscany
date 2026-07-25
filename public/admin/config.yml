@@ -5,8 +5,8 @@ backend:
   base_url: https://sveltia-cms-auth.bikepacking-static.workers.dev
   auth_endpoint: /auth/github
 
-media_folder: src/assets/images
-public_folder: /src/assets/images
+media_folder: public/images
+public_folder: /images
 
 collections:
   - name: territori

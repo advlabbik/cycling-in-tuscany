@@ -8,21 +8,28 @@ interface Props {
 }
 
 const { territories, structures } = Astro.props;
+const getSlug = (id: string) => id.replace(/\.md$/, '');
 const markers = [
-  ...territories.map((entry) => ({
-    id: `territorio-${entry.slug}`,
-    name: entry.data.name,
-    href: `/territori/${entry.slug}`,
-    coords: entry.data.coords,
-    color: '#f5a623',
-  })),
-  ...structures.map((entry) => ({
-    id: `struttura-${entry.slug}`,
-    name: entry.data.name,
-    href: `/strutture/${entry.slug}`,
-    coords: entry.data.coords,
-    color: '#c74634',
-  })),
+  ...territories.map((entry) => {
+    const slug = getSlug(entry.id);
+    return {
+      id: `territorio-${slug}`,
+      name: entry.data.name,
+      href: `/territori/${slug}`,
+      coords: entry.data.coords,
+      color: '#f5a623',
+    };
+  }),
+  ...structures.map((entry) => {
+    const slug = getSlug(entry.id);
+    return {
+      id: `struttura-${slug}`,
+      name: entry.data.name,
+      href: `/strutture/${slug}`,
+      coords: entry.data.coords,
+      color: '#c74634',
+    };
+  }),
 ];
 ---
 

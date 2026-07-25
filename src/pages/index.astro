@@ -1,18 +1,20 @@
 ---
 import Base from '../layouts/Base.astro';
 import Map from '../components/Map.astro';
+import SectionHeader from '../components/SectionHeader.astro';
 import { getCollection } from 'astro:content';
 
 const territori = await getCollection('territori');
 const strutture = await getCollection('strutture');
 const faqEntries = await getCollection('faq');
 const campiglia = territori.find((item) => item.data.tier === 'premium');
-const monterotondo = territori.find((item) => item.data.tier !== 'premium');
+const monterotondo = territori.find((item) => item.data.tier !== 'premium') || territori[0];
+const getSlug = (id: string) => id.replace(/\.md$/, '');
 ---
 
 <Base title="Cycling in Tuscany — plan your Tuscany cycling holiday" description="Handpicked territories, verified bike-friendly stays and routes ready to download.">
   <section class="hero-glass">
-    <div class="hero-bg" style="background-image:url('/src/assets/images/hero.jpg')"></div>
+    <div class="hero-bg" style="background-image:url('/images/hero.jpg')"></div>
     <div class="hero-glow-gold"></div>
     <div class="hero-glow-green"></div>
     <div class="wrap hero-grid">
@@ -28,58 +30,43 @@ const monterotondo = territori.find((item) => item.data.tier !== 'premium');
     </div>
   </section>
 
-  <section class="feature" style="background-image:linear-gradient(rgba(10,5,8,.45),rgba(10,5,8,.88)), url('/src/assets/images/campiglia.jpg'), linear-gradient(135deg,#2d4a3e,#6b4a10); border-radius:28px 28px 0 0; margin-top:-40px; position:relative; z-index:5; box-shadow:0 -12px 48px rgba(0,0,0,.55)">
+  <section class="feature" style="background-image:linear-gradient(rgba(10,5,8,.45),rgba(10,5,8,.88)), url('/images/campiglia.jpg'), linear-gradient(135deg,#2d4a3e,#6b4a10); border-radius:28px 28px 0 0; margin-top:-40px; position:relative; z-index:5; box-shadow:0 -12px 48px rgba(0,0,0,.55)">
     <div class="wrap">
       <div class="ribbon">Home of the Tuscany Trail</div>
       <div class="kick">Costa degli Etruschi ★</div>
       <h2>Campiglia Marittima</h2>
       <p>We didn't choose it by chance as the start and finish of the Tuscany Trail. From here you get direct access to one of the finest cycling areas in all of Tuscany — and a medieval town that's a joy even off the bike.</p>
-      <a class="btn gold" href={`/territori/${campiglia?.slug}`}>Discover Campiglia →</a>
+      <a class="btn gold" href={`/territori/${campiglia ? getSlug(campiglia.id) : ''}`}>Discover Campiglia →</a>
     </div>
   </section>
 
   <section id="stays" style="background:var(--cream)">
     <div class="wrap" style="max-width:1320px">
-      <div class="sec-box" style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:36px 40px;text-align:center;box-shadow:var(--shadow-sm);margin-bottom:36px">
-        <div style="display:inline-flex;align-items:center;gap:13px;margin-bottom:14px">
-          <div style="height:1px;width:38px;background:#f5a623"></div>
-          <span style="font-size:.65rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:#f5a623;font-family:var(--font-body)">Verified Stays</span>
-          <div style="height:1px;width:38px;background:#f5a623"></div>
-        </div>
-        <h2 style="font-size:2.2rem;margin:0 0 11px;color:var(--fg);font-family:var(--font-display)">Official Bike-Friendly Stays</h2>
-        <p style="color:var(--muted);font-size:.98rem;max-width:560px;margin:0 auto;line-height:1.55">Verified bases: bike storage, wash, early breakfast and their own route pack.<br />Pick the one that fits your trip.</p>
-      </div>
+      <SectionHeader tag="Verified Stays" title="Official Bike-Friendly Stays" description="Verified bases: bike storage, wash, early breakfast and their own route pack.<br />Pick the one that fits your trip." />
       <div class="stays-grid">
-        {strutture.map((struttura) => (
-          <div class="dcard-outer" style={`--tc:${struttura.data.card.tint}`}>
+        {strutture.map((struttura) => {
+          const slugStr = getSlug(struttura.id);
+          return <div class="dcard-outer" style={`--tc:${struttura.data.card.tint}`}>
             <div class="dcard">
-              <div class="dcard-bg" style={`background-image:url('/src/assets/images/${struttura.slug}.jpg')`}></div>
+              <div class="dcard-bg" style={`background-image:url('/images/${slugStr}.jpg')`}></div>
               <div class="dcard-grad"></div>
-              <a class="dcard-cover" href={`/strutture/${struttura.slug}`} aria-label={`See ${struttura.data.name}`}></a>
+              <a class="dcard-cover" href={`/strutture/${slugStr}`} aria-label={`See ${struttura.data.name}`}></a>
               <div class="dcard-body">
                 <h3>{struttura.data.name}</h3>
                 <p>{struttura.data.card.categoria} · {struttura.data.town} · {struttura.data.ridePack.length} routes</p>
-                <a class="dcard-btn" href={`/strutture/${struttura.slug}`}><span>See the stay</span>→</a>
-                <a class="dcard-btn-sec" href={`/strutture/${struttura.slug}#percorsi`}>See the routes →</a>
+                <a class="dcard-btn" href={`/strutture/${slugStr}`}><span>See the stay</span>→</a>
+                <a class="dcard-btn-sec" href={`/strutture/${slugStr}#percorsi`}>See the routes →</a>
               </div>
             </div>
-          </div>
-        ))}
+          </div>;
+        })}
       </div>
     </div>
   </section>
 
   <section id="map" style="padding:80px 0 0;background:var(--cream)">
     <div class="wrap" style="position:relative;z-index:10">
-      <div class="sec-box" style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:36px 40px;text-align:center;box-shadow:var(--shadow-sm);margin-bottom:40px">
-        <div style="display:inline-flex;align-items:center;gap:13px;margin-bottom:14px">
-          <div style="height:1px;width:38px;background:#f5a623"></div>
-          <span style="font-size:.65rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:#f5a623;font-family:var(--font-body)">Explore the destination</span>
-          <div style="height:1px;width:38px;background:#f5a623"></div>
-        </div>
-        <h2 style="font-size:2.2rem;margin:0 0 11px;color:var(--fg);font-family:var(--font-display)">The destination map</h2>
-        <p style="color:var(--muted);font-size:.98rem;max-width:560px;margin:0 auto;line-height:1.55">Official territories and stays, all in one place. Click a pin for routes, details and booking.</p>
-      </div>
+      <SectionHeader tag="Explore the destination" title="The destination map" description="Official territories and stays, all in one place. Click a pin for routes, details and booking." />
     </div>
     <Map territories={territori} structures={strutture} />
   </section>
@@ -99,13 +86,13 @@ const monterotondo = territori.find((item) => item.data.tier !== 'premium');
       </div>
     </div>
     <div class="ter-carousel-scroll" id="ter-carousel-scroll">
-      <a class="ter-slide" href={`/territori/${monterotondo?.slug}`}>
+      <a class="ter-slide" href={`/territori/${getSlug(monterotondo.id)}`}>
         <div class="ter-slide-inner">
-          <div class="ter-slide-img" style="background-image:url('/src/assets/images/monterotondo.jpg')"></div>
+          <div class="ter-slide-img" style="background-image:url('/images/monterotondo.jpg')"></div>
           <div class="ter-slide-grad"></div>
           <div class="ter-slide-body">
             <span class="ter-slide-tag">Official Territory</span>
-            <div class="ter-slide-title">{monterotondo?.data.name}</div>
+            <div class="ter-slide-title">{monterotondo.data.name}</div>
             <div class="ter-slide-desc">Metalliferous Hills — geothermal landscape, white hills, routes that breathe.</div>
             <div class="ter-slide-cta">Discover →</div>
           </div>
@@ -116,35 +103,19 @@ const monterotondo = territori.find((item) => item.data.tier !== 'premium');
 
   <section id="magazine">
     <div class="wrap">
-      <div class="sec-box" style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:36px 40px;text-align:center;box-shadow:var(--shadow-sm);margin-bottom:24px">
-        <div style="display:inline-flex;align-items:center;gap:13px;margin-bottom:14px">
-          <div style="height:1px;width:38px;background:#f5a623"></div>
-          <span style="font-size:.65rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:#f5a623;font-family:var(--font-body)">From the field</span>
-          <div style="height:1px;width:38px;background:#f5a623"></div>
-        </div>
-        <h2 style="font-size:2.2rem;margin:0 0 11px;color:var(--fg);font-family:var(--font-display)">Cycling in Tuscany Magazine</h2>
-        <p style="color:var(--muted);font-size:.98rem;max-width:560px;margin:0 auto;line-height:1.55">Real stories from each territory — routes, places, people. Read here, no PDF.</p>
-      </div>
+      <SectionHeader tag="From the field" title="Cycling in Tuscany Magazine" description="Real stories from each territory — routes, places, people. Read here, no PDF." />
       <div class="banner">
         <div>
-          <p style="color:var(--muted);margin:0">First issue: Monterotondo Marittimo — the geothermal hills, where the earth breathes.</p>
+          <p style="color:var(--muted);margin:0">First issue: {monterotondo.data.name} — the geothermal hills, where the earth breathes.</p>
         </div>
-        <a class="btn gold" href={`/territori/${monterotondo?.slug}`}>Read now →</a>
+        <a class="btn gold" href={`/territori/${getSlug(monterotondo.id)}`}>Read now →</a>
       </div>
     </div>
   </section>
 
   <section id="faq" style="background:#fff">
     <div class="wrap" style="max-width:780px">
-      <div class="sec-box" style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:36px 40px;text-align:center;box-shadow:var(--shadow-sm);margin-bottom:24px">
-        <div style="display:inline-flex;align-items:center;gap:13px;margin-bottom:14px">
-          <div style="height:1px;width:38px;background:#f5a623"></div>
-          <span style="font-size:.65rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:#f5a623;font-family:var(--font-body)">Plan your trip</span>
-          <div style="height:1px;width:38px;background:#f5a623"></div>
-        </div>
-        <h2 style="font-size:2.2rem;margin:0 0 11px;color:var(--fg);font-family:var(--font-display)">Frequently asked questions</h2>
-        <p style="color:var(--muted);font-size:.98rem;max-width:560px;margin:0 auto;line-height:1.55">Quick answers before you go.</p>
-      </div>
+      <SectionHeader tag="Plan your trip" title="Frequently asked questions" description="Quick answers before you go." />
       <div style="margin-top:8px">
         {faqEntries.map((entry) => (
           <details class="acc">
