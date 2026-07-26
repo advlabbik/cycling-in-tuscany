@@ -31,15 +31,15 @@ ridePack: null
 magazine:
   heroTitle: "Campiglia Marittima"
   boxes:
-    - titolo: "Il borgo medievale"
-      testo: "Piazza della Repubblica, vicoli e angoli nascosti di una delle località più suggestive della Costa degli Etruschi."
+    - titolo: "The medieval borough"
+      testo: "Piazza della Repubblica, alleyways and hidden corners of one of the most striking towns on the Etruscan Coast."
     - titolo: "Rocca di Campiglia"
-      testo: "La fortezza medievale domina la valle e la vista spazia fino all'Arcipelago Toscano."
+      testo: "The medieval fortress dominates the valley, with views stretching all the way to the Tuscan Archipelago."
     - titolo: "Parco Archeominerario"
-      testo: "Miniere, museo e bike park: una delle storie più forti e concrete del territorio."
-    - titolo: "Terme e wellness"
-      testo: "Le Terme del Calidario diventano il perfetto complemento a una giornata in bici."
-  fonte: "Contenuti editoriali dal magazine Cycling in Tuscany."
+      testo: "Mines, museum and bike park: one of the strongest, most tangible stories in the area."
+    - titolo: "Thermal springs & wellness"
+      testo: "Terme del Calidario is the perfect complement to a day on the bike."
+  fonte: "Editorial content from Cycling in Tuscany magazine."
 channels:
   - label: "Parco Archeominerario di San Silvestro"
     url: "https://www.parchivaldicornia.it/parchi-archeologici/parco-archeominerario-di-san-silvestro/"
