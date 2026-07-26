@@ -29,7 +29,25 @@ cosaVedere:
     descrizione: "9 enduro trails and 4 cross-country routes across the slopes of Monte Calvi, fully integrated with the Tuscany Trail network."
     image: "../../assets/images/campiglia/bike-area-monte-calvi.jpg"
 ridePack: null
-magazine: null
+# Provenienza: questo blocco NON viene dai dati del prototipo — _dati-partner.json
+# ha `editorial` solo per Monterotondo, e la spec §7 prevedeva "vuoto per Campiglia".
+# È stato sintetizzato durante la migrazione di Fase 1 (#15) dalle voci `cosaVedere`
+# e tradotto in inglese con la PR #21. Tenuto per scelta editoriale (PR #20): è
+# contenuto voluto, non un residuo da ripulire. Nota: i box qui sotto ripetono
+# quattro delle sei `cosaVedere` renderizzate sopra nella stessa pagina — se un
+# giorno il magazine di Campiglia va riscritto, partire da qui.
+magazine:
+  heroTitle: "Campiglia Marittima"
+  boxes:
+    - titolo: "The medieval borough"
+      testo: "Piazza della Repubblica, alleyways and hidden corners of one of the most striking towns on the Etruscan Coast."
+    - titolo: "Rocca di Campiglia"
+      testo: "The medieval fortress dominates the valley, with views stretching all the way to the Tuscan Archipelago."
+    - titolo: "Parco Archeominerario"
+      testo: "Mines, museum and bike park: one of the strongest, most tangible stories in the area."
+    - titolo: "Thermal springs & wellness"
+      testo: "Terme del Calidario is the perfect complement to a day on the bike."
+  fonte: "Editorial content from Cycling in Tuscany magazine."
 channels:
   - label: "Parco Archeominerario di San Silvestro"
     url: "https://www.parchivaldicornia.it/parchi-archeologici/parco-archeominerario-di-san-silvestro/"

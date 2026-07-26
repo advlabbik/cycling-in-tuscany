@@ -19,6 +19,9 @@ const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campa
 const heroImage = territorio.data.heroImage?.src;
 const premium = territorio.data.tier === 'premium';
 const magazine = territorio.data.magazine;
+// non tutti i territori hanno l'articolo nel body: senza questo controllo
+// `.editorial` renderizzerebbe un riquadro bianco vuoto (es. Campiglia)
+const hasArticle = Boolean(territorio.body?.trim());
 
 const schema = {
   '@context': 'https://schema.org',
@@ -99,9 +102,11 @@ const schema = {
       <div class="wrap">
         <h2 class="sec">{magazine.heroTitle}</h2>
         <p class="sub">From the Cycling in Tuscany Magazine.</p>
-        <div class="editorial">
-          <Content />
-        </div>
+        {hasArticle && (
+          <div class="editorial">
+            <Content />
+          </div>
+        )}
         {magazine.boxes.length > 0 && (
           <div class="grid g2" style="margin-top:22px">
             {magazine.boxes.map((box) => (
