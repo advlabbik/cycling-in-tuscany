@@ -6,4 +6,6 @@ export const site = {
     instagram: '@cyclingintuscany_official',
   },
   map: { center: [10.68, 42.98], zoom: 9 },
+  /** ordine delle strutture nella home — era STR_ORDER in _prototipo/build_pages.py */
+  struttureOrder: ['punta-ala', 'villaggio-orizzonte', 'villa-toscana'],
 };

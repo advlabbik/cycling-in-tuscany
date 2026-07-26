@@ -1,25 +1,33 @@
 ---
 import '../styles/global.css';
+import { Image } from 'astro:assets';
+import logo from '../assets/images/logo.png';
 import { site } from '../../site.config';
 
 interface Props {
   title: string;
   description?: string;
-  canonical?: string;
+  /** carica MapLibre solo dove serve davvero (oggi: la home) */
+  maplibre?: boolean;
+  /** JSON-LD schema.org della pagina (issue #11) */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description = 'Cycling in Tuscany', canonical } = Astro.props;
-const currentYear = new Date().getFullYear();
+const { title, description = 'Cycling in Tuscany', maplibre = false, schema } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -27,20 +35,23 @@ const currentYear = new Date().getFullYear();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Caveat:wght@500&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" />
     <link rel="preconnect" href="https://ridewithgps.com" />
-    <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="preconnect" href="https://basemaps.cartocdn.com" />
-    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
-    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" defer></script>
-    <title>{title}</title>
-    {canonical && <link rel="canonical" href={canonical} />}
+    {maplibre && (
+      <>
+        <link rel="preconnect" href="https://unpkg.com" />
+        <link rel="preconnect" href="https://basemaps.cartocdn.com" />
+        <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+        <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" defer></script>
+      </>
+    )}
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
   </head>
   <body>
     <header class="nav-glass" id="main-nav">
       <div class="nav-inner">
-        <a class="brand" href="/index.html"><img src="/logo.png" alt="Cycling in Tuscany" /></a>
+        <a class="brand" href="/"><Image src={logo} alt="Cycling in Tuscany" width={240} densities={[1, 2]} loading="eager" /></a>
         <nav class="nav-pill" aria-label="Primary navigation">
           <ul>
-            <li><a href="/#home">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="/#stays">Stays</a></li>
             <li><a href="/#map">Map</a></li>
             <li><a href="/#territories">Territories</a></li>
@@ -56,7 +67,7 @@ const currentYear = new Date().getFullYear();
       </div>
       <div class="nav-mobile-panel" id="nav-mobile-panel" aria-hidden="true">
         <ul>
-          <li><a href="/#home">Home</a></li>
+          <li><a href="/">Home</a></li>
           <li><a href="/#stays">Stays</a></li>
           <li><a href="/#map">Map</a></li>
           <li><a href="/#territories">Territories</a></li>
@@ -73,7 +84,6 @@ const currentYear = new Date().getFullYear();
         <b style="color:#fff">Cycling in Tuscany</b> — where to ride and where to stay in this Tuscany, from the team behind the Tuscany Trail.<br />
         <span class="small">Official territories & bike-friendly stays · tracked booking · routes on Ride with GPS.</span><br /><br />
         <a href="/">Home</a> · <a href={`mailto:${site.brand.email}`}>{site.brand.email}</a> · Instagram {site.brand.instagram}
-        <div style="margin-top:12px;color:#a8c4b4">© {currentYear} Cycling in Tuscany</div>
       </div>
     </footer>
 

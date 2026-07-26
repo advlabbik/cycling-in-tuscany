@@ -8,27 +8,45 @@ export async function getStaticPaths() {
   const strutture = await getCollection('strutture');
   return strutture.map((struttura) => ({
     params: { slug: struttura.id.replace(/\.md$/, '') },
+    props: { struttura },
   }));
 }
 
-const strutture = await getCollection('strutture');
-const struttura = strutture.find((entry) => {
-  const id = entry.id?.replace(/\.md$/, '');
-  return id === Astro.params.slug || entry.slug === Astro.params.slug || entry.id === `${Astro.params.slug}.md`;
-});
-
-if (!struttura) {
-  throw new Error(`Structure not found for slug: ${Astro.params.slug}`);
-}
+const { struttura } = Astro.props;
 
 const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${site.stay22Campaign}&lat=${struttura.data.coords.lat}&lng=${struttura.data.coords.lng}&product_medium=apps`;
-const heroImage = struttura.data.heroImage?.src ?? '/hero.jpg';
+const heroImage = struttura.data.heroImage?.src;
 const gravelCount = struttura.data.ridePack.filter((route) => route.type.toLowerCase() === 'gravel').length;
 const roadCount = struttura.data.ridePack.length - gravelCount;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LodgingBusiness',
+  name: struttura.data.name,
+  description: struttura.data.intro,
+  url: struttura.data.site,
+  address: { '@type': 'PostalAddress', addressLocality: struttura.data.town, addressCountry: 'IT' },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: struttura.data.coords.lat,
+    longitude: struttura.data.coords.lng,
+  },
+  amenityFeature: struttura.data.services.map((service) => ({
+    '@type': 'LocationFeatureSpecification',
+    name: service,
+    value: true,
+  })),
+  ...(heroImage ? { image: new URL(heroImage, Astro.site ?? Astro.url.origin).href } : {}),
+};
 ---
 
-<Base title={`${struttura.data.name} — Cycling in Tuscany`} description={struttura.data.intro}>
-  <div class="hero" style={`background-image:linear-gradient(rgba(20,10,15,.45),rgba(20,10,15,.72)),url('${heroImage}');background-size:cover;background-position:center`}>
+<Base title={`${struttura.data.name} — Cycling in Tuscany`} description={struttura.data.intro} schema={schema}>
+  <div
+    class="hero"
+    style={heroImage
+      ? `background-image:linear-gradient(rgba(20,10,15,.45),rgba(20,10,15,.72)),url(${heroImage});background-size:cover;background-position:center`
+      : undefined}
+  >
     <div class="wrap">
       <div class="badge-verif">✔ Official Bike-Friendly Stay · verificata dal Tuscany Trail</div>
       <div class="kick">Struttura · {struttura.data.town}</div>

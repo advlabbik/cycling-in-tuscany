@@ -20,6 +20,7 @@ collections:
       - { name: area, label: Area, widget: string }
       - { name: tagline, label: Tagline, widget: string }
       - { name: intro, label: Intro, widget: text }
+      - { name: itinerariTxt, label: "What to see — intro", widget: text }
       - name: coords
         label: Coordinates
         widget: object

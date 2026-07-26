@@ -4,6 +4,7 @@ tier: "standard"
 area: "Colline Metallifere · Cuore geotermico"
 tagline: "Territorio ufficiale · dove la Terra respira"
 intro: "Borgo medievale nel cuore geotermico della Toscana: fumarole, soffioni e le colline bianche del Parco delle Biancane. Un paesaggio quasi lunare, dentro un Geoparco UNESCO, da attraversare in bici."
+itinerariTxt: "Quattro percorsi ufficiali dalla porta del borgo, dal gravel tecnico tra le fumarole ai lunghi anelli tra i borghi delle Colline Metallifere."
 coords:
   lat: 43.143
   lng: 10.857

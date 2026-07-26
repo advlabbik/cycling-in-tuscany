@@ -3,12 +3,14 @@ interface Props {
   tag: string;
   title: string;
   description: string;
+  /** era il parametro `mb` di sec_box() nel prototipo */
+  marginBottom?: string;
 }
 
-const { tag, title, description } = Astro.props;
+const { tag, title, description, marginBottom = '36px' } = Astro.props;
 ---
 
-<div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:36px 40px;text-align:center;box-shadow:var(--shadow-sm);margin-bottom:36px">
+<div style={`background:#fff;border:1px solid var(--border);border-radius:16px;padding:36px 40px;text-align:center;box-shadow:var(--shadow-sm);margin-bottom:${marginBottom}`}>
   <div style="display:inline-flex;align-items:center;gap:13px;margin-bottom:14px">
     <div style="height:1px;width:38px;background:#f5a623"></div>
     <span style="font-size:.65rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:#f5a623;font-family:var(--font-body)">{tag}</span>

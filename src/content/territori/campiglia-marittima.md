@@ -4,6 +4,7 @@ tier: "premium"
 area: "Costa degli Etruschi"
 tagline: "Home of the Tuscany Trail"
 intro: "A medieval hilltop borough suspended between sea and hills, at the heart of the Etruscan Coast. Thermal springs, mining archaeology and one of Tuscany's most technical bike areas — this is where the Tuscany Trail calls home."
+itinerariTxt: "A typical day: breakfast in the borough, the Rocca and historic centre, a local lunch, then the Thermal Baths or the Parco Archeominerario in the afternoon. Riders: Bike Area Monte Calvi and the trails through the Parco."
 coords:
   lat: 43.057
   lng: 10.6
@@ -28,18 +29,7 @@ cosaVedere:
     descrizione: "9 enduro trails and 4 cross-country routes across the slopes of Monte Calvi, fully integrated with the Tuscany Trail network."
     image: "../../assets/images/campiglia/bike-area-monte-calvi.jpg"
 ridePack: null
-magazine:
-  heroTitle: "Campiglia Marittima"
-  boxes:
-    - titolo: "Il borgo medievale"
-      testo: "Piazza della Repubblica, vicoli e angoli nascosti di una delle località più suggestive della Costa degli Etruschi."
-    - titolo: "Rocca di Campiglia"
-      testo: "La fortezza medievale domina la valle e la vista spazia fino all'Arcipelago Toscano."
-    - titolo: "Parco Archeominerario"
-      testo: "Miniere, museo e bike park: una delle storie più forti e concrete del territorio."
-    - titolo: "Terme e wellness"
-      testo: "Le Terme del Calidario diventano il perfetto complemento a una giornata in bici."
-  fonte: "Contenuti editoriali dal magazine Cycling in Tuscany."
+magazine: null
 channels:
   - label: "Parco Archeominerario di San Silvestro"
     url: "https://www.parchivaldicornia.it/parchi-archeologici/parco-archeominerario-di-san-silvestro/"
@@ -52,5 +42,3 @@ numeriUtili:
     value: "0565 839111 — Via Roma 5"
 guidaPdf: "/guide-pdf/Guida-Campiglia-Marittima.pdf"
 ---
-
-A medieval hilltop borough suspended between sea and hills, at the heart of the Etruscan Coast. Thermal springs, mining archaeology and one of Tuscany's most technical bike areas — this is where the Tuscany Trail calls home.
