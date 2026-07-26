@@ -1,47 +1,47 @@
 ---
 name: "Monterotondo Marittimo"
 tier: "standard"
-area: "Colline Metallifere · Cuore geotermico"
-tagline: "Territorio ufficiale · dove la Terra respira"
-intro: "Borgo medievale nel cuore geotermico della Toscana: fumarole, soffioni e le colline bianche del Parco delle Biancane. Un paesaggio quasi lunare, dentro un Geoparco UNESCO, da attraversare in bici."
-itinerariTxt: "Quattro percorsi ufficiali dalla porta del borgo, dal gravel tecnico tra le fumarole ai lunghi anelli tra i borghi delle Colline Metallifere."
+area: "Metalliferous Hills · Geothermal heart"
+tagline: "Official territory · where the Earth breathes"
+intro: "Medieval hilltop borough in Tuscany's geothermal heart: fumaroles, steam vents and the white hills of Parco delle Biancane. An almost lunar landscape within a UNESCO Geopark, made to explore by bike."
+itinerariTxt: "Four official routes from the doorstep of the borough, from technical gravel among the fumaroles to long loops between the villages of the Metalliferous Hills."
 coords:
   lat: 43.143
   lng: 10.857
 heroImage: ../../assets/images/monterotondo.jpg
 cosaVedere:
   - titolo: "Parco delle Biancane"
-    descrizione: "Colline bianche, fumarole e soffioni: il volto geotermico del territorio, con anello escursionistico e panorami."
+    descrizione: "White hills, fumaroles and steam vents: the geothermal face of this territory, with scenic loop trails and panoramic views."
     image: "../../assets/images/monterotondo/biancane-parco.jpg"
-  - titolo: "Il borgo & la Rocca degli Alberti"
-    descrizione: "Piazza Casalini, le Logge, la Chiesa di San Lorenzo, il Museo Fucini e il panorama dalla Rocca."
+  - titolo: "The borough & Rocca degli Alberti"
+    descrizione: "Piazza Casalini, the Logge, Chiesa di San Lorenzo, the Fucini Museum and views from the Rocca."
     image: "../../assets/images/monterotondo/biancane-lagone.jpg"
   - titolo: "Trail Area, Pump Track & Bike Center"
-    descrizione: "Area trail attorno alle Biancane, pump track ai Lagoni a ingresso libero, noleggio e ricarica e-bike."
+    descrizione: "Trail area around Biancane, free-access pump track at Lagoni, bike rental and e-bike charging station."
     image: "../../assets/images/monterotondo/trail-mtb.jpg"
   - titolo: "Ciclovia delle 3 M"
-    descrizione: "Anello di 90 km Massa Marittima–Monterotondo–Montieri: 14 aree sosta e 10 colonnine di assistenza."
+    descrizione: "90 km loop Massa Marittima–Monterotondo–Montieri: 14 rest areas and 10 support stations."
     image: "../../assets/images/monterotondo/montieri-borgo.jpg"
-ridePack: [{"name":"Castle & Crags Loop","type":"Gravel","km":"31","dislivello":"885 m","diff":"Impegnativo","surface":"gravel · e-bike consigliata","hi":"Rocchette Pannocchieschi, Monte Arsenti","url":"https://ridewithgps.com/routes/53994750"},{"name":"Fumarole Loop","type":"Gravel","km":"40","dislivello":"1.079 m","diff":"Impegnativo","surface":"gravel · e-bike consigliata","hi":"Le Fumarole, La Leccia, Le Biancane","url":"https://ridewithgps.com/routes/53994755"},{"name":"Boar & Deer Loop","type":"Road","km":"78,6","dislivello":"1.270 m","diff":"Sforzo prolungato","surface":"asfalto","hi":"Parco di Montioni, Massa Marittima","url":"https://ridewithgps.com/routes/53994764"},{"name":"Borghi & Vineyards Loop","type":"Road","km":"79,6","dislivello":"1.547 m","diff":"Sforzo prolungato","surface":"asfalto","hi":"Montieri, Radicondoli, Castelnuovo V.C., Le Fumarole","url":"https://ridewithgps.com/routes/53994774"}]
+ridePack: [{"name":"Castle & Crags Loop","type":"Gravel","km":"31","dislivello":"885 m","diff":"Challenging","surface":"gravel · e-bike recommended","hi":"Rocchette Pannocchieschi, Monte Arsenti","url":"https://ridewithgps.com/routes/53994750"},{"name":"Fumarole Loop","type":"Gravel","km":"40","dislivello":"1.079 m","diff":"Challenging","surface":"gravel · e-bike recommended","hi":"Le Fumarole, La Leccia, Le Biancane","url":"https://ridewithgps.com/routes/53994755"},{"name":"Boar & Deer Loop","type":"Road","km":"78,6","dislivello":"1.270 m","diff":"Long endurance effort","surface":"paved road","hi":"Parco di Montioni, Massa Marittima","url":"https://ridewithgps.com/routes/53994764"},{"name":"Borghi & Vineyards Loop","type":"Road","km":"79,6","dislivello":"1.547 m","diff":"Long endurance effort","surface":"paved road","hi":"Montieri, Radicondoli, Castelnuovo V.C., Le Fumarole","url":"https://ridewithgps.com/routes/53994774"}]
 magazine:
-  heroTitle: "Monterotondo Marittimo — dove la Terra respira"
+  heroTitle: "Monterotondo Marittimo — where the Earth breathes"
   boxes:
-    - titolo: "Le Biancane e i soffioni"
-      testo: "Il fenomeno geotermico che ha reso celebre il territorio: fumarole, lagoni e il Lagone Cerchiaio. Il MUBIA racconta la storia dell'acido borico e delle prime centrali."
-    - titolo: "Il Museo Narrante di Renato Fucini"
-      testo: "Dedicato allo scrittore toscano; biblioteca comunale 0566 906391, biblioteca@comune.monterotondomarittimo.gr.it."
+    - titolo: "The Biancane and steam vents"
+      testo: "The geothermal phenomenon that made this territory famous: fumaroles, lagoons and Lagone Cerchiaio. MUBIA tells the story of boric acid and the first power plants."
+    - titolo: "The Renato Fucini Narrative Museum"
+      testo: "Dedicated to the Tuscan writer; municipal library 0566 906391, biblioteca@comune.monterotondomarittimo.gr.it."
     - titolo: "Massa Marittima"
-      testo: "A pochi km: Fonte dell'Abbondanza, Torre del Candeliere, il Duomo e la Zecca medievale."
-    - titolo: "Sapori geotermici"
-      testo: "Caseifici, birrifici che sfruttano il vapore (il Birrificio Vapori di Birra a Sasso Pisano) e i piatti tipici: tortelli di ricotta, ribollita, pappardelle al cinghiale, schiaccia all'uva."
-  fonte: "Contenuti editoriali dal magazine Cycling in Tuscany. Fonti in rivista/Bibliografia Monterotondo."
+      testo: "Just a few kilometers away: Fonte dell'Abbondanza, Torre del Candeliere, the Duomo and the medieval Zecca."
+    - titolo: "Geothermal flavors"
+      testo: "Cheese makers, breweries powered by geothermal steam (Birrificio Vapori di Birra at Sasso Pisano) and local specialties: ricotta tortelli, ribollita, pappardelle with wild boar, grape schiaccia."
+  fonte: "Editorial content from Cycling in Tuscany magazine. Sources in publication/Monterotondo Bibliography."
 channels:
-  - label: "Comune di Monterotondo Marittimo"
+  - label: "Municipality of Monterotondo Marittimo"
     url: "https://www.comune.monterotondomarittimo.gr.it/"
 numeriUtili:
-  - label: "Biblioteca / Museo Fucini"
+  - label: "Library / Fucini Museum"
     value: "0566 906391"
 guidaPdf: "/guide-pdf/Ride-Base-Pack-Monterotondo.pdf"
 ---
 
-<p>Si arriva in bici a Monterotondo salendo tra i castagni, e la prima cosa che colpisce è il rumore: un sibilo continuo che esce dalla terra. Sono i soffioni, il respiro geotermico di queste colline. Il borgo medievale, raccolto attorno a Piazza Casalini e alle Logge, si apre poi sul paesaggio bianco e fumante delle Biancane, un anfiteatro naturale che sembra appartenere a un altro pianeta.</p><p>È un territorio che si racconta lentamente: le miniere e il vapore, le foreste di castagni, i caseifici e le birre prodotte con il calore della terra. Pedalare qui significa attraversare geologia, storia e gusto nello stesso giro.</p>
+<p>You arrive in Monterotondo by bike climbing through chestnut forests, and the first thing that strikes you is the sound: a continuous hiss rising from the earth. These are the steam vents, the geothermal breath of these hills. The medieval borough, gathered around Piazza Casalini and the Logge, then opens onto the white and steaming landscape of Biancane, a natural amphitheater that seems to belong to another planet.</p><p>This is a territory that reveals itself slowly: mining and steam, chestnut forests, cheese makers and beers produced with earth's heat. Cycling here means traversing geology, history and flavor in the same loop.</p>

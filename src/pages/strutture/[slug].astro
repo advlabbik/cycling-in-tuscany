@@ -48,8 +48,8 @@ const schema = {
       : undefined}
   >
     <div class="wrap">
-      <div class="badge-verif">✔ Official Bike-Friendly Stay · verificata dal Tuscany Trail</div>
-      <div class="kick">Struttura · {struttura.data.town}</div>
+      <div class="badge-verif">✔ Official Bike-Friendly Stay · verified by the Tuscany Trail</div>
+      <div class="kick">Stay · {struttura.data.town}</div>
       <h1>{struttura.data.name}</h1>
       <p class="lead">{struttura.data.intro}</p>
     </div>
@@ -57,7 +57,7 @@ const schema = {
 
   <section>
     <div class="wrap">
-      <h2 class="sec">Servizi bike-friendly</h2>
+      <h2 class="sec">Bike-friendly services</h2>
       <p class="sub">{struttura.data.tagline}</p>
       <div class="chips">
         {struttura.data.services.map((service) => <span class="chip">{service}</span>)}
@@ -67,8 +67,8 @@ const schema = {
 
   <section id="percorsi" style="background:#fff">
     <div class="wrap">
-      <h2 class="sec">Il Ride Base Pack</h2>
-      <p class="sub">Partono dalla porta della struttura. Apri la traccia su Ride with GPS e vai.</p>
+      <h2 class="sec">The Ride Base Pack</h2>
+      <p class="sub">Starting right from the stay's doorstep. Open the track on Ride with GPS and go.</p>
       <div class="grid g2">
         {struttura.data.ridePack.map((route) => <RouteCard route={route} />)}
       </div>
@@ -77,7 +77,7 @@ const schema = {
         <div class="pack-dl-bar-glow"></div>
         <div class="pack-dl-bar-left">
           <div class="pack-dl-label">Ride Base Pack · {gravelCount} gravel · {roadCount} road</div>
-          <h3 class="pack-dl-title">Scarica tutti i percorsi di {struttura.data.name}</h3>
+          <h3 class="pack-dl-title">Download all the routes for {struttura.data.name}</h3>
         </div>
         <div class="pack-dl-bar-right">
           <a class="pack-dl-btn" href={struttura.data.guidaPdf} target="_blank">
@@ -99,12 +99,12 @@ const schema = {
     <div class="wrap">
       <div class="cta-band">
         <div>
-          <h3>Prenota il tuo soggiorno</h3>
-          <p>Prenota diretto con la struttura, oppure cerca alternative in zona.</p>
+          <h3>Book your stay</h3>
+          <p>Book directly with the stay, or look for alternatives in the area.</p>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <a class="btn gold" href={struttura.data.site} target="_blank" rel="noopener">Prenota su {struttura.data.name} →</a>
-          <a class="btn dark" href={stay22Url} target="_blank" rel="noopener">Altri alloggi in zona</a>
+          <a class="btn gold" href={struttura.data.site} target="_blank" rel="noopener">Book with {struttura.data.name} →</a>
+          <a class="btn dark" href={stay22Url} target="_blank" rel="noopener">Other stays in the area</a>
         </div>
       </div>
     </div>
