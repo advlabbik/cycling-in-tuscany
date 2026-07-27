@@ -6,6 +6,23 @@ npm create astro@latest -- --template minimal
 
 > 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
 
+## Prerequisiti
+
+**Node 22.12.0**, la versione in `.nvmrc`:
+
+```sh
+nvm use
+```
+
+Non è un dettaglio opzionale. Cloudflare Pages legge `.nvmrc` e builda con Node 22.12 → npm 10.9.2, e il `package-lock.json` è risolto per quella versione. Con Node 25 (npm 11) `npm ci` fallisce, perché npm 11 pretende un albero di dipendenze diverso:
+
+```
+npm error `npm ci` can only install packages when your package.json
+npm error and package-lock.json are in sync.
+```
+
+Per lo stesso motivo, **il lockfile non va rigenerato da zero** per far passare un errore di `npm ci`: `npm install` scrive solo i binari nativi della piattaforma su cui gira, e potando le altre si rompe il build sul runner Linux (`Cannot find module '@rolldown/binding-linux-x64-gnu'`). Le entry mancanti si aggiungono; l'albero non si ricostruisce.
+
 ## 🚀 Project Structure
 
 Inside of your Astro project, you'll see the following folders and files:
