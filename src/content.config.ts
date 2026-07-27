@@ -79,6 +79,12 @@ const strutture = defineCollection({
 const faq = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/faq' }),
   schema: z.object({
+    /**
+     * L'ordine in home è una proprietà del contenuto, non del nome file (#34):
+     * dal CMS lo slug lo genera Sveltia da `question`, quindi ordinare per `id`
+     * infilerebbe ogni FAQ nuova in mezzo alle altre in ordine alfabetico.
+     */
+    order: z.number().int(),
     question: z.string(),
     answer: z.string(),
   }),

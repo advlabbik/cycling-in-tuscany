@@ -111,6 +111,24 @@ collections:
         public_folder: /guide-pdf
       - { name: body, label: Magazine body, widget: markdown }
 
+  - name: faq
+    label: FAQ
+    folder: src/content/faq
+    create: true
+    # Lo slug viene dalla domanda, quindi il nome file non dice più niente sull'ordine:
+    # è il campo `order` a decidere la sequenza in home (#34).
+    slug: "{{question}}"
+    sortable_fields: [order, question]
+    # Nessun campo `body`: le FAQ sono solo frontmatter, domanda e risposta.
+    fields:
+      - name: order
+        label: Order
+        widget: number
+        value_type: int
+        hint: Posizione in home. I numeri più bassi vengono prima; i buchi non danno problemi.
+      - { name: question, label: Question, widget: string }
+      - { name: answer, label: Answer, widget: text }
+
   - name: strutture
     label: Strutture
     folder: src/content/strutture
