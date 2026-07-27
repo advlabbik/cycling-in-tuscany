@@ -4,6 +4,7 @@ import Map from '../components/Map.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { getCollection } from 'astro:content';
 import { site } from '../../site.config';
+import { bgUrl } from '../lib/images';
 import heroImg from '../assets/images/hero.jpg';
 
 const territori = await getCollection('territori');
@@ -23,6 +24,25 @@ const strutture = [
 const campiglia = territori.find((item) => item.data.tier === 'premium');
 const monterotondo = territori.find((item) => item.data.tier !== 'premium') || territori[0];
 
+/**
+ * Sfondi CSS in versione ottimizzata (#42). Le larghezze seguono il contenitore
+ * reale, non il file sorgente: hero e feature sono a tutta pagina, la card di una
+ * struttura sta in una griglia da tre dentro un wrap da 1320px (~420px, quindi 800
+ * copre il 2x), lo slide del carosello è fissato a 340px da `.ter-slide`.
+ */
+const heroBg = await bgUrl(heroImg, 1600);
+const campigliaBg = await bgUrl(campiglia?.data.heroImage, 1600);
+const monterotondoBg = await bgUrl(monterotondo.data.heroImage, 700);
+// Oggetto e non `new Map()`: in questo file `Map` è il componente della mappa,
+// che ombreggia il costruttore globale.
+const struttureBg: Record<string, string> = Object.fromEntries(
+  await Promise.all(
+    strutture.map(
+      async (entry) => [entry.id, await bgUrl(entry.data.heroImage, 800)] as const,
+    ),
+  ),
+);
+
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -41,7 +61,7 @@ const faqSchema = {
   schema={faqSchema}
 >
   <section class="hero-glass">
-    <div class="hero-bg" style={`background-image:url('${heroImg.src}')`}></div>
+    <div class="hero-bg" style={`background-image:url('${heroBg}')`}></div>
     <div class="hero-glow-gold"></div>
     <div class="hero-glow-green"></div>
     <div class="wrap hero-grid">
@@ -60,7 +80,7 @@ const faqSchema = {
   {campiglia && (
     <section
       class="feature"
-      style={`background-image:linear-gradient(rgba(10,5,8,.45),rgba(10,5,8,.88)), url('${campiglia.data.heroImage?.src ?? ''}'), linear-gradient(135deg,#2d4a3e,#6b4a10);border-radius:28px 28px 0 0;margin-top:-40px;position:relative;z-index:5;box-shadow:0 -12px 48px rgba(0,0,0,.55)`}
+      style={`background-image:linear-gradient(rgba(10,5,8,.45),rgba(10,5,8,.88)), url('${campigliaBg}'), linear-gradient(135deg,#2d4a3e,#6b4a10);border-radius:28px 28px 0 0;margin-top:-40px;position:relative;z-index:5;box-shadow:0 -12px 48px rgba(0,0,0,.55)`}
     >
       <div class="wrap">
         <div class="ribbon">Home of the Tuscany Trail</div>
@@ -85,7 +105,7 @@ const faqSchema = {
           return (
             <div class="dcard-outer" style={`--tc:${struttura.data.card.tint}`}>
               <div class="dcard">
-                <div class="dcard-bg" style={`background-image:url('${struttura.data.heroImage?.src ?? ''}')`}></div>
+                <div class="dcard-bg" style={`background-image:url('${struttureBg[struttura.id] ?? ''}')`}></div>
                 <div class="dcard-grad"></div>
                 <a class="dcard-cover" href={`/strutture/${slug}`} aria-label={`See ${struttura.data.name}`}></a>
                 <div class="dcard-body">
@@ -142,7 +162,7 @@ const faqSchema = {
     <div class="ter-carousel-scroll" id="ter-carousel-scroll">
       <a class="ter-slide" href={`/territori/${getSlug(monterotondo.id)}`}>
         <div class="ter-slide-inner">
-          <div class="ter-slide-img" style={`background-image:url('${monterotondo.data.heroImage?.src ?? ''}')`}></div>
+          <div class="ter-slide-img" style={`background-image:url('${monterotondoBg}')`}></div>
           <div class="ter-slide-grad"></div>
           <div class="ter-slide-body">
             <span class="ter-slide-tag">Official Territory</span>

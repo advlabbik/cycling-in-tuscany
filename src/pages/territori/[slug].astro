@@ -1,8 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import RouteCard from '../../components/RouteCard.astro';
 import { site } from '../../../site.config';
+import { bgUrl } from '../../lib/images';
 
 export async function getStaticPaths() {
   const territori = await getCollection('territori');
@@ -16,7 +18,8 @@ const { territorio } = Astro.props;
 const { Content } = await render(territorio);
 
 const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${site.stay22Campaign}&lat=${territorio.data.coords.lat}&lng=${territorio.data.coords.lng}&product_medium=apps`;
-const heroImage = territorio.data.heroImage?.src;
+// Sfondo a tutta pagina, quindi 1600px: sotto c'è comunque un gradiente scuro (#42).
+const heroImage = await bgUrl(territorio.data.heroImage, 1600);
 const premium = territorio.data.tier === 'premium';
 const magazine = territorio.data.magazine;
 // non tutti i territori hanno l'articolo nel body: senza questo controllo
@@ -62,9 +65,12 @@ const schema = {
       <div class="grid g3">
         {territorio.data.cosaVedere.map((item) => (
           <div class="cvcard">
+            {/* `<Image>` e non `<img src={item.image.src}>`: solo così la foto passa
+                davvero dalla pipeline, e width/height intrinseci tolgono il layout
+                shift (#42). 700px = la colonna della griglia `.g3` (~340px) al 2x. */}
             <div class="cvcard-img">
               {item.image ? (
-                <img src={item.image.src} alt={item.titolo} loading="lazy" />
+                <Image src={item.image} alt={item.titolo} width={700} format="webp" loading="lazy" />
               ) : (
                 <div class="cvcard-img-placeholder">
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true">

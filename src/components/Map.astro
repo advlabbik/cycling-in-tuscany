@@ -1,6 +1,14 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { site } from '../../site.config';
+import { bgUrl } from '../lib/images';
+
+/**
+ * La miniatura dentro il popup è alta 134px in un box da 218px: servire lì la hero
+ * a piena risoluzione voleva dire scaricare 1,6 MB per un francobollo (#42).
+ * 440 = 218 al 2x.
+ */
+const POPUP_WIDTH = 440;
 
 interface Props {
   territories: CollectionEntry<'territori'>[];
@@ -12,7 +20,7 @@ const getSlug = (id: string) => id.replace(/\.md$/, '');
 const stay22 = (lat: number, lng: number) =>
   `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${site.stay22Campaign}&lat=${lat}&lng=${lng}&product_medium=apps`;
 
-const territoryMarker = (entry: CollectionEntry<'territori'>) => ({
+const territoryMarker = async (entry: CollectionEntry<'territori'>) => ({
   name: entry.data.name,
   kind: entry.data.tier === 'premium' ? 'premium' : 'territory',
   lat: entry.data.coords.lat,
@@ -20,26 +28,28 @@ const territoryMarker = (entry: CollectionEntry<'territori'>) => ({
   page: `/territori/${getSlug(entry.id)}`,
   book: stay22(entry.data.coords.lat, entry.data.coords.lng),
   sub: entry.data.area,
-  img: entry.data.heroImage?.src ?? '',
+  img: await bgUrl(entry.data.heroImage, POPUP_WIDTH),
   rp: entry.data.ridePack?.length ? 'percorsi' : '',
 });
 
+const structureMarker = async (entry: CollectionEntry<'strutture'>) => ({
+  name: entry.data.name,
+  kind: 'structure',
+  lat: entry.data.coords.lat,
+  lng: entry.data.coords.lng,
+  page: `/strutture/${getSlug(entry.id)}`,
+  book: entry.data.site,
+  sub: entry.data.town,
+  img: await bgUrl(entry.data.heroImage, POPUP_WIDTH),
+  rp: 'percorsi',
+});
+
 // stesso ordine del prototipo: il premium per ultimo, così resta sopra nel DOM
-const markers = [
+const markers = await Promise.all([
   ...territories.filter((entry) => entry.data.tier !== 'premium').map(territoryMarker),
-  ...structures.map((entry) => ({
-    name: entry.data.name,
-    kind: 'structure',
-    lat: entry.data.coords.lat,
-    lng: entry.data.coords.lng,
-    page: `/strutture/${getSlug(entry.id)}`,
-    book: entry.data.site,
-    sub: entry.data.town,
-    img: entry.data.heroImage?.src ?? '',
-    rp: 'percorsi',
-  })),
+  ...structures.map(structureMarker),
   ...territories.filter((entry) => entry.data.tier === 'premium').map(territoryMarker),
-];
+]);
 ---
 
 <div

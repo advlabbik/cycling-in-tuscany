@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import RouteCard from '../../components/RouteCard.astro';
 import { site } from '../../../site.config';
+import { bgUrl } from '../../lib/images';
 
 export async function getStaticPaths() {
   const strutture = await getCollection('strutture');
@@ -15,7 +16,8 @@ export async function getStaticPaths() {
 const { struttura } = Astro.props;
 
 const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${site.stay22Campaign}&lat=${struttura.data.coords.lat}&lng=${struttura.data.coords.lng}&product_medium=apps`;
-const heroImage = struttura.data.heroImage?.src;
+// Sfondo a tutta pagina, quindi 1600px: sotto c'è comunque un gradiente scuro (#42).
+const heroImage = await bgUrl(struttura.data.heroImage, 1600);
 const gravelCount = struttura.data.ridePack.filter((route) => route.type.toLowerCase() === 'gravel').length;
 const roadCount = struttura.data.ridePack.length - gravelCount;
 
