@@ -8,7 +8,8 @@ import heroImg from '../assets/images/hero.jpg';
 
 const territori = await getCollection('territori');
 const struttureAll = await getCollection('strutture');
-const faqEntries = (await getCollection('faq')).sort((a, b) => a.id.localeCompare(b.id));
+// Ordinate per `order`, non per nome file: dal CMS lo slug viene dalla domanda (#34).
+const faqEntries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
 
 const getSlug = (id: string) => id.replace(/\.md$/, '');
 // ordine esplicito come nel prototipo; eventuali nuove strutture finiscono in coda
