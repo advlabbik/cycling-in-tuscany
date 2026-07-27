@@ -1,0 +1,42 @@
+# Prova il build prima del merge (#44).
+#
+# Finora l'unica verifica era Cloudflare, *dopo* il merge: se una PR rompeva qualcosa,
+# `main` restava rotto finché non se ne accorgeva qualcuno guardando la dashboard.
+#
+# Il job replica il runner di Pages il più fedelmente possibile: stessa versione di Node
+# (letta da .nvmrc, che è quello che legge anche Cloudflare) e `npm ci`, non `npm install`.
+# La differenza conta: `npm install` riscrive il lockfile e nasconde proprio i
+# disallineamenti multipiattaforma che hanno prodotto #27 e #28.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Una PR aggiornata due volte di fila non tiene occupato il runner con il build vecchio.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # Il caso che rompe il sito senza toccare il codice: un campo obbligatorio nello
+      # schema Zod ma assente dal config del CMS. Il build fallisce al primo salvataggio
+      # dal form, cioè in mano a chi scrive i contenuti. Meglio scoprirlo qui.
+      - name: config.yml è YAML valido
+        run: |
+          npx --yes js-yaml public/admin/config.yml > /dev/null
+
+      - run: npm run build
