@@ -4,13 +4,11 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   // Dominio definitivo del go-live (#18). Alimenta il sitemap e i canonical/og:url
-  // di src/layouts/Base.astro, quindi va scritto qui l'host che vogliamo indicizzato,
-  // non quello da cui il sito è servito in questo momento.
+  // di src/layouts/Base.astro, quindi va scritto qui l'host che *serve* le pagine.
   //
-  // Apex, non www: oggi cyclingintuscany.com e www.cyclingintuscany.com rispondono
-  // entrambi 200 senza redirect fra loro. Il canonical apex fa convergere le due
-  // varianti su una sola, ma la regola di redirect www → apex va comunque messa in
-  // Cloudflare al cutover, altrimenti restano due URL serviti per ogni pagina.
-  site: 'https://cyclingintuscany.com',
+  // Non è cyclingintuscany.com: quello diventa un redirect verso questo terzo livello.
+  // Metterci il dominio che rimanda vorrebbe dire dichiarare come pagina ufficiale un
+  // URL che non serve niente. Stesso valore anche in public/robots.txt.
+  site: 'https://cyclingintuscany.tuscanytrail.it',
   integrations: [sitemap()],
 });
