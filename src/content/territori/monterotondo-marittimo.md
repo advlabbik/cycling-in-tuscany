@@ -4,6 +4,7 @@ tier: "standard"
 area: "Metalliferous Hills · Geothermal heart"
 tagline: "Official territory · where the Earth breathes"
 intro: "Medieval hilltop borough in Tuscany's geothermal heart: fumaroles, steam vents and the white hills of Parco delle Biancane. An almost lunar landscape within a UNESCO Geopark, made to explore by bike."
+itinerariTxt: "Four official routes from the doorstep of the borough, from technical gravel among the fumaroles to long loops between the villages of the Metalliferous Hills."
 coords:
   lat: 43.143
   lng: 10.857

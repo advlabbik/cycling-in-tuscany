@@ -20,6 +20,7 @@ collections:
       - { name: area, label: Area, widget: string }
       - { name: tagline, label: Tagline, widget: string }
       - { name: intro, label: Intro, widget: text }
+      - { name: itinerariTxt, label: "What to see — intro", widget: text }
       - name: coords
         label: Coordinates
         widget: object
@@ -51,6 +52,10 @@ collections:
         label: Magazine
         widget: object
         required: false
+        hint: >-
+          Sezione magazine della pagina territorio. Lasciala vuota se il territorio
+          non ha un articolo. Il corpo dell'articolo si scrive nel body della pagina,
+          sotto il form: se il body è vuoto compaiono solo titolo, box e fonte.
         fields:
           - { name: heroTitle, label: Hero title, widget: string }
           - name: boxes

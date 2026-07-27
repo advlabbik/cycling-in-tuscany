@@ -4,6 +4,7 @@ tier: "premium"
 area: "Costa degli Etruschi"
 tagline: "Home of the Tuscany Trail"
 intro: "A medieval hilltop borough suspended between sea and hills, at the heart of the Etruscan Coast. Thermal springs, mining archaeology and one of Tuscany's most technical bike areas — this is where the Tuscany Trail calls home."
+itinerariTxt: "A typical day: breakfast in the borough, the Rocca and historic centre, a local lunch, then the Thermal Baths or the Parco Archeominerario in the afternoon. Riders: Bike Area Monte Calvi and the trails through the Parco."
 coords:
   lat: 43.057
   lng: 10.6
@@ -28,6 +29,13 @@ cosaVedere:
     descrizione: "9 enduro trails and 4 cross-country routes across the slopes of Monte Calvi, fully integrated with the Tuscany Trail network."
     image: "../../assets/images/campiglia/bike-area-monte-calvi.jpg"
 ridePack: null
+# Provenienza: questo blocco NON viene dai dati del prototipo — _dati-partner.json
+# ha `editorial` solo per Monterotondo, e la spec §7 prevedeva "vuoto per Campiglia".
+# È stato sintetizzato durante la migrazione di Fase 1 (#15) dalle voci `cosaVedere`
+# e tradotto in inglese con la PR #21. Tenuto per scelta editoriale (PR #20): è
+# contenuto voluto, non un residuo da ripulire. Nota: i box qui sotto ripetono
+# quattro delle sei `cosaVedere` renderizzate sopra nella stessa pagina — se un
+# giorno il magazine di Campiglia va riscritto, partire da qui.
 magazine:
   heroTitle: "Campiglia Marittima"
   boxes:
@@ -52,5 +60,3 @@ numeriUtili:
     value: "0565 839111 — Via Roma 5"
 guidaPdf: "/guide-pdf/Guida-Campiglia-Marittima.pdf"
 ---
-
-A medieval hilltop borough suspended between sea and hills, at the heart of the Etruscan Coast. Thermal springs, mining archaeology and one of Tuscany's most technical bike areas — this is where the Tuscany Trail calls home.

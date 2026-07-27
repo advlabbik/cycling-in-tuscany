@@ -9,106 +9,142 @@ interface Props {
 
 const { territories, structures } = Astro.props;
 const getSlug = (id: string) => id.replace(/\.md$/, '');
+const stay22 = (lat: number, lng: number) =>
+  `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${site.stay22Campaign}&lat=${lat}&lng=${lng}&product_medium=apps`;
+
+const territoryMarker = (entry: CollectionEntry<'territori'>) => ({
+  name: entry.data.name,
+  kind: entry.data.tier === 'premium' ? 'premium' : 'territory',
+  lat: entry.data.coords.lat,
+  lng: entry.data.coords.lng,
+  page: `/territori/${getSlug(entry.id)}`,
+  book: stay22(entry.data.coords.lat, entry.data.coords.lng),
+  sub: entry.data.area,
+  img: entry.data.heroImage?.src ?? '',
+  rp: entry.data.ridePack?.length ? 'percorsi' : '',
+});
+
+// stesso ordine del prototipo: il premium per ultimo, così resta sopra nel DOM
 const markers = [
-  ...territories.map((entry) => {
-    const slug = getSlug(entry.id);
-    return {
-      id: `territorio-${slug}`,
-      name: entry.data.name,
-      href: `/territori/${slug}`,
-      coords: entry.data.coords,
-      color: '#f5a623',
-    };
-  }),
-  ...structures.map((entry) => {
-    const slug = getSlug(entry.id);
-    return {
-      id: `struttura-${slug}`,
-      name: entry.data.name,
-      href: `/strutture/${slug}`,
-      coords: entry.data.coords,
-      color: '#c74634',
-    };
-  }),
+  ...territories.filter((entry) => entry.data.tier !== 'premium').map(territoryMarker),
+  ...structures.map((entry) => ({
+    name: entry.data.name,
+    kind: 'structure',
+    lat: entry.data.coords.lat,
+    lng: entry.data.coords.lng,
+    page: `/strutture/${getSlug(entry.id)}`,
+    book: entry.data.site,
+    sub: entry.data.town,
+    img: entry.data.heroImage?.src ?? '',
+    rp: 'percorsi',
+  })),
+  ...territories.filter((entry) => entry.data.tier === 'premium').map(territoryMarker),
 ];
 ---
 
-<div class="map-hcard">
-  <div class="map-hcard-body">
-    <div class="mapleg">
-      <span><i class="dot" style="background:#f5a623"></i>Territories</span>
-      <span><i class="dot" style="background:#c74634"></i>Stays</span>
-      <span><i class="dot" style="background:#2d4a3e"></i>Map center</span>
-    </div>
-  </div>
-  <div id="map-el" data-markers={JSON.stringify(markers)}></div>
+<div
+  id="map-el"
+  data-markers={JSON.stringify(markers)}
+  data-center={JSON.stringify(site.map.center)}
+  data-zoom={String(site.map.zoom)}
+>
 </div>
 
 <script>
   (function () {
-    const container = document.getElementById('map-el');
-    if (!container || !window.maplibregl) return;
+    var container = document.getElementById('map-el');
+    if (!container || !(window as any).maplibregl) return;
+    var maplibregl = (window as any).maplibregl;
 
-    const markers = JSON.parse(container.dataset.markers || '[]');
-    const map = new window.maplibregl.Map({
+    var markers = JSON.parse(container.dataset.markers || '[]');
+    var center = JSON.parse(container.dataset.center || '[10.68,42.98]');
+    var zoom = Number(container.dataset.zoom || 9);
+    var col: Record<string, string> = { premium: '#f5a623', territory: '#2d4a3e', structure: '#c74634' };
+
+    var map = new maplibregl.Map({
       container: 'map-el',
-      style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-      center: [site.map.center[0], site.map.center[1]],
-      zoom: site.map.zoom,
+      style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+      center: center,
+      zoom: zoom,
+      scrollZoom: false,
+      attributionControl: { compact: true },
     });
 
-    map.addControl(new window.maplibregl.NavigationControl(), 'top-right');
-
     map.on('load', function () {
-      markers.forEach(function (marker) {
-        const el = document.createElement('div');
-        el.setAttribute('role', 'button');
-        el.setAttribute('tabindex', '0');
-        el.setAttribute('aria-label', `Open ${marker.name}`);
-        el.style.width = '16px';
-        el.style.height = '16px';
-        el.style.borderRadius = '50%';
-        el.style.background = marker.color;
-        el.style.border = '3px solid rgba(255,255,255,.95)';
-        el.style.boxShadow = '0 6px 18px rgba(0,0,0,.35)';
-        el.style.cursor = 'pointer';
-        el.style.position = 'relative';
+      var bounds = new maplibregl.LngLatBounds();
 
-        const pulse = document.createElement('div');
-        pulse.style.position = 'absolute';
-        pulse.style.inset = '-8px';
-        pulse.style.borderRadius = '50%';
-        pulse.style.border = '1px solid ' + marker.color;
-        pulse.style.animation = 'pinpulse 2s ease-out infinite';
-        el.appendChild(pulse);
+      markers.forEach(function (m: any) {
+        var isPremium = m.kind === 'premium';
+        var svgW = isPremium ? 38 : 26;
+        var svgH = isPremium ? 50 : 34;
+        var svgPin =
+          '<svg xmlns="http://www.w3.org/2000/svg" width="' + svgW + '" height="' + svgH +
+          '" viewBox="0 0 24 32" aria-hidden="true" focusable="false" style="display:block;filter:drop-shadow(0 ' +
+          (isPremium ? '4px 14px' : '2px 8px') + ' rgba(0,0,0,' + (isPremium ? '.7' : '.55') +
+          '))"><path d="M12 0C5.37 0 0 5.37 0 12c0 7.5 12 20 12 20s12-12.5 12-20C24 5.37 18.63 0 12 0z" fill="' +
+          col[m.kind] + '" stroke="' + (isPremium ? '#fff' : 'rgba(255,255,255,.85)') + '" stroke-width="' +
+          (isPremium ? '2' : '1') + '"/><circle cx="12" cy="11" r="' + (isPremium ? '5.5' : '4.5') +
+          '" fill="rgba(255,255,255,' + (isPremium ? '.95' : '.9') + ')"/></svg>';
 
-        const pin = new window.maplibregl.Marker({ element: el })
-          .setLngLat([marker.coords.lng, marker.coords.lat])
+        var label =
+          m.kind === 'structure'
+            ? 'Official Bike-Friendly Stay'
+            : m.kind === 'premium'
+              ? 'Home of the Tuscany Trail'
+              : 'Official territory';
+        var ctaLabel = m.kind === 'structure' ? 'See the stay →' : 'Discover →';
+        var routeLabel = m.kind === 'structure' ? 'See the route pack →' : 'See the routes →';
+
+        // issue #12: marker focusabile da tastiera con label, non più un div con solo onclick
+        var el = document.createElement('button');
+        el.type = 'button';
+        el.setAttribute('aria-label', m.name + ' — ' + label);
+        el.style.cssText =
+          'cursor:pointer;background:none;border:0;padding:0;line-height:0;display:block;width:' +
+          svgW + 'px;height:' + svgH + 'px';
+        el.innerHTML = isPremium
+          ? '<div style="position:relative;width:' + svgW + 'px;height:' + svgH +
+            'px"><div style="position:absolute;top:17px;left:19px;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#f5a623;animation:pinpulse 2.4s ease-out infinite"></div>' +
+            svgPin + '</div>'
+          : svgPin;
+
+        var popup = new maplibregl.Popup({
+          offset: isPremium ? 30 : 25,
+          closeButton: false,
+          closeOnClick: true,
+          maxWidth: 'none',
+          anchor: 'bottom',
+        }).setHTML(
+          '<div style="width:218px">' +
+            (m.img
+              ? '<div style="height:134px;background:url(' + m.img +
+                ') center/cover no-repeat;border-radius:8px;margin-bottom:11px"></div>'
+              : '') +
+            '<div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:' +
+            col[m.kind] + '">' + label + '</div>' +
+            '<b style="font-size:1rem;display:block;margin:4px 0 2px">' + m.name + '</b>' +
+            '<span style="color:#6b6b6b;font-size:.82rem">' + m.sub + '</span>' +
+            '<div style="margin-top:11px;display:flex;flex-direction:column;gap:6px">' +
+            '<a href="' + m.page +
+            '" style="display:block;background:#c74634;color:#fff;font-weight:700;font-size:.82rem;padding:10px 14px;border-radius:9px;text-decoration:none;text-align:center">' +
+            ctaLabel + '</a>' +
+            (m.rp
+              ? '<a href="' + m.page + '#' + m.rp +
+                '" style="display:block;background:#faf3e0;color:#b8860b;font-weight:700;font-size:.82rem;padding:10px 14px;border-radius:9px;text-decoration:none;text-align:center">' +
+                routeLabel + '</a>'
+              : '') +
+            '</div></div>'
+        );
+
+        new maplibregl.Marker({ element: el, anchor: 'bottom' })
+          .setLngLat([m.lng, m.lat])
+          .setPopup(popup)
           .addTo(map);
 
-        function navigateToMarker() {
-          window.location.href = marker.href;
-        }
-
-        el.addEventListener('click', navigateToMarker);
-        el.addEventListener('keydown', function (event) {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            navigateToMarker();
-          }
-        });
-        el.addEventListener('focus', function () {
-          el.style.outline = '3px solid rgba(245, 166, 35, 0.9)';
-          el.style.outlineOffset = '3px';
-        });
-        el.addEventListener('blur', function () {
-          el.style.outline = '';
-          el.style.outlineOffset = '';
-        });
-
-        const popup = new window.maplibregl.Popup({ offset: 18 }).setHTML(`<strong>${marker.name}</strong>`);
-        pin.setPopup(popup);
+        bounds.extend([m.lng, m.lat]);
       });
+
+      map.fitBounds(bounds, { padding: { top: 80, bottom: 60, left: 80, right: 80 }, maxZoom: 9 });
     });
   })();
 </script>

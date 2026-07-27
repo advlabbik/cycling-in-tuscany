@@ -21,6 +21,8 @@ const territori = defineCollection({
       area: z.string(),
       tagline: z.string(),
       intro: z.string(),
+      /** sottotitolo della sezione "What to see" — era itinerari_txt nel prototipo */
+      itinerariTxt: z.string(),
       coords: z.object({ lat: z.number(), lng: z.number() }),
       heroImage: image().optional(),
       cosaVedere: z.array(
