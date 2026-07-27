@@ -8,12 +8,12 @@ backend:
   name: github
   repo: advlabbik/cycling-in-tuscany
   branch: main
-  # ⚠️ base_url NON funziona: l'host non esiste (NXDOMAIN). Il worker di auth
-  # dell'account si chiama `bikepacking-cms-auth`; il suo URL workers.dev va letto
-  # dalla dashboard e ricopiato qui, e questo dominio va aggiunto ai suoi
-  # ALLOWED_DOMAINS. Finché non è fatto, «Sign In with GitHub» non può funzionare.
-  base_url: https://sveltia-cms-auth.bikepacking-static.workers.dev
-  auth_endpoint: /auth/github
+  # Worker `sveltia-cms-auth` già in uso per bikepacking.it — riusato, non duplicato.
+  # Il client secret vive lì dentro e non passa mai da questa repo.
+  # Documentazione del setup: advlabbik/bikepacking-static, docs/deploy/cms-setup.md
+  base_url: https://bikepacking-cms-auth.account-fe1.workers.dev
+  # Nessun `auth_endpoint`: il worker espone solo /auth e /callback, quindi il default
+  # di Sveltia è già quello giusto. Il valore precedente (`/auth/github`) dava 404.
 
 # Fallback globale, di fatto mai usato: ogni campo immagine o file ha un override
 # di collezione o di campo. Se un giorno se ne aggiunge uno senza override, l'upload
