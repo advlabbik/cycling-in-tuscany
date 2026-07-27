@@ -4,173 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sveltia CMS · Cycling in Tuscany</title>
-    <script src="https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js"></script>
-    <script src="https://unpkg.com/@sveltia/cms@latest/dist/sveltia-cms.js"></script>
+    <!--
+      La configurazione sta tutta in config.yml. Niente CMS_MANUAL_INIT con config
+      inline: era il motivo per cui config.yml non veniva mai letto (#24).
+    -->
+    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
   </head>
   <body>
-    <script>
-      window.CMS_MANUAL_INIT = true;
-      window.addEventListener('DOMContentLoaded', function () {
-        window.CMS.init({
-          config: {
-            backend: {
-              name: 'github',
-              repo: 'advlabbik/cycling-in-tuscany',
-              branch: 'main',
-              base_url: 'https://sveltia-cms-auth.bikepacking-static.workers.dev',
-              auth_endpoint: '/auth/github'
-            },
-            media_folder: 'src/assets/images',
-            public_folder: '/src/assets/images',
-            collections: [
-              {
-                name: 'territori',
-                label: 'Territori',
-                folder: 'src/content/territori',
-                create: true,
-                slug: '{{name}}',
-                fields: [
-                  { name: 'name', label: 'Name', widget: 'string' },
-                  { name: 'tier', label: 'Tier', widget: 'select', options: ['premium', 'standard'] },
-                  { name: 'area', label: 'Area', widget: 'string' },
-                  { name: 'tagline', label: 'Tagline', widget: 'string' },
-                  { name: 'intro', label: 'Intro', widget: 'text' },
-                  {
-                    name: 'coords',
-                    label: 'Coordinates',
-                    widget: 'object',
-                    fields: [
-                      { name: 'lat', label: 'Latitude', widget: 'number', value_type: 'float' },
-                      { name: 'lng', label: 'Longitude', widget: 'number', value_type: 'float' }
-                    ]
-                  },
-                  { name: 'heroImage', label: 'Hero image', widget: 'image', required: false },
-                  {
-                    name: 'cosaVedere',
-                    label: 'What to see',
-                    widget: 'list',
-                    fields: [
-                      { name: 'titolo', label: 'Title', widget: 'string' },
-                      { name: 'descrizione', label: 'Description', widget: 'text' },
-                      { name: 'image', label: 'Image', widget: 'image', required: false }
-                    ]
-                  },
-                  {
-                    name: 'ridePack',
-                    label: 'Ride pack',
-                    widget: 'list',
-                    required: false,
-                    fields: [
-                      { name: 'name', label: 'Name', widget: 'string' },
-                      { name: 'type', label: 'Type', widget: 'select', options: ['Gravel', 'Road'] },
-                      { name: 'km', label: 'KM', widget: 'string' },
-                      { name: 'dislivello', label: 'Dislivello', widget: 'string' },
-                      { name: 'diff', label: 'Difficulty', widget: 'string' },
-                      { name: 'surface', label: 'Surface', widget: 'string' },
-                      { name: 'hi', label: 'Highlights', widget: 'string' },
-                      { name: 'url', label: 'Ride with GPS URL', widget: 'string' }
-                    ]
-                  },
-                  {
-                    name: 'magazine',
-                    label: 'Magazine',
-                    widget: 'object',
-                    required: false,
-                    fields: [
-                      { name: 'heroTitle', label: 'Hero title', widget: 'string' },
-                      {
-                        name: 'boxes',
-                        label: 'Boxes',
-                        widget: 'list',
-                        fields: [
-                          { name: 'titolo', label: 'Title', widget: 'string' },
-                          { name: 'testo', label: 'Text', widget: 'text' }
-                        ]
-                      },
-                      { name: 'fonte', label: 'Source', widget: 'string', required: false }
-                    ]
-                  },
-                  {
-                    name: 'channels',
-                    label: 'Channels',
-                    widget: 'list',
-                    required: false,
-                    fields: [
-                      { name: 'label', label: 'Label', widget: 'string' },
-                      { name: 'url', label: 'URL', widget: 'string' }
-                    ]
-                  },
-                  {
-                    name: 'numeriUtili',
-                    label: 'Useful numbers',
-                    widget: 'list',
-                    required: false,
-                    fields: [
-                      { name: 'label', label: 'Label', widget: 'string' },
-                      { name: 'value', label: 'Value', widget: 'string' }
-                    ]
-                  },
-                  { name: 'guidaPdf', label: 'Guide PDF', widget: 'file' },
-                  { name: 'body', label: 'Magazine body', widget: 'markdown' }
-                ]
-              },
-              {
-                name: 'strutture',
-                label: 'Strutture',
-                folder: 'src/content/strutture',
-                create: true,
-                slug: '{{name}}',
-                fields: [
-                  { name: 'name', label: 'Name', widget: 'string' },
-                  { name: 'town', label: 'Town', widget: 'string' },
-                  { name: 'tagline', label: 'Tagline', widget: 'string' },
-                  { name: 'intro', label: 'Intro', widget: 'text' },
-                  { name: 'site', label: 'Booking site', widget: 'string' },
-                  {
-                    name: 'coords',
-                    label: 'Coordinates',
-                    widget: 'object',
-                    fields: [
-                      { name: 'lat', label: 'Latitude', widget: 'number', value_type: 'float' },
-                      { name: 'lng', label: 'Longitude', widget: 'number', value_type: 'float' }
-                    ]
-                  },
-                  { name: 'heroImage', label: 'Hero image', widget: 'image', required: false },
-                  {
-                    name: 'card',
-                    label: 'Card',
-                    widget: 'object',
-                    fields: [
-                      { name: 'categoria', label: 'Category', widget: 'string' },
-                      { name: 'promise', label: 'Promise', widget: 'string' },
-                      { name: 'bullets', label: 'Bullets', widget: 'list' },
-                      { name: 'caption', label: 'Caption', widget: 'string' },
-                      { name: 'tint', label: 'Tint', widget: 'string' }
-                    ]
-                  },
-                  { name: 'services', label: 'Services', widget: 'list' },
-                  {
-                    name: 'ridePack',
-                    label: 'Ride pack',
-                    widget: 'list',
-                    fields: [
-                      { name: 'name', label: 'Name', widget: 'string' },
-                      { name: 'type', label: 'Type', widget: 'select', options: ['Gravel', 'Road'] },
-                      { name: 'km', label: 'KM', widget: 'string' },
-                      { name: 'dislivello', label: 'Dislivello', widget: 'string' },
-                      { name: 'diff', label: 'Difficulty', widget: 'string' },
-                      { name: 'surface', label: 'Surface', widget: 'string' },
-                      { name: 'hi', label: 'Highlights', widget: 'string' },
-                      { name: 'url', label: 'Ride with GPS URL', widget: 'string' }
-                    ]
-                  },
-                  { name: 'guidaPdf', label: 'Guide PDF', widget: 'file' }
-                ]
-              }
-            ]
-          }
-        });
-      });
-    </script>
+    <!--
+      Un solo CMS: netlify-cms è end-of-life e si contendeva window.CMS con Sveltia (#23).
+      Versione fissata di proposito — Sveltia è pre-1.0 e rilascia spesso; con @latest
+      un aggiornamento upstream cambierebbe l'admin senza che nulla cambi qui.
+    -->
+    <script src="https://unpkg.com/@sveltia/cms@0.173.0/dist/sveltia-cms.js"></script>
   </body>
 </html>

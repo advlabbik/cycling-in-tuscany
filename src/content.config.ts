@@ -32,14 +32,20 @@ const territori = defineCollection({
           image: image().optional(),
         }),
       ),
-      ridePack: z.array(Route).nullable(),
+      /**
+       * `.default(null)` perché il CMS omette del tutto le liste e gli oggetti
+       * facoltativi lasciati vuoti: senza default, un territorio salvato dal form
+       * senza ride pack farebbe fallire il build con «Required».
+       */
+      ridePack: z.array(Route).nullable().default(null),
       magazine: z
         .object({
           heroTitle: z.string(),
           boxes: z.array(z.object({ titolo: z.string(), testo: z.string() })),
           fonte: z.string().optional(),
         })
-        .nullable(),
+        .nullable()
+        .default(null),
       channels: z.array(z.object({ label: z.string(), url: z.string().url() })).default([]),
       numeriUtili: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
       guidaPdf: z.string(),

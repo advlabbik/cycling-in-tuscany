@@ -1,3 +1,9 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.173.0/schema/sveltia-cms.json
+#
+# Unica fonte di verità della configurazione CMS.
+# I campi qui devono restare allineati allo schema Zod di src/content.config.ts:
+# un campo che manca qui ma è obbligatorio là fa fallire il build al primo salvataggio.
+
 backend:
   name: github
   repo: advlabbik/cycling-in-tuscany
@@ -5,6 +11,9 @@ backend:
   base_url: https://sveltia-cms-auth.bikepacking-static.workers.dev
   auth_endpoint: /auth/github
 
+# Fallback globale, di fatto mai usato: ogni campo immagine o file ha un override
+# di collezione o di campo. Se un giorno se ne aggiunge uno senza override, l'upload
+# finisce qui — cioè in public/, fuori dalla pipeline di ottimizzazione di astro:assets.
 media_folder: public/images
 public_folder: /images
 
@@ -14,6 +23,11 @@ collections:
     folder: src/content/territori
     create: true
     slug: "{{name}}"
+    # Percorso relativo alla cartella della collezione: gli upload finiscono in
+    # src/assets/images/ e nel frontmatter viene scritto `../../assets/images/x.jpg`,
+    # l'unica forma che image() di astro:assets sa risolvere (#25).
+    media_folder: ../../assets/images
+    public_folder: ../../assets/images
     fields:
       - { name: name, label: Name, widget: string }
       - { name: tier, label: Tier, widget: select, options: [premium, standard] }
@@ -47,7 +61,10 @@ collections:
           - { name: diff, label: Difficulty, widget: string }
           - { name: surface, label: Surface, widget: string }
           - { name: hi, label: Highlight, widget: string }
-          - { name: url, label: Ride with GPS URL, widget: string }
+          - name: url
+            label: Ride with GPS URL
+            widget: string
+            pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
       - name: magazine
         label: Magazine
         widget: object
@@ -71,7 +88,10 @@ collections:
         required: false
         fields:
           - { name: label, label: Label, widget: string }
-          - { name: url, label: URL, widget: string }
+          - name: url
+            label: URL
+            widget: string
+            pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
       - name: numeriUtili
         label: Useful numbers
         widget: list
@@ -79,7 +99,12 @@ collections:
         fields:
           - { name: label, label: Label, widget: string }
           - { name: value, label: Value, widget: string }
-      - { name: guidaPdf, label: Guide PDF, widget: file }
+      # I PDF restano in public/: sono serviti così come sono, non passano da astro:assets.
+      - name: guidaPdf
+        label: Guide PDF
+        widget: file
+        media_folder: /public/guide-pdf
+        public_folder: /guide-pdf
       - { name: body, label: Magazine body, widget: markdown }
 
   - name: strutture
@@ -87,12 +112,17 @@ collections:
     folder: src/content/strutture
     create: true
     slug: "{{name}}"
+    media_folder: ../../assets/images
+    public_folder: ../../assets/images
     fields:
       - { name: name, label: Name, widget: string }
       - { name: town, label: Town, widget: string }
       - { name: tagline, label: Tagline, widget: string }
       - { name: intro, label: Intro, widget: text }
-      - { name: site, label: Booking site, widget: string }
+      - name: site
+        label: Booking site
+        widget: string
+        pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
       - name: coords
         label: Coordinates
         widget: object
@@ -121,5 +151,12 @@ collections:
           - { name: diff, label: Difficulty, widget: string }
           - { name: surface, label: Surface, widget: string }
           - { name: hi, label: Highlight, widget: string }
-          - { name: url, label: Ride with GPS URL, widget: string }
-      - { name: guidaPdf, label: Guide PDF, widget: file }
+          - name: url
+            label: Ride with GPS URL
+            widget: string
+            pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
+      - name: guidaPdf
+        label: Guide PDF
+        widget: file
+        media_folder: /public/guide-pdf
+        public_folder: /guide-pdf
