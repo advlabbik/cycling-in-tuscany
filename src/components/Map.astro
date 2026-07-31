@@ -32,7 +32,7 @@ const territoryMarker = async (entry: CollectionEntry<'territori'>) => ({
   book: stay22(entry.data.coords.lat, entry.data.coords.lng),
   sub: entry.data.area,
   img: await bgUrl(entry.data.heroImage, POPUP_WIDTH),
-  rp: entry.data.ridePack?.length ? 'percorsi' : '',
+  rp: entry.data.ridePack?.length ? 'routes' : '',
 });
 
 const structureMarker = async (entry: CollectionEntry<'strutture'>) => ({
@@ -44,7 +44,7 @@ const structureMarker = async (entry: CollectionEntry<'strutture'>) => ({
   book: entry.data.site,
   sub: entry.data.town,
   img: await bgUrl(entry.data.heroImage, POPUP_WIDTH),
-  rp: 'percorsi',
+  rp: 'routes',
 });
 
 // stesso ordine del prototipo: il premium per ultimo, così resta sopra nel DOM
