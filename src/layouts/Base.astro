@@ -1,5 +1,16 @@
 ---
 import '../styles/global.css';
+// #19: font self-hosted — l'IP dei visitatori non va più a Google al primo load,
+// e spariscono due preconnect e una richiesta CSS bloccante.
+import '@fontsource/playfair-display/600.css';
+import '@fontsource/playfair-display/600-italic.css';
+import '@fontsource/playfair-display/700.css';
+import '@fontsource/playfair-display/700-italic.css';
+import '@fontsource/caveat/500.css';
+import '@fontsource/dm-sans/400.css';
+import '@fontsource/dm-sans/500.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
 import { Image, getImage } from 'astro:assets';
 import logo from '../assets/images/logo.png';
 import heroDefault from '../assets/images/hero.jpg';
@@ -42,9 +53,6 @@ const ogImageUrl = new URL(ogImg.src, Astro.site ?? Astro.url.origin).href;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Caveat:wght@500&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" />
     <link rel="preconnect" href="https://ridewithgps.com" />
     {maplibre && <link rel="preconnect" href="https://basemaps.cartocdn.com" />}
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
