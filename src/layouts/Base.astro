@@ -15,6 +15,7 @@ import { Image, getImage } from 'astro:assets';
 import logo from '../assets/images/logo.png';
 import heroDefault from '../assets/images/hero.jpg';
 import { site } from '../../site.config';
+import ConsentBanner from '../components/ConsentBanner.astro';
 
 interface Props {
   title: string;
@@ -55,6 +56,32 @@ const ogImageUrl = new URL(ogImg.src, Astro.site ?? Astro.url.origin).href;
     <meta name="twitter:image" content={ogImageUrl} />
     <link rel="preconnect" href="https://ridewithgps.com" />
     {maplibre && <link rel="preconnect" href="https://basemaps.cartocdn.com" />}
+    {site.ga4MeasurementId && (
+      <>
+        {/* GA4 con Consent Mode v2 "advanced" (#19): default tutto negato,
+            i cookie si attivano solo dopo l'Accept del banner. Il gate su
+            ga4MeasurementId spegne tutto finché la proprietà non esiste. */}
+        <script is:inline define:vars={{ gaId: site.ga4MeasurementId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          window.gtag = gtag;
+          gtag('consent', 'default', {
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            analytics_storage: 'denied',
+          });
+          try {
+            if (localStorage.getItem('cit-consent') === 'granted') {
+              gtag('consent', 'update', { analytics_storage: 'granted' });
+            }
+          } catch (e) {}
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${site.ga4MeasurementId}`}></script>
+      </>
+    )}
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
   </head>
   <body>
@@ -90,6 +117,8 @@ const ogImageUrl = new URL(ogImg.src, Astro.site ?? Astro.url.origin).href;
     </header>
 
     <slot />
+
+    {site.ga4MeasurementId && <ConsentBanner />}
 
     <footer>
       <div class="wrap">
