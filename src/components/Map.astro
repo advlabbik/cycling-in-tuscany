@@ -2,6 +2,9 @@
 import type { CollectionEntry } from 'astro:content';
 import { site } from '../../site.config';
 import { bgUrl } from '../lib/images';
+// #45: la libreria arriva dal bundle, non più da unpkg — versione nel lockfile,
+// file serviti dal nostro dominio, niente CDN terza da cui dipendere.
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 /**
  * La miniatura dentro il popup è alta 134px in un box da 218px: servire lì la hero
@@ -61,10 +64,11 @@ const markers = await Promise.all([
 </div>
 
 <script>
+  import maplibregl from 'maplibre-gl';
+
   (function () {
     var container = document.getElementById('map-el');
-    if (!container || !(window as any).maplibregl) return;
-    var maplibregl = (window as any).maplibregl;
+    if (!container) return;
 
     var markers = JSON.parse(container.dataset.markers || '[]');
     var center = JSON.parse(container.dataset.center || '[10.68,42.98]');
