@@ -1,7 +1,8 @@
 ---
 import '../styles/global.css';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import logo from '../assets/images/logo.png';
+import heroDefault from '../assets/images/hero.jpg';
 import { site } from '../../site.config';
 
 interface Props {
@@ -11,10 +12,16 @@ interface Props {
   maplibre?: boolean;
   /** JSON-LD schema.org della pagina (issue #11) */
   schema?: Record<string, unknown> | Record<string, unknown>[];
+  /** immagine per le anteprime social (#43); default: l'hero del sito */
+  ogImage?: ImageMetadata;
 }
 
-const { title, description = 'Cycling in Tuscany', maplibre = false, schema } = Astro.props;
+const { title, description = 'Cycling in Tuscany', maplibre = false, schema, ogImage = heroDefault } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+// 1200×630 è il ritaglio che ogni piattaforma si aspetta; jpg e non webp perché
+// alcuni scraper social (WhatsApp in testa) il webp non lo mostrano.
+const ogImg = await getImage({ src: ogImage, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const ogImageUrl = new URL(ogImg.src, Astro.site ?? Astro.url.origin).href;
 ---
 
 <html lang="en">
@@ -28,9 +35,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).hr
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Caveat:wght@500&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" />
