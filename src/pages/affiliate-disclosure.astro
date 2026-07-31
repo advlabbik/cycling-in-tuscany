@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../../site.config';
+---
+
+<Base
+  title="Affiliate disclosure — Cycling in Tuscany"
+  description="How Cycling in Tuscany earns money: some accommodation links are affiliate links."
+>
+  <div class="hero">
+    <div class="wrap">
+      <div class="kick">Transparency</div>
+      <h1>Affiliate disclosure</h1>
+      <p class="lead">How this site earns money, in plain words.</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap" style="max-width:760px">
+      <h2 class="sec">Accommodation links</h2>
+      <p>
+        Some links on this site — the "Find accommodation" and "Other stays in the
+        area" buttons — go through <strong>Stay22</strong>, an affiliate platform.
+        If you book a stay after following one of those links, we may earn a
+        commission. <strong>You pay exactly the same price</strong>: the commission
+        comes from the booking platform, not from your pocket.
+      </p>
+      <p>
+        Direct booking links to the official stays ("Book with …") point to the
+        property's own website and are <strong>not</strong> affiliate links: we earn
+        nothing from them.
+      </p>
+      <h2 class="sec" style="margin-top:34px">Why we do it this way</h2>
+      <p>
+        Affiliate commissions are what keeps this site running — the routes, the
+        guides and the maps are free, and there is no advertising and no paywall.
+        We only list territories and stays we have verified ourselves.
+      </p>
+      <p>
+        Questions? Write to <a href={`mailto:${site.brand.email}`}>{site.brand.email}</a>.
+      </p>
+    </div>
+  </section>
+</Base>
