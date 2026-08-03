@@ -2,7 +2,7 @@
 name: PuntAla Camp & Resort
 town: Punta Ala · Castiglione della Pescaia
 tagline: Pine-forest resort with Trail Center and Blue-Flag beach
-intro: 'Four-star campground in a coastal pine forest, with a private Blue-Flag beach. An MTB historic venue: in 2013 it hosted the first round of the Enduro World Series. Full Trail Center, workshop, bike rentals, and permanent pump track. test'
+intro: 'Four-star campground in a coastal pine forest, with a private Blue-Flag beach. An MTB historic venue: in 2013 it hosted the first round of the Enduro World Series. Full Trail Center, workshop, bike rentals, and permanent pump track.'
 site: https://www.campingpuntala.it/
 coords:
   lat: 42.811
