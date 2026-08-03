@@ -242,9 +242,7 @@ a.chip{text-decoration:none;color:var(--ev)}
 @keyframes pinpulse{0%{transform:scale(1);opacity:.75}60%{transform:scale(2.8);opacity:.15}100%{transform:scale(3.2);opacity:0}}
 
 /* maplibre popup */
-.maplibregl-map{overflow:visible}
 .maplibregl-canvas-container{overflow:hidden}
-#map-el{overflow:visible}
 .maplibregl-popup{z-index:9999!important}
 .maplibregl-popup-content{border-radius:12px!important;padding:14px 16px!important;box-shadow:var(--shadow-lg)!important;font-family:var(--font-body)}
 
