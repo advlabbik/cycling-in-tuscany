@@ -43,6 +43,8 @@ const ogImageUrl = new URL(ogImg.src, Astro.site ?? Astro.url.origin).href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -124,7 +126,7 @@ const ogImageUrl = new URL(ogImg.src, Astro.site ?? Astro.url.origin).href;
       <div class="wrap">
         <b style="color:#fff">Cycling in Tuscany</b> — where to ride and where to stay in this Tuscany, from the team behind the Tuscany Trail.<br />
         <span class="small">Official territories & bike-friendly stays · tracked booking · routes on Ride with GPS.</span><br /><br />
-        <a href="/">Home</a> · <a href="/affiliate-disclosure/">Affiliate disclosure</a> · <a href={`mailto:${site.brand.email}`}>{site.brand.email}</a> · Instagram {site.brand.instagram}
+        <a href="/">Home</a> · <a href="/affiliate-disclosure/">Affiliate disclosure</a> · <a href={`mailto:${site.brand.email}`}>{site.brand.email}</a> · <a href={`https://instagram.com/${site.brand.instagram.replace('@', '')}`}>Instagram {site.brand.instagram}</a>
       </div>
     </footer>
 
