@@ -51,19 +51,29 @@ const lastUpdated = 'August 2026';
           after 2 years.
         </li>
         <li>
-          <code>_ga_&lt;container-id&gt;</code> — keeps the state of the current
-          visit. Expires after 2 years.
+          <code>_ga_FELFB9W37W</code> — keeps the state of the current visit for
+          this site's analytics property. Expires after 2 years.
         </li>
       </ul>
       <p>
-        Until then they do not exist. We run Google Consent Mode v2 with
-        <code>analytics_storage</code> denied by default, so the tag loads in a
-        cookieless state and only starts writing once consent is given. Ad
-        storage, ad user data and ad personalisation stay denied whatever you
-        choose: we do not advertise and we do not build profiles.
+        We run Google Consent Mode v2 with <code>analytics_storage</code> denied
+        by default, so the tag loads in a cookieless state and only starts
+        writing once consent is given. Ad storage, ad user data and ad
+        personalisation stay denied whatever you choose: we do not advertise and
+        we do not build profiles.
       </p>
       <p>
-        If you press <em>Decline</em>, no analytics cookie is ever written.
+        One honest caveat about <code>_ga</code>. This site lives at
+        <code>cyclingintuscany.tuscanytrail.it</code>, and Google Analytics
+        writes that cookie for the whole of <code>tuscanytrail.it</code> — so if
+        you have already visited the Tuscany Trail website, your browser is
+        carrying a <code>_ga</code> cookie before you ever reach us. We neither
+        set it nor read it until you accept. What is unambiguously ours is
+        <code>_ga_FELFB9W37W</code>, and that one appears only after you press
+        <em>Accept</em>.
+      </p>
+      <p>
+        If you press <em>Decline</em>, we write no analytics cookie at all.
       </p>
 
       <h2 class="sec" style="margin-top:34px">Changing your mind</h2>
