@@ -10,7 +10,15 @@ const badge = route.type.toLowerCase() === 'gravel' ? 'gravel' : 'road';
 const urlParts = route.url.split('?');
 const routeId = urlParts[0].replace(/\/$/, '').split('/').pop() ?? '';
 const privacyCode = urlParts[1]?.split('&').find((param) => param.startsWith('privacy_code='))?.split('=')[1] ?? '';
-const imageUrl = `https://ridewithgps.com/routes/${routeId}/full.png${privacyCode ? `?privacy_code=${privacyCode}` : ''}`;
+/**
+ * `hover_preview.png` e non `full.png`: al 2026-08-06 Ride with GPS serve
+ * `full.png` con `200 OK` ma corpo vuoto (0 byte) su 12 delle 16 route del
+ * sito, e il riquadro dell'anteprima resta grigio. `hover_preview.png` le
+ * restituisce tutte e sedici, fra i 61 e i 127 KB. Nessun redirect e nessun
+ * errore: `full.png` risponde, semplicemente non contiene niente — quindi
+ * l'unica verifica che se ne accorge è controllare il peso della risposta.
+ */
+const imageUrl = `https://ridewithgps.com/routes/${routeId}/hover_preview.png${privacyCode ? `?privacy_code=${privacyCode}` : ''}`;
 ---
 
 <div class="rcard">
