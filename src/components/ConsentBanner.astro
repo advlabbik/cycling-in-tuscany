@@ -17,6 +17,18 @@
 </div>
 
 <style>
+  /**
+   * Deve stare PRIMA della regola che segue, e soprattutto non va rimossa:
+   * `[hidden]` vale `display: none` solo nel foglio di stile del browser, che
+   * perde contro qualsiasi regola d'autore. Senza questa riga il `display: flex`
+   * qui sotto vince, `setAttribute('hidden')` non nasconde niente, e il banner
+   * resta in pagina anche dopo Accept/Decline — pure a chi aveva già scelto in
+   * una visita precedente.
+   */
+  .consent-banner[hidden] {
+    display: none;
+  }
+
   .consent-banner {
     position: fixed;
     bottom: 16px;
