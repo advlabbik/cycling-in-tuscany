@@ -1,0 +1,122 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../../site.config';
+
+/**
+ * Titolare e impianto delle sezioni vengono dalla privacy policy di
+ * bikeadventureseries.com, che è dello stesso titolare. Il contenuto NON è
+ * ripreso alla lettera: quella policy descrive iscrizioni a eventi, ranking,
+ * newsletter e diritto d'immagine — trattamenti che qui non esistono, perché
+ * questo sito non ha nemmeno un form. Dichiarare trattamenti inesistenti in
+ * un'informativa è un errore, non una cautela.
+ */
+const lastUpdated = 'August 2026';
+---
+
+<Base
+  title="Privacy policy — Cycling in Tuscany"
+  description="What data this site collects, why, and the rights you have over it."
+>
+  <div class="hero">
+    <div class="wrap">
+      <div class="kick">Legal</div>
+      <h1>Privacy policy</h1>
+      <p class="lead">What we collect, why, and what you can ask us to do about it.</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap" style="max-width:760px">
+      <p class="small">Last updated: {lastUpdated}</p>
+
+      <h2 class="sec">Who is responsible</h2>
+      <p>
+        The data controller is <strong>AdventureLab S.r.l.</strong>, Via Giulio
+        Braga 98, 59100 Prato (PO), Italy — VAT no. 02410590976. For anything
+        concerning your personal data, write to
+        <a href={`mailto:${site.brand.email}`}>{site.brand.email}</a>.
+      </p>
+
+      <h2 class="sec" style="margin-top:34px">This site has no forms</h2>
+      <p>
+        There is nothing here to sign up for: no account, no newsletter, no
+        booking form, no contact form. We never ask you for your name, your
+        email address or any other personal detail, and we have no way to
+        receive one unless you choose to write to us yourself.
+      </p>
+      <p>
+        If you do email us, we process your address and the content of your
+        message for the sole purpose of replying — legal basis: our legitimate
+        interest in answering someone who contacted us (Art. 6(1)(f) GDPR). We
+        keep that correspondence only as long as it is useful for the exchange.
+      </p>
+
+      <h2 class="sec" style="margin-top:34px">What is collected automatically</h2>
+      <p>
+        <strong>Technical logs.</strong> The site is served by Cloudflare Pages.
+        Like any web server, the infrastructure processes your IP address, the
+        requested page, the time of the request, your browser and operating
+        system. This is necessary to deliver the pages and to protect the site
+        from abuse (Art. 6(1)(f) GDPR). Cloudflare acts as our data processor.
+      </p>
+      <p>
+        <strong>Google Analytics 4 — only if you accept.</strong> We use GA4 to
+        understand how many people reach the site and which pages they read.
+        It runs in Google Consent Mode v2 with every storage category denied by
+        default: until you press <em>Accept</em> on the banner, no analytics
+        cookie is written and no measurement identifier is stored on your
+        device. The legal basis is your consent (Art. 6(1)(a) GDPR), and you can
+        withdraw it at any time — see the <a href="/cookie-policy/">cookie policy</a>.
+        We do not use GA4 for advertising or profiling: ad storage, ad user data
+        and ad personalisation are all left denied.
+      </p>
+      <p>
+        Google Ireland Limited acts as our data processor for GA4. Analytics
+        data may be transferred outside the European Economic Area under the
+        safeguards described in Google's own privacy documentation. GA4 data is
+        retained for the period configured in the property (by default, 14
+        months).
+      </p>
+
+      <h2 class="sec" style="margin-top:34px">Links that leave this site</h2>
+      <p>
+        The accommodation buttons send you to <strong>Stay22</strong> or to the
+        property's own website. Some of those links are affiliate links — we
+        explain exactly which ones, and why, in our
+        <a href="/affiliate-disclosure/">affiliate disclosure</a>. The route
+        buttons send you to <strong>Ride with GPS</strong>.
+      </p>
+      <p>
+        Once you follow one of those links you are on someone else's site, and
+        their privacy policy applies — not ours. We do not receive your personal
+        data back from them: what reaches us is, at most, aggregate commission
+        reporting with no information that identifies you.
+      </p>
+
+      <h2 class="sec" style="margin-top:34px">Your rights</h2>
+      <p>
+        Under Articles 15 to 22 GDPR you may ask us for access to your personal
+        data, and for its rectification or erasure; you may ask us to restrict
+        or object to a processing operation; and you may ask for your data in a
+        portable format. Where processing rests on your consent, you can
+        withdraw it at any time without affecting what was lawful beforehand.
+      </p>
+      <p>
+        Write to <a href={`mailto:${site.brand.email}`}>{site.brand.email}</a> and
+        we will reply within one month. In practice, since we hold almost
+        nothing about you, most requests are answered in a line or two. If you
+        believe your data has been mishandled you also have the right to lodge a
+        complaint with the Italian supervisory authority
+        (<em>Garante per la protezione dei dati personali</em>, garanteprivacy.it)
+        or with the authority of the country where you live.
+      </p>
+
+      <h2 class="sec" style="margin-top:34px">Changes</h2>
+      <p>
+        If this notice changes we update the date at the top of the page. Should
+        a change affect a processing operation that rests on your consent, we
+        will ask for that consent again.
+      </p>
+    </div>
+  </section>
+</Base>

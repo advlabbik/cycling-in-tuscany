@@ -6,7 +6,7 @@ export const site = {
    * completamente spenta: niente gtag, niente banner consenso (issue #19).
    * Si valorizza quando la proprietà GA4 del sito viene creata.
    */
-  ga4MeasurementId: '',
+  ga4MeasurementId: 'G-FELFB9W37W',
   brand: {
     email: 'hello@cyclingintuscany.com',
     instagram: '@cyclingintuscany_official',
