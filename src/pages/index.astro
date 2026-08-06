@@ -61,7 +61,7 @@ const faqSchema = {
   schema={faqSchema}
 >
   <section class="hero-glass">
-    <div class="hero-bg" style={`background-image:url('${heroBg}')`}></div>
+    {heroBg && <div class="hero-bg" style={`background-image:url('${heroBg}')`}></div>}
     <div class="hero-glow-gold"></div>
     <div class="hero-glow-green"></div>
     <div class="wrap hero-grid">
@@ -80,7 +80,7 @@ const faqSchema = {
   {campiglia && (
     <section
       class="feature"
-      style={`background-image:linear-gradient(rgba(10,5,8,.45),rgba(10,5,8,.88)), url('${campigliaBg}'), linear-gradient(135deg,#2d4a3e,#6b4a10);border-radius:28px 28px 0 0;margin-top:-40px;position:relative;z-index:5;box-shadow:0 -12px 48px rgba(0,0,0,.55)`}
+      style={`background-image:linear-gradient(rgba(10,5,8,.45),rgba(10,5,8,.88))${campigliaBg ? `, url('${campigliaBg}')` : ''}, linear-gradient(135deg,#2d4a3e,#6b4a10);border-radius:28px 28px 0 0;margin-top:-40px;position:relative;z-index:5;box-shadow:0 -12px 48px rgba(0,0,0,.55)`}
     >
       <div class="wrap">
         <div class="ribbon">Home of the Tuscany Trail</div>
@@ -105,7 +105,7 @@ const faqSchema = {
           return (
             <div class="dcard-outer" style={`--tc:${struttura.data.card.tint}`}>
               <div class="dcard">
-                <div class="dcard-bg" style={`background-image:url('${struttureBg[struttura.id] ?? ''}')`}></div>
+                {struttureBg[struttura.id] && <div class="dcard-bg" style={`background-image:url('${struttureBg[struttura.id]}')`}></div>}
                 <div class="dcard-grad"></div>
                 <a class="dcard-cover" href={`/strutture/${slug}`} aria-label={`See ${struttura.data.name}`}></a>
                 <div class="dcard-body">
@@ -162,7 +162,7 @@ const faqSchema = {
     <div class="ter-carousel-scroll" id="ter-carousel-scroll">
       <a class="ter-slide" href={`/territori/${getSlug(monterotondo.id)}`}>
         <div class="ter-slide-inner">
-          <div class="ter-slide-img" style={`background-image:url('${monterotondoBg}')`}></div>
+          {monterotondoBg && <div class="ter-slide-img" style={`background-image:url('${monterotondoBg}')`}></div>}
           <div class="ter-slide-grad"></div>
           <div class="ter-slide-body">
             <span class="ter-slide-tag">Official Territory</span>

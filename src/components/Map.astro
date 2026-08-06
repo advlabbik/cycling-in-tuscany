@@ -112,6 +112,7 @@ const markers = await Promise.all([
               : 'Official territory';
         var ctaLabel = m.kind === 'structure' ? 'See the stay →' : 'Discover →';
         var routeLabel = m.kind === 'structure' ? 'See the route pack →' : 'See the routes →';
+        var bookLabel = m.kind === 'structure' ? 'Book →' : 'Find accommodation →';
 
         // issue #12: marker focusabile da tastiera con label, non più un div con solo onclick
         var el = document.createElement('button');
@@ -150,6 +151,11 @@ const markers = await Promise.all([
               ? '<a href="' + m.page + '#' + m.rp +
                 '" style="display:block;background:#faf3e0;color:#b8860b;font-weight:700;font-size:.82rem;padding:10px 14px;border-radius:9px;text-decoration:none;text-align:center">' +
                 routeLabel + '</a>'
+              : '') +
+            (m.book
+              ? '<a href="' + m.book +
+                '" target="_blank" rel="noopener" style="display:block;background:#2d4a3e;color:#fff;font-weight:700;font-size:.82rem;padding:10px 14px;border-radius:9px;text-decoration:none;text-align:center">' +
+                bookLabel + '</a>'
               : '') +
             '</div></div>'
         );
