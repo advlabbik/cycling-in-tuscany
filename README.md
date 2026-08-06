@@ -4,15 +4,15 @@ Guida di destinazione per il cicloturismo in Toscana: territori selezionati, str
 
 | | |
 |---|---|
-| Produzione | <https://cycling-in-tuscany-astro.pages.dev> |
-| CMS | <https://cycling-in-tuscany-astro.pages.dev/admin/> |
+| Produzione | <https://cyclingintuscany.tuscanytrail.it> |
+| CMS | <https://cyclingintuscany.tuscanytrail.it/admin/> |
 | Spec tecnica | [`docs/superpowers/specs/2026-07-24-refactor-astro-cms-design.md`](docs/superpowers/specs/2026-07-24-refactor-astro-cms-design.md) |
 
 ## Come si modifica il sito
 
 Due strade, stesso risultato: **un commit su `main`**. Cloudflare Pages builda da lì e pubblica.
 
-**Dal CMS** — <https://cycling-in-tuscany-astro.pages.dev/admin/>, login con GitHub. Salvare **è** pubblicare: Sveltia non ha editorial workflow, non esistono bozze. Il salvataggio scrive un commit, il commit fa partire il build, il build va live in un paio di minuti.
+**Dal CMS** — <https://cyclingintuscany.tuscanytrail.it/admin/>, login con GitHub. **Va usato questo dominio, non `cycling-in-tuscany-astro.pages.dev/admin/`**: il `pages.dev` serve lo stesso build e l'interfaccia si apre, ma il worker di auth non lo ha negli `ALLOWED_DOMAINS`, quindi il login GitHub muore con `UNSUPPORTED_DOMAIN` (vedi [Autenticazione del CMS](#autenticazione-del-cms)). Salvare **è** pubblicare: Sveltia non ha editorial workflow, non esistono bozze. Il salvataggio scrive un commit, il commit fa partire il build, il build va live in un paio di minuti.
 
 **Da editor** — si toccano i `.md` in `src/content/`, si committa, si pusha. Stesso identico effetto.
 
@@ -83,5 +83,5 @@ Il login GitHub passa dal worker `bikepacking-cms-auth`, **condiviso con bikepac
 
 Due cose da sapere quando il login smette di funzionare:
 
-1. Il dominio da cui si apre `/admin/` deve stare negli `ALLOWED_DOMAINS` del worker, altrimenti risponde `UNSUPPORTED_DOMAIN`. È un Secret: si aggiunge un dominio riscrivendo **tutta** la lista, quindi va ricopiata per intero o si cancellano i domini di bikepacking.it.
+1. Il dominio da cui si apre `/admin/` deve stare negli `ALLOWED_DOMAINS` del worker, altrimenti risponde `UNSUPPORTED_DOMAIN`. Per questo progetto l'unico dominio in lista è `cyclingintuscany.tuscanytrail.it`: da `cycling-in-tuscany-astro.pages.dev` e da `cyclingintuscany.com` il CMS si apre ma il login non parte. È un Secret: si aggiunge un dominio riscrivendo **tutta** la lista, quindi va ricopiata per intero o si cancellano i domini di bikepacking.it.
 2. La org GitHub `advlabbik` ha attive le *OAuth App access restrictions*: la app di auth va approvata a livello di org.
