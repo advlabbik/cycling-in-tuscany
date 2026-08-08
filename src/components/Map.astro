@@ -132,7 +132,7 @@ const markers = await Promise.all([
           closeButton: true,
           closeOnClick: true,
           maxWidth: '260px',
-          anchor: 'auto',
+          anchor: 'bottom',
         }).setHTML(
           '<div style="width:228px;font-family:inherit">' +
             (m.img
@@ -169,7 +169,7 @@ const markers = await Promise.all([
         bounds.extend([m.lng, m.lat]);
       });
 
-      map.fitBounds(bounds, { padding: { top: 140, bottom: 80, left: 80, right: 80 }, maxZoom: 9 });
+      map.fitBounds(bounds, { padding: { top: 320, bottom: 60, left: 100, right: 100 }, maxZoom: 9 });
     })();
 
     // Senza questo un fallimento dello stile resta invisibile: durante il disservizio

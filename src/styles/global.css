@@ -241,8 +241,11 @@ a.chip{text-decoration:none;color:var(--ev)}
 /* maplibre pin pulse */
 @keyframes pinpulse{0%{transform:scale(1);opacity:.75}60%{transform:scale(2.8);opacity:.15}100%{transform:scale(3.2);opacity:0}}
 
-/* maplibre popup — z-index 900: sopra i layer della mappa, sotto il nav fisso (1000) */
-#map-el{overflow:hidden}
+/* maplibre popup
+   transform:translateZ(0) forza un compositing layer su #map-el: senza di esso
+   i popup con CSS transform bypassano overflow:hidden in Chrome/Safari.
+   z-index 900 = sopra i tile della mappa, sotto il nav fisso (z-index 1000). */
+#map-el{overflow:hidden;transform:translateZ(0)}
 .maplibregl-canvas-container{overflow:hidden}
 .maplibregl-popup{z-index:900}
 .maplibregl-popup-content{border-radius:14px!important;padding:0!important;box-shadow:0 8px 32px rgba(0,0,0,.22)!important;font-family:var(--font-body);overflow:hidden}
