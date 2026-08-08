@@ -129,35 +129,36 @@ const markers = await Promise.all([
 
         var popup = new maplibregl.Popup({
           offset: isPremium ? 30 : 25,
-          closeButton: false,
+          closeButton: true,
           closeOnClick: true,
-          maxWidth: '250px',
+          maxWidth: '260px',
           anchor: 'auto',
         }).setHTML(
-          '<div style="width:218px">' +
+          '<div style="width:228px;font-family:inherit">' +
             (m.img
-              ? '<div style="height:134px;background:url(' + m.img +
-                ') center/cover no-repeat;border-radius:8px;margin-bottom:11px"></div>'
+              ? '<div style="height:130px;background:url(' + m.img +
+                ') center/cover no-repeat"></div>'
               : '') +
-            '<div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:' +
-            col[m.kind] + '">' + label + '</div>' +
-            '<b style="font-size:1rem;display:block;margin:4px 0 2px">' + m.name + '</b>' +
-            '<span style="color:#6b6b6b;font-size:.82rem">' + m.sub + '</span>' +
-            '<div style="margin-top:11px;display:flex;flex-direction:column;gap:6px">' +
+            '<div style="padding:14px 16px 16px">' +
+            '<div style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:' +
+            col[m.kind] + ';margin-bottom:5px">' + label + '</div>' +
+            '<b style="font-size:1.02rem;display:block;margin:0 0 3px;color:#111;line-height:1.15">' + m.name + '</b>' +
+            '<span style="color:#777;font-size:.8rem">' + m.sub + '</span>' +
+            '<div style="margin-top:12px;display:flex;flex-direction:column;gap:7px">' +
             '<a href="' + m.page +
-            '" style="display:block;background:#c74634;color:#fff;font-weight:700;font-size:.82rem;padding:10px 14px;border-radius:9px;text-decoration:none;text-align:center">' +
+            '" style="display:block;background:#c74634;color:#fff;font-weight:700;font-size:.84rem;padding:11px 16px;border-radius:10px;text-decoration:none;text-align:center;letter-spacing:.01em">' +
             ctaLabel + '</a>' +
             (m.rp
               ? '<a href="' + m.page + '#' + m.rp +
-                '" style="display:block;background:#faf3e0;color:#b8860b;font-weight:700;font-size:.82rem;padding:10px 14px;border-radius:9px;text-decoration:none;text-align:center">' +
+                '" style="display:block;background:#f5a623;color:#1a1a1a;font-weight:700;font-size:.84rem;padding:11px 16px;border-radius:10px;text-decoration:none;text-align:center;letter-spacing:.01em">' +
                 routeLabel + '</a>'
               : '') +
             (m.book
               ? '<a href="' + m.book +
-                '" target="_blank" rel="noopener" style="display:block;background:#2d4a3e;color:#fff;font-weight:700;font-size:.82rem;padding:10px 14px;border-radius:9px;text-decoration:none;text-align:center">' +
+                '" target="_blank" rel="noopener" style="display:block;background:#2d4a3e;color:#fff;font-weight:700;font-size:.84rem;padding:11px 16px;border-radius:10px;text-decoration:none;text-align:center;letter-spacing:.01em">' +
                 bookLabel + '</a>'
               : '') +
-            '</div></div>'
+            '</div></div></div>'
         );
 
         new maplibregl.Marker({ element: el, anchor: 'bottom' })
@@ -168,7 +169,7 @@ const markers = await Promise.all([
         bounds.extend([m.lng, m.lat]);
       });
 
-      map.fitBounds(bounds, { padding: { top: 80, bottom: 60, left: 80, right: 80 }, maxZoom: 9 });
+      map.fitBounds(bounds, { padding: { top: 140, bottom: 80, left: 80, right: 80 }, maxZoom: 9 });
     })();
 
     // Senza questo un fallimento dello stile resta invisibile: durante il disservizio

@@ -241,10 +241,11 @@ a.chip{text-decoration:none;color:var(--ev)}
 /* maplibre pin pulse */
 @keyframes pinpulse{0%{transform:scale(1);opacity:.75}60%{transform:scale(2.8);opacity:.15}100%{transform:scale(3.2);opacity:0}}
 
-/* maplibre popup */
+/* maplibre popup — z-index 900: sopra i layer della mappa, sotto il nav fisso (1000) */
+#map-el{overflow:hidden}
 .maplibregl-canvas-container{overflow:hidden}
-.maplibregl-popup{z-index:9999!important}
-.maplibregl-popup-content{border-radius:12px!important;padding:14px 16px!important;box-shadow:var(--shadow-lg)!important;font-family:var(--font-body)}
+.maplibregl-popup{z-index:900}
+.maplibregl-popup-content{border-radius:14px!important;padding:0!important;box-shadow:0 8px 32px rgba(0,0,0,.22)!important;font-family:var(--font-body);overflow:hidden}
 
 footer{background:var(--dark);color:#a8c4b4;padding:38px 0;margin-top:0;font-size:.85rem}footer a{color:#c8dcd2}
 .muted{color:var(--muted)}.small{font-size:.82rem}
