@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import RouteCard from '../../components/RouteCard.astro';
-import { site } from '../../../site.config';
 import { bgUrl } from '../../lib/images';
 
 export async function getStaticPaths() {
@@ -15,7 +14,7 @@ export async function getStaticPaths() {
 
 const { struttura } = Astro.props;
 
-const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${site.stay22Campaign}&lat=${struttura.data.coords.lat}&lng=${struttura.data.coords.lng}&product_medium=apps`;
+// Niente Stay22 sulla scheda: il partner paga, in pagina si prenota solo da lui (Andrea, 14/8).
 // Sfondo a tutta pagina, quindi 1600px: sotto c'è comunque un gradiente scuro (#42).
 const heroImage = await bgUrl(struttura.data.heroImage, 1600);
 const gravelCount = struttura.data.ridePack.filter((route) => route.type.toLowerCase() === 'gravel').length;
@@ -128,11 +127,10 @@ const schema = {
       <div class="cta-band">
         <div>
           <h3>Book your stay</h3>
-          <p>Book directly with the stay, or look for alternatives in the area.</p>
+          <p>Book directly with {struttura.data.name} — your hosts know these routes first-hand.</p>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <a class="btn gold" href={struttura.data.site} target="_blank" rel="noopener">Book with {struttura.data.name} →</a>
-          <a class="btn dark" href={stay22Url} target="_blank" rel="noopener">Other stays in the area</a>
         </div>
       </div>
     </div>

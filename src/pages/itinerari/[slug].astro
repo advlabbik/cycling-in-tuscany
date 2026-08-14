@@ -93,25 +93,34 @@ const schema = {
 
   <section id="sleep" style="background:#fff">
     <div class="wrap">
-      <h2 class="sec">Sleep along this route</h2>
-      <p class="sub">
-        The loop starts and ends at an Official Bike-Friendly Stay — or browse every stay in the
-        area on the live map.
-      </p>
-      <div class="cta-band">
-        <div>
-          <h3>{d.base.name} — your base for this loop</h3>
-          <p>Bike storage, bike wash, early breakfast and local route knowledge. Verified by the Tuscany Trail.</p>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <a class="btn gold" href={d.base.site} target="_blank" rel="noopener">Book {d.base.name} →</a>
-          <a class="btn dark" href={`/strutture/${d.base.slug}`}>See the stay</a>
-        </div>
-      </div>
-      <div class="it-otherstays">
-        <a class="chip" href={stay22Url} target="_blank" rel="noopener">All stays along the route (live map) →</a>
-        <a class="chip" href={airbnbUrl} target="_blank" rel="noopener">Search on Airbnb →</a>
-      </div>
+      {d.base ? (
+        <>
+          <h2 class="sec">Your base for this loop</h2>
+          <p class="sub">
+            This route belongs to an Official Bike-Friendly Stay — the loop starts and ends right
+            at its door.
+          </p>
+          <div class="cta-band">
+            <div>
+              <h3>{d.base.name} — your base for this loop</h3>
+              <p>Bike storage, bike wash, early breakfast and local route knowledge. Verified by the Tuscany Trail.</p>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <a class="btn gold" href={d.base.site} target="_blank" rel="noopener">Book {d.base.name} →</a>
+              <a class="btn dark" href={`/strutture/${d.base.slug}`}>See the stay</a>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <h2 class="sec">Sleep along this route</h2>
+          <p class="sub">Browse every stay along the route on the live map.</p>
+          <div class="it-otherstays">
+            <a class="chip" href={stay22Url} target="_blank" rel="noopener">All stays along the route (live map) →</a>
+            <a class="chip" href={airbnbUrl} target="_blank" rel="noopener">Search on Airbnb →</a>
+          </div>
+        </>
+      )}
     </div>
   </section>
 

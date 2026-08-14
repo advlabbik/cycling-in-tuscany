@@ -114,8 +114,16 @@ const itinerari = defineCollection({
       surface: z.string(),
       time: z.string(),
       heroImage: image().optional(),
-      /** la struttura partner da cui parte l'anello */
-      base: z.object({ slug: z.string(), name: z.string(), site: z.string().url() }),
+      /**
+       * La struttura partner da cui parte l'anello. Se c'è, la sezione dormire
+       * mostra SOLO lei — chi paga la scheda non trova concorrenti in pagina
+       * (Andrea, 14/8). Senza base (itinerari non legati a un partner, come la
+       * futura pagina del Tuscany Trail) compaiono Stay22 + Airbnb.
+       */
+      base: z
+        .object({ slug: z.string(), name: z.string(), site: z.string().url() })
+        .nullable()
+        .default(null),
       highlights: z.array(z.string()),
       rwgpsUrl: z.string().url().optional(),
       /** GPX servito da public/, sbloccato dal gate email */
