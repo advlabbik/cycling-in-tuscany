@@ -76,7 +76,22 @@ const schema = {
     </div>
   </section>
 
-  <section id="sleep">
+  <section id="goodtoknow">
+    <div class="wrap">
+      <h2 class="sec">Good to know</h2>
+      <p class="sub">Everything from the Ride Base Pack, right here on the page.</p>
+      <div class="grid g2">
+        {d.goodToKnow.map((g) => (
+          <div class="card">
+            <h3>{g.label}</h3>
+            <p>{g.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="sleep" style="background:#fff">
     <div class="wrap">
       <h2 class="sec">Sleep along this route</h2>
       <p class="sub">
@@ -100,14 +115,14 @@ const schema = {
     </div>
   </section>
 
-  <section id="gpx" style="background:#fff">
+  <section id="gpx">
     <div class="wrap">
       <div class="pack-dl-bar">
         <div class="pack-dl-bar-glow"></div>
         <div class="pack-dl-bar-left">
-          <div class="pack-dl-label">GPX + PDF guide · free</div>
+          <div class="pack-dl-label">GPX track · free</div>
           <h3 class="pack-dl-title">Take this route with you</h3>
-          <p class="it-gatehint">Leave your email and the GPX file and the full Ride Base Pack are yours.</p>
+          <p class="it-gatehint">Leave your email and the GPX file is yours, ready for your bike computer.</p>
         </div>
         <div class="pack-dl-bar-right">
           <form id="gpx-gate" class="it-gate" novalidate>
@@ -129,7 +144,6 @@ const schema = {
           </form>
           <div id="gpx-unlocked" class="it-unlocked" hidden>
             <a class="pack-dl-btn" href={d.gpx} download>Download the GPX</a>
-            {d.guidaPdf && <a class="pack-dl-btn" href={d.guidaPdf} target="_blank">Ride Base Pack (PDF)</a>}
           </div>
         </div>
       </div>

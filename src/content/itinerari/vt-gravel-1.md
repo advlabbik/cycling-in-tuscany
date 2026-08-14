@@ -21,7 +21,17 @@ highlights:
   - "Quiet white roads of the Cornia plain"
 rwgpsUrl: "https://ridewithgps.com/routes/53933155"
 gpx: "/gpx/VT-Gravel-1.gpx"
-guidaPdf: "/guide-pdf/Ride-Base-Pack-Villa-Toscana.pdf"
+goodToKnow:
+  - label: "Best season"
+    text: "Spring and autumn, for mild temperatures and fewer crowds. Summer works too — start early and plan a swim at the Sterpaia beaches on the way home."
+  - label: "Bike & surface"
+    text: "40% unpaved on smooth white roads and farm tracks. Perfect for gravel bikes and e-bikes; a road bike is not the right tool here."
+  - label: "Water & resupply"
+    text: "Fill your bottles at the public fountain in Suvereto (km 16). Bars and groceries in Suvereto, San Lorenzo (Circolo Arci) and Riotorto (Coop, bakery)."
+  - label: "Don't miss"
+    text: "A wine tasting at Tenuta Casadei, right on the route, and the wild beaches of the Sterpaia park before the final kilometres."
+  - label: "Ride at your own pace"
+    text: "Routes are suggestions, not guided tours. Road and trail conditions may change — always respect local traffic rules."
 trackData: "/data/itinerari/vt-gravel-1.json"
 stay22Campaign: "cit-vt-gravel-1"
 ---

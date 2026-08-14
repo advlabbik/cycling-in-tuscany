@@ -34,6 +34,7 @@ ridePack:
     surface: "40% unpaved"
     hi: "Suvereto medieval village, Parco della Sterpaia"
     url: "https://ridewithgps.com/routes/53933155"
+    page: "/itinerari/vt-gravel-1"
   - name: "Baratti, Populonia & Piombino"
     type: "Gravel"
     km: "55"

@@ -10,6 +10,8 @@ const Route = z.object({
   surface: z.string(),
   hi: z.string(),
   url: z.string().url(),
+  /** pagina itinerario interna: se c'è, la card porta lì e non più fuori su RwGPS */
+  page: z.string().optional(),
 });
 
 const territori = defineCollection({
@@ -104,7 +106,11 @@ const itinerari = defineCollection({
       rwgpsUrl: z.string().url().optional(),
       /** GPX servito da public/, sbloccato dal gate email */
       gpx: z.string(),
-      guidaPdf: z.string().optional(),
+      /**
+       * Il contenuto del Ride Base Pack vive QUI, visibile nella pagina —
+       * il PDF non si scarica più: l'unico download è il GPX (Andrea, 14/8).
+       */
+      goodToKnow: z.array(z.object({ label: z.string(), text: z.string() })).default([]),
       /** dati traccia+POI generati da script, serviti da public/ */
       trackData: z.string(),
       stay22Campaign: z.string(),

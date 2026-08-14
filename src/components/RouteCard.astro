@@ -37,6 +37,10 @@ const imageUrl = `https://ridewithgps.com/routes/${routeId}/hover_preview.png${p
       <p class="rcard-hi">{route.hi}</p>
       <span class="rcard-surface">{route.surface}</span>
     </div>
-    <a class="rcard-cta" href={route.url} target="_blank" rel="noopener">Download on Ride with GPS →</a>
+    {route.page ? (
+      <a class="rcard-cta" href={route.page}>Study this route on the site →</a>
+    ) : (
+      <a class="rcard-cta" href={route.url} target="_blank" rel="noopener">Download on Ride with GPS →</a>
+    )}
   </div>
 </div>
