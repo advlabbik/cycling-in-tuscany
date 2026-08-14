@@ -34,6 +34,9 @@ goodToKnow:
     text: "Routes are suggestions, not guided tours. Road and trail conditions may change — always respect local traffic rules."
 trackData: "/data/itinerari/vt-gravel-1.json"
 stay22Campaign: "cit-vt-gravel-1"
+stay22Center:
+  lat: 43.01
+  lng: 10.63
 ---
 
 Suvereto & Sterpaia

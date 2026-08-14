@@ -20,6 +20,9 @@ const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campa
 const heroImage = await bgUrl(struttura.data.heroImage, 1600);
 const gravelCount = struttura.data.ridePack.filter((route) => route.type.toLowerCase() === 'gravel').length;
 const roadCount = struttura.data.ridePack.length - gravelCount;
+/* Se tutte le route hanno la pagina interna, il pack vive nel sito e il PDF
+   non si offre più in download (Andrea, 14/8): solo GPX, dalle pagine itinerario. */
+const allOnSite = struttura.data.ridePack.every((route) => route.page);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -70,32 +73,55 @@ const schema = {
   <section id="routes" style="background:#fff">
     <div class="wrap">
       <h2 class="sec">The Ride Base Pack</h2>
-      <p class="sub">Starting right from the stay's doorstep. Open the track on Ride with GPS and go.</p>
+      <p class="sub">
+        {allOnSite
+          ? `${struttura.data.ridePack.length} tested routes starting right from the stay's doorstep — study each one on the site, with map, elevation and everything along the way.`
+          : "Starting right from the stay's doorstep. Open the track on Ride with GPS and go."}
+      </p>
       <div class="grid g2">
         {struttura.data.ridePack.map((route) => <RouteCard route={route} />)}
       </div>
 
-      <div class="pack-dl-bar">
-        <div class="pack-dl-bar-glow"></div>
-        <div class="pack-dl-bar-left">
-          <div class="pack-dl-label">Ride Base Pack · {gravelCount} gravel · {roadCount} road</div>
-          <h3 class="pack-dl-title">Download all the routes for {struttura.data.name}</h3>
+      {!allOnSite && (
+        <div class="pack-dl-bar">
+          <div class="pack-dl-bar-glow"></div>
+          <div class="pack-dl-bar-left">
+            <div class="pack-dl-label">Ride Base Pack · {gravelCount} gravel · {roadCount} road</div>
+            <h3 class="pack-dl-title">Download all the routes for {struttura.data.name}</h3>
+          </div>
+          <div class="pack-dl-bar-right">
+            <a class="pack-dl-btn" href={struttura.data.guidaPdf} target="_blank">
+              <span class="pack-dl-circle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </span>
+              Download PDF
+            </a>
+          </div>
         </div>
-        <div class="pack-dl-bar-right">
-          <a class="pack-dl-btn" href={struttura.data.guidaPdf} target="_blank">
-            <span class="pack-dl-circle">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-            </span>
-            Download PDF
-          </a>
-        </div>
-      </div>
+      )}
     </div>
   </section>
+
+  {struttura.data.extraSections.map((sec, i) => (
+    <section style={i % 2 === 1 ? 'background:#fff' : undefined}>
+      <div class="wrap">
+        <h2 class="sec">{sec.title}</h2>
+        {sec.sub && <p class="sub">{sec.sub}</p>}
+        <div class="grid g2">
+          {sec.cards.map((card) => (
+            <div class="card">
+              <h3>{card.label}</h3>
+              <p>{card.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
 
   <section>
     <div class="wrap">

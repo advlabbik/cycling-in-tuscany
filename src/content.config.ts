@@ -75,6 +75,20 @@ const strutture = defineCollection({
       services: z.array(z.string()),
       ridePack: z.array(Route),
       guidaPdf: z.string(),
+      /**
+       * Contenuti del Ride Base Pack portati DENTRO la scheda (Andrea, 14/8):
+       * aree di riding, itinerari-tipo, supporto tour operator, tips. Sezioni
+       * generiche titolo + card, così ogni struttura può averne di sue.
+       */
+      extraSections: z
+        .array(
+          z.object({
+            title: z.string(),
+            sub: z.string().optional(),
+            cards: z.array(z.object({ label: z.string(), text: z.string() })),
+          }),
+        )
+        .default([]),
     }),
 });
 
@@ -114,6 +128,8 @@ const itinerari = defineCollection({
       /** dati traccia+POI generati da script, serviti da public/ */
       trackData: z.string(),
       stay22Campaign: z.string(),
+      /** centro della mappa Stay22, di norma il baricentro dell'anello */
+      stay22Center: z.object({ lat: z.number(), lng: z.number() }).default({ lat: 43.01, lng: 10.63 }),
     }),
 });
 

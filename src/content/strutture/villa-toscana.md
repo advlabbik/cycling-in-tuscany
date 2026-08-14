@@ -43,6 +43,7 @@ ridePack:
     surface: "51% unpaved"
     hi: "Baratti, Populonia, Piombino, Piazza Bovio"
     url: "https://ridewithgps.com/routes/53933243?privacy_code=QM3Of2XWLB41w1n0wodqOW7JR5IgRWlt"
+    page: "/itinerari/vt-gravel-2"
   - name: "Suvereto, Sassetta & the Hills"
     type: "Road"
     km: "89"
@@ -51,6 +52,7 @@ ridePack:
     surface: "paved road"
     hi: "Suvereto, Sassetta, Monteverdi, Canneto"
     url: "https://ridewithgps.com/routes/53933290"
+    page: "/itinerari/vt-road-1"
   - name: "Follonica & Montioni Park"
     type: "Road"
     km: "79"
@@ -59,7 +61,31 @@ ridePack:
     surface: "paved road"
     hi: "Follonica, Parco di Montioni"
     url: "https://ridewithgps.com/routes/53933299?privacy_code=DJcGQ2OKwZydioFG0tWMmHVHF54ebMDt"
+    page: "/itinerari/vt-road-2"
 guidaPdf: "/guide-pdf/Ride-Base-Pack-Villa-Toscana.pdf"
+extraSections:
+  - title: "The riding around the base"
+    sub: "Val di Cornia is one of Tuscany's best cycling playgrounds — here is what surrounds the villa."
+    cards:
+      - label: "Montioni Natural Park"
+        text: "7,000 hectares of protected Mediterranean forest with quiet gravel roads and MTB trails, minutes from the door."
+      - label: "Tuscany Trail routes"
+        text: "The roads and white tracks of the Tuscany Trail run through this exact area — ride the real thing, any day."
+      - label: "Piombino headland & Bandite di Scarlino"
+        text: "Around 10 km of headland trails over the sea, and 20 km more in the Bandite di Scarlino towards Punta Ala."
+      - label: "Road classics"
+        text: "The Bolgheri cypress avenue and Castagneto Carducci to the north, the Sassetta and Monteverdi hills inland, Monte Arsenti and Massa Marittima to the east."
+  - title: "Plan your stay"
+    sub: "Sample itineraries from the Ride Base Pack — turn single routes into a relaxed cycling holiday."
+    cards:
+      - label: "3 nights / 2 rides — the short break"
+        text: "Day 1 arrival and bike setup. Day 2 the Suvereto & Sterpaia gravel loop. Day 3 the Follonica road loop at recovery pace. Day 4 breakfast, optional short spin, departure."
+      - label: "6 nights / 4 rides — the complete experience"
+        text: "Warm up on Gravel 1, go long on Road 1, then a recovery day of beach and wine tasting. Finish with the adventurous Gravel 2 and an easy Road 2 to spin the legs before departure."
+      - label: "Tour operator support"
+        text: "Bike rentals delivered to the villa, airport and station transfers, luggage logistics, local guides and custom trip planning — arranged before you arrive."
+      - label: "Practical tips"
+        text: "Spring and autumn are the sweet spot. Rental shops, guided tours and shuttles are available locally. And don't miss a sunset gelato at Piazza Bovio, a wine tasting in Suvereto, a swim at Baratti after your ride."
 ---
 
 Villa Toscana

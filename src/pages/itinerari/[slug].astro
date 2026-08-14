@@ -19,7 +19,7 @@ const d = itinerario.data;
 const routeColor = d.type === 'Gravel' ? '#b8860b' : '#2d4a3e';
 /* Stay22 centrato sulla zona dell'anello, con campagna dedicata all'itinerario:
    è la campagna che rende attribuibile ogni prenotazione nel CSV di Stay22. */
-const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${d.stay22Campaign}&lat=43.01&lng=10.63&product_medium=apps`;
+const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${d.stay22Campaign}&lat=${d.stay22Center.lat}&lng=${d.stay22Center.lng}&product_medium=apps`;
 /* Stay22 non include Airbnb: link sempre accanto, mai al suo posto. */
 const airbnbUrl = 'https://www.airbnb.com/s/Venturina-Terme--Tuscany--Italy/homes';
 const heroImage = await bgUrl(d.heroImage, 1600);
