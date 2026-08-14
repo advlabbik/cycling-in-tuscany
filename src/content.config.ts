@@ -76,6 +76,41 @@ const strutture = defineCollection({
     }),
 });
 
+/**
+ * Prototipo "mini-guida" (branch prototipo-itinerari): un itinerario studiabile
+ * dentro il sito — viewer con mappa + altimetria + POI — invece del solo link
+ * esterno a Ride with GPS. La traccia e i POI NON stanno qui: vivono in
+ * public/data/itinerari/<slug>.json, generati da script (come in tg-guida),
+ * perché array di coordinate dentro Sveltia sarebbero ingestibili.
+ */
+const itinerari = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/itinerari' }),
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      type: z.enum(['Gravel', 'Road']),
+      area: z.string(),
+      tagline: z.string(),
+      intro: z.string(),
+      km: z.string(),
+      dislivello: z.string(),
+      diff: z.string(),
+      surface: z.string(),
+      time: z.string(),
+      heroImage: image().optional(),
+      /** la struttura partner da cui parte l'anello */
+      base: z.object({ slug: z.string(), name: z.string(), site: z.string().url() }),
+      highlights: z.array(z.string()),
+      rwgpsUrl: z.string().url().optional(),
+      /** GPX servito da public/, sbloccato dal gate email */
+      gpx: z.string(),
+      guidaPdf: z.string().optional(),
+      /** dati traccia+POI generati da script, serviti da public/ */
+      trackData: z.string(),
+      stay22Campaign: z.string(),
+    }),
+});
+
 const faq = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/faq' }),
   schema: z.object({
@@ -93,5 +128,6 @@ const faq = defineCollection({
 export const collections = {
   territori,
   strutture,
+  itinerari,
   faq,
 };
