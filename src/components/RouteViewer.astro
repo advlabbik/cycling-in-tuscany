@@ -3,8 +3,12 @@
  * Viewer di itinerario — mappa + altimetria + POI, tutto dentro la pagina.
  * Logica portata dalla vista percorso di tg-guida (Leaflet) e riscritta su
  * MapLibre GL, che è la libreria già bundlata del sito (niente CDN, #45).
- * I dati arrivano da public/data/itinerari/<slug>.json via fetch: la pagina
- * resta leggera e il JSON si cachea da solo.
+ * I dati arrivano da public/data/itinerari/<slug>.json, generati da
+ * scripts/gen_poi.py (OSM via Overpass — vedi docs/generazione-poi.md di
+ * tg-guida per le trappole). Modello POI identico a tg-guida:
+ *   {t:'c'} centro raggruppato con conteggi ne/ns/nf,
+ *   {t:'a'|'m'|'d'} punto singolo; lat/lng dove noti, altrimenti si aggancia
+ *   al punto della traccia al proprio km (ed è scritto sotto il profilo).
  */
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -80,7 +84,7 @@ const { src, color } = Astro.props;
 
     /* colori e icone per tipo — oro = partner/dormire, come il tier premium del sito */
     const TCOL: Record<string, string> = { a: '#1971c2', m: '#8a6d1c', c: '#2d4a3e', d: '#f5a623' };
-    const TLAB: Record<string, string> = { a: 'Water', m: 'Food & wine', c: 'Villages & sights', d: 'Sleep' };
+    const TLAB: Record<string, string> = { a: 'Water', m: 'Food', c: 'Villages', d: 'Sleep' };
     const ICO: Record<string, string> = {
       a: '<path d="M12 2.7C9.2 6.5 6 10.2 6 13.5a6 6 0 0 0 12 0c0-3.3-3.2-7-6-10.8z"/>',
       m: '<path d="M7 3v7M5 3v4a2 2 0 0 0 4 0V3M15 3v18M15 12h3a1 1 0 0 0 1-1V7a4 4 0 0 0-4-4M7 12v9"/>',
@@ -89,12 +93,29 @@ const { src, color } = Astro.props;
     };
     const icon = (t: string, size: number, stroke = '#fff') =>
       `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICO[t]}</svg>`;
+    const esc = (s: string) => String(s || '').replace(/[<>&"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]!));
+    const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : '');
+    /* il blocco "quanti posti per mangiare / dormire / fontane" di un centro */
+    const counts = (e: any) =>
+      [e.ne ? `${e.ne} places to eat` : null, e.ns ? `${e.ns} stays` : null, e.nf ? `${e.nf} fountains` : null]
+        .filter(Boolean)
+        .join(' · ');
+    const descOf = (e: any) =>
+      e.desc || (e.t === 'c' ? counts(e) : [cap(e.sub), e.luogo].filter(Boolean).join(' · '));
+    const nameOf = (e: any) => e.name || cap(e.sub) || TLAB[e.t];
+    /* un centro raggruppato risponde anche ai filtri delle sue categorie */
+    const poiMatch = (e: any, f: string) =>
+      f === 'all' || e.t === f ||
+      (e.t === 'c' && ((f === 'm' && e.ne) || (f === 'd' && e.ns) || (f === 'a' && e.nf)));
 
     const idxFromKm = (km: number) => {
       let lo = 0, hi = pts.length - 1;
       while (lo < hi) { const mid = (lo + hi) >> 1; if (pts[mid][3] < km) lo = mid + 1; else hi = mid; }
       return lo;
     };
+    /* come tg-guida: coordinate vere se note, altrimenti punto della traccia al km */
+    const posOf = (e: any): [number, number] =>
+      e.lat != null ? [e.lat, e.lng] : [pts[idxFromKm(e.km)][0], pts[idxFromKm(e.km)][1]];
 
     /* ---------- mappa ---------- */
     const map = new maplibregl.Map({
@@ -108,14 +129,24 @@ const { src, color } = Astro.props;
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
     map.on('error', (e: any) => console.error('[rvw] errore stile mappa', (e && e.error) || e));
 
+    const bounds = pts.reduce(
+      (b, p) => b.extend([p[1], p[0]]),
+      new maplibregl.LngLatBounds([pts[0][1], pts[0][0]], [pts[0][1], pts[0][0]]),
+    );
+    const fitAll = (animate = false) => map.fitBounds(bounds, { padding: 44, animate, maxZoom: 13 });
+    fitAll();
+
     const line = { type: 'Feature', geometry: { type: 'LineString', coordinates: pts.map((p) => [p[1], p[0]]) } };
     map.on('load', () => {
       map.addSource('route', { type: 'geojson', data: line as any });
       map.addLayer({ id: 'route-casing', type: 'line', source: 'route', paint: { 'line-color': '#fff', 'line-width': 8, 'line-opacity': 0.9 }, layout: { 'line-cap': 'round', 'line-join': 'round' } });
       map.addLayer({ id: 'route-line', type: 'line', source: 'route', paint: { 'line-color': color, 'line-width': 4.5 }, layout: { 'line-cap': 'round', 'line-join': 'round' } });
+      /* l'inquadratura si rifà a stile carico e dimensioni definitive: senza
+         questo, se il contenitore cambia misura durante il caricamento la
+         mappa resta inquadrata su un pezzo solo del percorso */
+      map.resize();
+      fitAll();
     });
-    const bounds = pts.reduce((b, p) => b.extend([p[1], p[0]]), new maplibregl.LngLatBounds([pts[0][1], pts[0][0]], [pts[0][1], pts[0][0]]));
-    map.fitBounds(bounds, { padding: 40, animate: false });
 
     /* partenza/arrivo (anello: coincidono) */
     const startEl = document.createElement('div');
@@ -127,42 +158,60 @@ const { src, color } = Astro.props;
       .setPopup(new maplibregl.Popup({ offset: 18 }).setHTML('<div style="padding:10px 12px;font-weight:700">Start & finish</div>'))
       .addTo(map);
 
-    /* POI sulla mappa, raggruppati se cadono sullo stesso punto (i 3 di Suvereto) */
-    const groupsMap: { members: any[]; lat: number; lng: number }[] = [];
+    /* POI sulla mappa, raggruppati se cadono quasi sullo stesso punto */
+    type MapGroup = { members: any[]; lat: number; lng: number; marker?: maplibregl.Marker; el?: HTMLElement };
+    const groupsMap: MapGroup[] = [];
     poi.forEach((e) => {
-      const near = groupsMap.find((g) => Math.abs(g.lat - e.lat) < 0.004 && Math.abs(g.lng - e.lng) < 0.004);
+      const [lat, lng] = posOf(e);
+      const near = groupsMap.find((g) => Math.abs(g.lat - lat) < 0.004 && Math.abs(g.lng - lng) < 0.004);
       if (near) near.members.push(e);
-      else groupsMap.push({ members: [e], lat: e.lat, lng: e.lng });
+      else groupsMap.push({ members: [e], lat, lng });
     });
     const popupHtml = (members: any[]) =>
-      '<div style="padding:12px 14px;min-width:190px">' +
+      '<div style="padding:12px 14px;min-width:190px;max-height:260px;overflow-y:auto">' +
       members
         .map(
           (e) =>
-            `<div style="margin-bottom:9px"><span style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${TCOL[e.t]}">${TLAB[e.t]} · km ${e.km}</span>` +
-            `<b style="display:block;font-size:.92rem;color:#111">${e.name}</b>` +
-            `<span style="font-size:.78rem;color:#666">${e.desc}</span>` +
+            `<div style="margin-bottom:9px"><span style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${TCOL[e.t]}">${e.t === 'c' ? 'Village' : TLAB[e.t]} · km ${e.km}</span>` +
+            `<b style="display:block;font-size:.92rem;color:#111">${esc(nameOf(e))}</b>` +
+            `<span style="font-size:.78rem;color:#666">${esc(descOf(e))}</span>` +
             (e.partner && e.url
-              ? `<a href="${e.url}" target="_blank" rel="noopener" style="display:block;margin-top:7px;background:#f5a623;color:#1a1a1a;font-weight:700;font-size:.78rem;padding:8px 12px;border-radius:8px;text-decoration:none;text-align:center">Book Villa Toscana →</a>`
+              ? `<a href="${e.url}" target="_blank" rel="noopener" style="display:block;margin-top:7px;background:#f5a623;color:#1a1a1a;font-weight:700;font-size:.78rem;padding:8px 12px;border-radius:8px;text-decoration:none;text-align:center">Book ${esc(e.name)} →</a>`
               : '') +
             '</div>'
         )
         .join('') +
       '</div>';
     groupsMap.forEach((g) => {
-      const capo = g.members.find((e) => e.partner) || g.members[0];
+      const capo = g.members.find((e) => e.partner) || g.members.find((e) => e.t === 'c') || g.members[0];
       const el = document.createElement('button');
       el.type = 'button';
       el.className = 'rvw-mk' + (capo.partner ? ' partner' : '');
       el.style.background = TCOL[capo.t];
       el.style.border = '2px solid #fff';
-      el.setAttribute('aria-label', g.members.map((e) => e.name).join(', '));
+      el.setAttribute('aria-label', g.members.map((e) => nameOf(e)).join(', '));
       el.innerHTML = icon(capo.t, 14) + (g.members.length > 1 ? `<i class="n">${g.members.length}</i>` : '');
-      new maplibregl.Marker({ element: el })
+      g.el = el;
+      g.marker = new maplibregl.Marker({ element: el })
         .setLngLat([g.lng, g.lat])
-        .setPopup(new maplibregl.Popup({ offset: 20, maxWidth: '250px' }).setHTML(popupHtml(g.members)))
+        .setPopup(new maplibregl.Popup({ offset: 20, maxWidth: '260px' }).setHTML(popupHtml(g.members)))
         .addTo(map);
+      // MapLibre sovrascrive l'aria-label con "Map marker": si rimette dopo l'addTo
+      el.setAttribute('aria-label', g.members.map((e) => nameOf(e)).join(', '));
     });
+    (root as any)._rvwMap = map; // per la verifica in test: bounds/zoom dall'esterno
+    /* il filtro comanda anche i segni sulla mappa, non solo profilo e lista */
+    function refreshMapMarkers() {
+      groupsMap.forEach((g) => {
+        const visibili = g.members.filter((e) => poiMatch(e, filter));
+        g.el!.style.display = visibili.length ? 'flex' : 'none';
+        const capo = visibili.find((e) => e.partner) || visibili.find((e) => e.t === 'c') || visibili[0];
+        if (capo) {
+          g.el!.style.background = TCOL[capo.t];
+          g.el!.innerHTML = icon(capo.t, 14) + (visibili.length > 1 ? `<i class="n">${visibili.length}</i>` : '');
+        }
+      });
+    }
 
     /* cursore che segue il profilo */
     const curEl = document.createElement('div');
@@ -239,13 +288,21 @@ const { src, color } = Astro.props;
       drawPins();
     }
 
+    /* ordine sui pin: prima i centri (riassumono una zona), o la categoria
+       filtrata — come ordinePoi di tg-guida */
+    const ordine = (f: string) => {
+      const pri: Record<string, number> = f === 'all' ? { c: 0, a: 1, m: 2, d: 3 } : { [f]: 0, c: 1 };
+      const rank = (e: any) => (pri[e.t] != null ? pri[e.t] : 2);
+      return (a: any, b: any) => rank(a) - rank(b) || a.km - b.km;
+    };
+
     /* pin sul profilo alla quota del loro km, raggruppati se si sovrappongono */
     function drawPins() {
-      const inFilter = poi.filter((e) => filter === 'all' || e.t === filter);
+      const inFilter = poi.filter((e) => poiMatch(e, filter));
       const groups: { x: number; y: number; members: any[] }[] = [];
       inFilter
         .slice()
-        .sort((a, b) => a.km - b.km)
+        .sort(ordine(filter))
         .forEach((e) => {
           const x = X(e.km), y = Y(pts[idxFromKm(e.km)][2]);
           const near = groups.find((g) => Math.abs(g.x - x) < 24);
@@ -255,7 +312,7 @@ const { src, color } = Astro.props;
       pins.innerHTML = groups
         .map((g, i) => {
           const capo = g.members.find((e) => e.partner) || g.members[0];
-          return `<button type="button" class="rvw-pin" data-g="${i}" style="left:${g.x}px;top:${g.y}px;background:${TCOL[capo.t]}" aria-label="${g.members.map((e) => e.name).join(', ')}">${icon(capo.t, 13)}${g.members.length > 1 ? `<i class="n">${g.members.length}</i>` : ''}</button>`;
+          return `<button type="button" class="rvw-pin" data-g="${i}" style="left:${g.x}px;top:${g.y}px;background:${TCOL[capo.t]}" aria-label="${esc(g.members.map((e) => nameOf(e)).join(', '))}">${icon(capo.t, 13)}${g.members.length > 1 ? `<i class="n">${g.members.length}</i>` : ''}</button>`;
         })
         .join('');
       pins.querySelectorAll<HTMLElement>('.rvw-pin').forEach((b) =>
@@ -263,10 +320,11 @@ const { src, color } = Astro.props;
           ev.stopPropagation();
           const g = groups[+b.dataset.g!];
           const capo = g.members[0];
+          const [lat, lng] = posOf(capo);
           selKm = capo.km;
           showCursor(idxFromKm(capo.km));
-          map.flyTo({ center: [capo.lng, capo.lat], zoom: Math.max(map.getZoom(), 12) });
-          showTip(capo.km, g.members.map((e) => e.name).join(' · '));
+          map.flyTo({ center: [lng, lat], zoom: Math.max(map.getZoom(), 12) });
+          showTip(capo.km, g.members.map((e) => nameOf(e)).slice(0, 3).join(' · ') + (g.members.length > 3 ? '…' : ''));
           drawProfile();
         })
       );
@@ -278,7 +336,7 @@ const { src, color } = Astro.props;
       const y = Math.max(Y(pts[i][2]), 56);
       tip.style.left = x + 'px';
       tip.style.top = y + 'px';
-      tip.innerHTML = label ? `<b>km ${km.toFixed(1)}</b> · ${label}` : `<b>km ${km.toFixed(1)}</b> · ${pts[i][2]} m`;
+      tip.innerHTML = label ? `<b>km ${km.toFixed(1)}</b> · ${esc(label)}` : `<b>km ${km.toFixed(1)}</b> · ${pts[i][2]} m`;
       tip.hidden = false;
     }
 
@@ -295,16 +353,18 @@ const { src, color } = Astro.props;
     wrap.addEventListener('mouseleave', () => { selKm = null; hideCursor(); });
     wrap.addEventListener('touchmove', (e) => onMove(e.touches[0].clientX), { passive: true });
 
-    /* filtri */
+    /* filtri — mostra solo le categorie davvero presenti nei dati */
+    const has = (t: string) => poi.some((e) => poiMatch(e, t));
     const filWrap = root.querySelector<HTMLElement>('.rvw-filters')!;
     filWrap.innerHTML =
       `<button type="button" class="rvw-fil on" data-f="all">All</button>` +
-      ['a', 'm', 'c', 'd'].map((t) => `<button type="button" class="rvw-fil" data-f="${t}">${icon(t, 14, TCOL[t])} ${TLAB[t]}</button>`).join('');
+      ['a', 'm', 'c', 'd'].filter(has).map((t) => `<button type="button" class="rvw-fil" data-f="${t}">${icon(t, 14, TCOL[t])} ${TLAB[t]}</button>`).join('');
     filWrap.querySelectorAll<HTMLElement>('.rvw-fil').forEach((b) =>
       b.addEventListener('click', () => {
         filter = b.dataset.f!;
         filWrap.querySelectorAll('.rvw-fil').forEach((x) => x.classList.toggle('on', x === b));
         renderList();
+        refreshMapMarkers();
         drawProfile();
       })
     );
@@ -312,13 +372,13 @@ const { src, color } = Astro.props;
     /* lista POI sotto il profilo */
     const list = root.querySelector<HTMLElement>('.rvw-list')!;
     function renderList() {
-      const inFilter = poi.filter((e) => filter === 'all' || e.t === filter).slice().sort((a, b) => a.km - b.km);
+      const inFilter = poi.filter((e) => poiMatch(e, filter)).slice().sort((a, b) => a.km - b.km);
       list.innerHTML = inFilter
         .map(
           (e) =>
             `<div class="rvw-poicard${e.partner ? ' partner' : ''}">` +
             `<span class="ico" style="background:${TCOL[e.t]}">${icon(e.t, 15)}</span>` +
-            `<span>${e.partner ? '<span class="ptag">Official Bike-Friendly Stay</span>' : ''}<b>${e.name}</b><span class="desc">${e.desc}</span>` +
+            `<span>${e.partner ? '<span class="ptag">Official Bike-Friendly Stay</span>' : ''}<b>${esc(nameOf(e))}</b><span class="desc">${esc(descOf(e))}</span>` +
             (e.partner && e.url ? `<a class="book" href="${e.url}" target="_blank" rel="noopener">Book your base →</a>` : '') +
             `</span><span class="kmtag">km ${e.km}</span></div>`
         )
