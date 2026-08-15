@@ -38,6 +38,8 @@ header.nav-glass *{pointer-events:auto}
 .nav-pill ul{list-style:none;display:flex;gap:28px;margin:0;padding:0}
 .nav-pill ul a{color:rgba(255,255,255,.72);text-decoration:none;font-size:.96rem;font-weight:500;letter-spacing:.01em;transition:color .2s}
 .nav-pill ul a:hover{color:#f5a623}
+/* voce di ritorno al sito evento: chi arriva da tuscanytrail.it deve poter tornare */
+.nav-pill ul a.nav-tt,.nav-mobile-panel ul a.nav-tt{color:#f5a623;font-weight:600}
 .nav-right{display:flex;align-items:center;gap:12px}
 .sys-dot{width:6px;height:6px;border-radius:50%;background:#f5a623;animation:syspulse 2s ease-in-out infinite;flex-shrink:0}
 @keyframes syspulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
