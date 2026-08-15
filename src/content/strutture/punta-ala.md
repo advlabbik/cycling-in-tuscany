@@ -28,7 +28,7 @@ services:
 ridePack:
   - name: Tirli Loop
     type: Gravel
-    km: 54,5
+    km: "54.5"
     dislivello: 767 m
     diff: Challenging
     surface: 43% unpaved
@@ -37,7 +37,7 @@ ridePack:
     page: /itinerari/pacr-gravel-1
   - name: Castiglione Loop
     type: Gravel
-    km: 55,8
+    km: "55.8"
     dislivello: 560 m
     diff: Easy
     surface: 52% gravel
@@ -46,7 +46,7 @@ ridePack:
     page: /itinerari/pacr-gravel-2
   - name: Marsiliana Road
     type: Road
-    km: 83,9
+    km: "83.9"
     dislivello: 523 m
     diff: Easy · scenic
     surface: paved road
@@ -62,7 +62,6 @@ ridePack:
     hi: Castiglione della Pescaia, Tirli climb
     url: https://ridewithgps.com/routes/53994046
     page: /itinerari/pacr-road-2
-guidaPdf: /guide-pdf/Ride-Base-Pack-Punta-Ala.pdf
 extraSections:
   - title: "The riding around the base"
     sub: "Beachfront pine forest, a Trail Center on site and some of Maremma's best riding from the door."

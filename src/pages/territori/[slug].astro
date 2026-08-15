@@ -159,7 +159,24 @@ const schema = {
     </section>
   )}
 
-  <section style="background:#fff">
+  {territorio.data.extraSections.map((sec, i) => (
+    <section style={i % 2 === 0 ? 'background:#fff' : undefined}>
+      <div class="wrap">
+        <h2 class="sec">{sec.title}</h2>
+        {sec.sub && <p class="sub">{sec.sub}</p>}
+        <div class="grid g2">
+          {sec.cards.map((card) => (
+            <div class="card">
+              <h3>{card.label}</h3>
+              <p>{card.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section style={territorio.data.extraSections.length % 2 === 1 ? undefined : 'background:#fff'}>
     <div class="wrap">
       <div class="cta-band">
         <div>
@@ -193,16 +210,18 @@ const schema = {
               <li class="muted">—</li>
             )}
           </ul>
-          <a class="pack-dl-btn" href={territorio.data.guidaPdf} target="_blank">
-            <span class="pack-dl-circle">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-            </span>
-            {premium ? 'Download the complete guide (PDF)' : 'Download the Ride Base Pack (PDF)'}
-          </a>
+          {territorio.data.guidaPdf && (
+            <a class="pack-dl-btn" href={territorio.data.guidaPdf} target="_blank">
+              <span class="pack-dl-circle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </span>
+              {premium ? 'Download the complete guide (PDF)' : 'Download the Ride Base Pack (PDF)'}
+            </a>
+          )}
         </div>
       </div>
     </div>

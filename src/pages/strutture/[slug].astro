@@ -83,7 +83,7 @@ const schema = {
         {struttura.data.ridePack.map((route) => <RouteCard route={route} />)}
       </div>
 
-      {!allOnSite && (
+      {!allOnSite && struttura.data.guidaPdf && (
         <div class="pack-dl-bar">
           <div class="pack-dl-bar-glow"></div>
           <div class="pack-dl-bar-left">

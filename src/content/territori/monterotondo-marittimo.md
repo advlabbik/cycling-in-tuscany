@@ -41,7 +41,6 @@ channels:
 numeriUtili:
   - label: "Library / Fucini Museum"
     value: "0566 906391"
-guidaPdf: "/guide-pdf/Ride-Base-Pack-Monterotondo.pdf"
 stay22Map:
   lat: 43.143
   lng: 10.857

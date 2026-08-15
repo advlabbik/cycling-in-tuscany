@@ -50,7 +50,20 @@ const territori = defineCollection({
         .default(null),
       channels: z.array(z.object({ label: z.string(), url: z.string().url() })).default([]),
       numeriUtili: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
-      guidaPdf: z.string(),
+      /** opzionale dal 15/8: la guida non si scarica più, i contenuti vivono
+       *  nelle extraSections della pagina (decisione Andrea, come per i pack) */
+      guidaPdf: z.string().optional(),
+      /** sezioni con i contenuti della guida territorio, stesse card generiche
+       *  delle strutture — titolo + sub + card label/text */
+      extraSections: z
+        .array(
+          z.object({
+            title: z.string(),
+            sub: z.string().optional(),
+            cards: z.array(z.object({ label: z.string(), text: z.string() })),
+          }),
+        )
+        .default([]),
       /**
        * Mappa Stay22 embeddata in testa alla pagina territorio (Andrea, 15/8).
        * L'AID è `adventurelabsrl` (lo stesso della guida Trentino, quello che
@@ -93,7 +106,8 @@ const strutture = defineCollection({
       }),
       services: z.array(z.string()),
       ridePack: z.array(Route),
-      guidaPdf: z.string(),
+      /** facoltativo dal 15/8: i pack vivono nelle pagine, niente download */
+      guidaPdf: z.string().optional(),
       /**
        * Contenuti del Ride Base Pack portati DENTRO la scheda (Andrea, 14/8):
        * aree di riding, itinerari-tipo, supporto tour operator, tips. Sezioni

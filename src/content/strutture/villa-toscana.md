@@ -62,7 +62,6 @@ ridePack:
     hi: "Follonica, Parco di Montioni"
     url: "https://ridewithgps.com/routes/53933299?privacy_code=DJcGQ2OKwZydioFG0tWMmHVHF54ebMDt"
     page: "/itinerari/vt-road-2"
-guidaPdf: "/guide-pdf/Ride-Base-Pack-Villa-Toscana.pdf"
 extraSections:
   - title: "The riding around the base"
     sub: "Val di Cornia is one of Tuscany's best cycling playgrounds — here is what surrounds the villa."

@@ -126,11 +126,28 @@ collections:
           - { name: label, label: Label, widget: string }
           - { name: value, label: Value, widget: string }
       # I PDF restano in public/: sono serviti così come sono, non passano da astro:assets.
+      # Dal 15/8 il campo è facoltativo: le guide non si scaricano più, i contenuti
+      # vivono nelle sezioni extra della pagina.
       - name: guidaPdf
         label: Guide PDF
         widget: file
+        required: false
         media_folder: /public/guide-pdf
         public_folder: /guide-pdf
+      - name: extraSections
+        label: "Sezioni extra (contenuti della guida)"
+        widget: list
+        required: false
+        hint: "I contenuti della guida territorio, in chiaro nella pagina."
+        fields:
+          - { name: title, label: Titolo sezione, widget: string }
+          - { name: sub, label: Sottotitolo, widget: string, required: false }
+          - name: cards
+            label: Card
+            widget: list
+            fields:
+              - { name: label, label: Titolo card, widget: string }
+              - { name: text, label: Testo card, widget: text }
       - { name: body, label: Magazine body, widget: markdown }
 
   - name: faq
@@ -207,6 +224,7 @@ collections:
       - name: guidaPdf
         label: Guide PDF
         widget: file
+        required: false
         media_folder: /public/guide-pdf
         public_folder: /guide-pdf
       - name: extraSections

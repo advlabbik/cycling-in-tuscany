@@ -58,7 +58,36 @@ numeriUtili:
     value: "0565 838470 — Via Cavour"
   - label: "Town Hall"
     value: "0565 839111 — Via Roma 5"
-guidaPdf: "/guide-pdf/Guida-Campiglia-Marittima.pdf"
+extraSections:
+  - title: "The stories behind the sights"
+    sub: "From the official Campiglia Marittima guide — the depth that makes this borough worth more than a photo stop."
+    cards:
+      - label: "A thousand years of mining"
+        text: "The San Silvestro mines have yielded copper, lead and silver for over a millennium, feeding medieval Europe's hunger for metals. Today the Temperino tour takes you underground into a real mine, the restored miners' village shows daily life as it was, and two museums cover the archaeology and the machines."
+      - label: "Waters the Etruscans knew"
+        text: "The Calidario thermal springs flow naturally at 36 °C, known since Etruscan and Roman times. Around the open-air thermal lake you'll find massages, thermal muds and saunas — and near the Tufaia ponds, the Area del Silenzio, a garden designed for meditation and slowing down."
+      - label: "The Rocca and the pirate coast"
+        text: "The 12th-century fortress was built to defend the borough from Saracen pirate raids along the Tyrrhenian coast. Its walls and towers still command the valley, with a panorama stretching to the Tuscan Archipelago that alone is worth the climb. Visits can be booked through the Parchi Val di Cornia."
+      - label: "Palazzo Pretorio and the podestà"
+        text: "Seat of local government since the 14th century, its austere facade is studded with the coats of arms of the Florentine podestà who ruled the borough between the 15th and 17th centuries. Today it hosts exhibitions and cultural events."
+  - title: "Plan your visit"
+    sub: "The practical layer — getting here, one perfect day, and who to call."
+    cards:
+      - label: "Getting there"
+        text: "By car, leave the SS1 Aurelia at the Venturina Terme exit and follow the signs uphill to the borough. By train, Campiglia Marittima station sits on the Pisa–Rome line with connections from Pisa and Florence airports."
+      - label: "One perfect day"
+        text: "Breakfast outdoors in a bar of the borough, then the Rocca while the light is still low. Lunch among the alleys, an afternoon guided tour of the Temperino mine and the miners' village, and a sunset soak in the thermal lake to close the loop."
+      - label: "Guided tours"
+        text: "The Parco Archeominerario runs guided tours year-round, in several languages, with special events and workshops for groups and families. The tourist office in Via Cavour (0565 838470) helps with bookings and tailored itineraries."
+      - label: "A walk of oil and wine"
+        text: "From the restored Fonte Corboli washhouse, with the valley and the sea on the horizon, a food-and-wine trail links olive groves, vineyards and organic farms around the borough — the slow-day alternative when the bike rests."
+  - title: "For riders"
+    sub: "Why Campiglia is the technical heart of the Tuscany Trail territory."
+    cards:
+      - label: "Bike Area Monte Calvi"
+        text: "Run with passion by the Sdegnetors ASD, the trail network on Monte Calvi grades from flowing lines with shaped berms and small jumps up to black enduro singletrack that demands precision and courage — with views from the Archipelago to the inland hills the whole way."
+      - label: "Part of the Tuscany Trail network"
+        text: "The white roads and trails around the borough are the same ones ridden by thousands at the Tuscany Trail. The bike park, the mining park trails and the event route weave into one riding playground."
 stay22Map:
   lat: 43.0302
   lng: 10.6055

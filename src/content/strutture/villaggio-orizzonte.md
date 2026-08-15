@@ -63,7 +63,6 @@ ridePack:
     hi: "Suvereto, Sassetta, Monteverdi Marittimo"
     url: "https://ridewithgps.com/routes/53934346"
     page: "/itinerari/vo-road-2"
-guidaPdf: "/guide-pdf/Ride-Base-Pack-Villaggio-Orizzonte.pdf"
 extraSections:
   - title: "The riding around the base"
     sub: "You're not in a resort with artificial routes — you're in the real Tuscany, between sea and hills."
