@@ -1,0 +1,37 @@
+# Servizi lungo pacr-gravel-2 — da OpenStreetMap
+
+Centri con molti servizi raggruppati in una riga. Km indicativi.
+
+- 🍝 km 0 — Isolotto Cafe & Restaurant
+- 🍝 km 0 — Beach Bar
+- ⛲ km 0 — fountain
+- 🛏️ km 0 — PuntAla Camp & Resort
+- 🍝 km 6 — Ristorante Le Zucche Quadre
+- ⛲ km 21 — fountain (Ampio)
+- 🍝 km 28 — Bar (Ponti di Badia)
+- 🍝 km 28 — Ristorante pizzeria Ponti di Badia (Ponti di Badia)
+**km 38 — Castiglione della Pescaia** · 84 eat · 11 fountains
+**km 40 — Riva del Sole** · 5 eat
+- 🍝 km 41 — Cafe Beach Camping Maremma Sanssouci
+- 🍝 km 43 — Da Anna (Roccamare)
+- 🍝 km 44 — Bar Pizzeria La Corte (Pian di Rocca)
+- 🍝 km 45 — Trentino
+**km 51 — Pian d'Alma** · 5 eat
+- 🍝 km 54 — Il Salto della Capriola
+- ⛲ km 55 — fountain
+- 🍝 km 55 — Baia Verde Supermarket SAS
+- ⛲ km 55 — fountain
+- 🍝 km 55 — restaurant
+- 🍝 km 55 — Bar Spiaggia
+- ⛲ km 55 — fountain
+- ⛲ km 55 — fountain
+- 🍝 km 55 — bar
+- 🍝 km 55 — restaurant
+- ⛲ km 55 — fountain
+- ⛲ km 55 — fountain
+- ⛲ km 55 — fountain
+- ⛲ km 56 — fountain
+- 🍝 km 56 — PuntAla Market
+- 🍝 km 56 — PuntAla Delicacies
+- 🍝 km 56 — Bar Centrale
+- 🍝 km 56 — Ristorante Centrale

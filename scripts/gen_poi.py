@@ -30,11 +30,20 @@ os.makedirs(MD_DIR, exist_ok=True)
 os.makedirs(OUTDIR, exist_ok=True)
 
 # Il partner della scheda, iniettato come unico "dormire" sui suoi itinerari.
+# Le coordinate sono il punto di partenza dei GPX (= la porta della struttura).
 PARTNER = {
     "vt-": {"t": "d", "name": "Villa Toscana",
             "desc": "Your base — Official Bike-Friendly Stay",
             "lat": 42.99, "lng": 10.606, "partner": True,
             "url": "https://www.villatoscanavacanze.it/"},
+    "pacr-": {"t": "d", "name": "PuntAla Camp & Resort",
+              "desc": "Your base — Official Bike-Friendly Stay",
+              "lat": 42.8433, "lng": 10.7796, "partner": True,
+              "url": "https://www.campingpuntala.it/"},
+    "vo-": {"t": "d", "name": "Villaggio Orizzonte",
+            "desc": "Your base — Official Bike-Friendly Stay",
+            "lat": 42.966, "lng": 10.6264, "partner": True,
+            "url": "https://www.villaggioorizzonte.it/"},
 }
 
 GPX = {}
