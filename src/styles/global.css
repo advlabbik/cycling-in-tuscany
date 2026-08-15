@@ -6,8 +6,8 @@
   --font-display:'Playfair Display',Georgia,serif;
   --font-handwritten:'Caveat',cursive;
   --font-body:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-  --ev:#c74634;--ev-dark:#a63828;
-  --dark:#2d4a3e;--dark-muted:#3d3d3d;
+  --ev:#a80030;--ev-dark:#7c0023;
+  --dark:#2e151c;--dark-muted:#3d3d3d;
   --gold:#b8860b;
   --cream:#f7f3eb;--cream-light:#faf8f4;
   --surface:#fff;--muted:#6b6b6b;--border:#e8e0d4;--fg:#1a1a1a;
@@ -23,15 +23,23 @@ a{color:var(--ev)}
 
 /* ===== NAV GLASS ===== */
 header.nav-glass{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 28px;pointer-events:none;transition:background .3s ease,box-shadow .3s ease,padding .3s ease}
-header.nav-glass.nav-solid{background:rgba(9,20,14,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(255,255,255,.07);padding:10px 28px}
+header.nav-glass.nav-solid{background:rgba(18,10,13,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(255,255,255,.07);padding:10px 28px}
 header.nav-glass *{pointer-events:auto}
 .nav-inner{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{display:flex;align-items:center;text-decoration:none;line-height:1}
 .brand img{height:80px;width:auto;display:block;filter:brightness(0) invert(1);opacity:1}
+/* lockup Tuscany Trail 365 (branch brand): il logo TT bianco ufficiale ha il
+   simbolo rosso — niente filtro invert, che lo cancellerebbe */
+.brand-tt{gap:10px}
+.brand-tt img{height:34px;width:auto;filter:none}
+.brand-365{font-family:var(--font-display);font-weight:700;font-style:italic;font-size:1.5rem;color:#f5a623;line-height:1;letter-spacing:.02em}
+@media(max-width:560px){.brand-tt img{height:26px}.brand-365{font-size:1.2rem}}
 .nav-pill{background:rgba(255,255,255,.07);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.13);border-radius:999px;padding:12px 30px}
 .nav-pill ul{list-style:none;display:flex;gap:28px;margin:0;padding:0}
 .nav-pill ul a{color:rgba(255,255,255,.72);text-decoration:none;font-size:.96rem;font-weight:500;letter-spacing:.01em;transition:color .2s}
 .nav-pill ul a:hover{color:#f5a623}
+/* voce di ritorno al sito evento: chi arriva da tuscanytrail.it deve poter tornare */
+.nav-pill ul a.nav-tt,.nav-mobile-panel ul a.nav-tt{color:#f5a623;font-weight:600}
 .nav-right{display:flex;align-items:center;gap:12px}
 .sys-dot{width:6px;height:6px;border-radius:50%;background:#f5a623;animation:syspulse 2s ease-in-out infinite;flex-shrink:0}
 @keyframes syspulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
@@ -44,7 +52,7 @@ header.nav-glass *{pointer-events:auto}
 .nav-burger.is-open span:nth-child(2){opacity:0}
 .nav-burger.is-open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 /* mobile dropdown panel */
-.nav-mobile-panel{display:none;position:absolute;top:100%;left:16px;right:16px;background:rgba(9,20,14,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px 24px 24px;margin-top:8px;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.nav-mobile-panel{display:none;position:absolute;top:100%;left:16px;right:16px;background:rgba(18,10,13,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px 24px 24px;margin-top:8px;box-shadow:0 16px 48px rgba(0,0,0,.5)}
 .nav-mobile-panel ul{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:4px}
 .nav-mobile-panel ul a{display:block;color:rgba(255,255,255,.82);text-decoration:none;font-size:1.08rem;font-weight:500;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07);transition:color .18s}
 .nav-mobile-panel ul li:last-child a{border-bottom:none}
@@ -57,12 +65,18 @@ header.nav-glass.nav-open .nav-mobile-panel{display:block}
 .kick{font-family:var(--font-handwritten);font-size:1.25rem;font-weight:500;letter-spacing:0;text-transform:none;color:#e6c98a;margin-bottom:10px}
 
 /* ===== GLASS HERO (home) ===== */
-.hero-glass{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:#09140e;padding-top:80px}
+.hero-glass{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:#120a0d;padding-top:80px}
 .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.32;filter:saturate(.75)}
 .hero-glow-gold{position:absolute;top:-80px;right:-60px;width:650px;height:650px;background:radial-gradient(circle,rgba(245,166,35,.22) 0%,transparent 65%);filter:blur(60px);pointer-events:none}
-.hero-glow-green{position:absolute;bottom:-60px;left:5%;width:500px;height:500px;background:radial-gradient(circle,rgba(45,74,62,.55) 0%,transparent 70%);filter:blur(80px);pointer-events:none}
+.hero-glow-green{position:absolute;bottom:-60px;left:5%;width:500px;height:500px;background:radial-gradient(circle,rgba(168,0,48,.4) 0%,transparent 70%);filter:blur(80px);pointer-events:none}
 /* issue #13: la colonna destra dell'hero non è mai stata usata → hero a colonna singola */
 .hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1fr;gap:56px;align-items:center;padding-top:48px;padding-bottom:80px}
+/* hero "slim" (15/8): la home non si prende più tutto lo schermo — sotto c'è
+   subito la mappa prenotazioni, che è il vero motivo per cui si arriva */
+.hero-glass.slim{min-height:auto}
+.hero-glass.slim .hero-grid{padding-top:36px;padding-bottom:56px}
+.hero-glass.slim .hero-title{font-size:3.4rem}
+@media(max-width:860px){.hero-glass.slim .hero-title{font-size:2.6rem}}
 .hero-left{min-width:0}
 .hero-sys-tag{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:24px}
 .hero-title{font-size:4.6rem;line-height:.9;color:#fff;margin:0 0 26px;letter-spacing:-.03em;font-weight:700;font-family:var(--font-display)}
@@ -78,6 +92,9 @@ header.nav-glass.nav-open .nav-mobile-panel{display:block}
 @media(max-width:860px){.hero-title{font-size:3.2rem}}
 @media(max-width:480px){.hero-title{font-size:2.4rem}}
 
+/* banda percorsi in home: foto dei ciclisti a piena luce, meno alta della feature */
+.routes-band{min-height:54vh}
+.routes-band h2{max-width:520px}
 /* feature (Campiglia) */
 .feature{position:relative;min-height:70vh;display:flex;align-items:flex-end;color:#fff;background-size:cover;background-position:center;border-bottom:5px solid var(--gold)}
 .feature .wrap{position:relative;z-index:2;padding-bottom:52px;padding-top:60px}
@@ -126,7 +143,10 @@ h2.sec{font-size:1.9rem;margin:0 0 8px}
 .ter-nav-btn{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--fg);transition:background .2s,border-color .2s,color .2s,opacity .2s}
 .ter-nav-btn:hover{background:var(--fg);color:#fff;border-color:var(--fg)}
 .ter-nav-btn:disabled{opacity:.28;cursor:default;pointer-events:none}
-.ter-carousel-scroll{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-left:max(22px,calc((100vw - 1120px)/2 + 22px));padding-right:max(22px,calc((100vw - 1120px)/2 + 22px));padding-bottom:4px}
+/* `safe center` (15/8): con tre slide che ci stanno tutte il carosello sta
+   centrato; se in futuro i territori crescono e sfora, torna a sinistra da
+   solo senza tagliare la prima slide */
+.ter-carousel-scroll{display:flex;gap:20px;justify-content:safe center;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-left:max(22px,calc((100vw - 1120px)/2 + 22px));padding-right:max(22px,calc((100vw - 1120px)/2 + 22px));padding-bottom:4px}
 .ter-carousel-scroll::-webkit-scrollbar{display:none}
 .ter-slide{flex:0 0 340px;scroll-snap-align:start;text-decoration:none;color:inherit;display:block}
 .ter-slide-inner{position:relative;height:490px;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 8px 32px rgba(0,0,0,.18);transition:transform .35s cubic-bezier(.25,1,.5,1),box-shadow .35s ease}
@@ -141,7 +161,7 @@ h2.sec{font-size:1.9rem;margin:0 0 8px}
 .ter-slide-cta{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;font-weight:600;color:rgba(255,255,255,.88);letter-spacing:.02em;transition:gap .2s}
 .ter-slide:hover .ter-slide-cta{gap:14px}
 /* coming soon */
-.ter-slide-soon .ter-slide-inner{background:linear-gradient(160deg,#0e1a12 0%,#0b1510 55%,#111820 100%);border:1.5px dashed rgba(255,255,255,.1);cursor:default}
+.ter-slide-soon .ter-slide-inner{background:linear-gradient(160deg,#1a0e12 0%,#150b0e 55%,#1f1216 100%);border:1.5px dashed rgba(255,255,255,.1);cursor:default}
 .ter-slide-soon:hover .ter-slide-inner{transform:none;box-shadow:0 8px 32px rgba(0,0,0,.18)}
 .ter-slide-soon .ter-slide-img{opacity:.1;filter:blur(3px) grayscale(.9)}
 .ter-soon-glow{position:absolute;bottom:35%;left:50%;transform:translateX(-50%);width:220px;height:220px;background:radial-gradient(circle,rgba(245,166,35,.2) 0%,transparent 68%);pointer-events:none}
@@ -167,7 +187,7 @@ h2.sec{font-size:1.9rem;margin:0 0 8px}
 
 /* cta band + editorial + accordion */
 .cta-band{background:var(--dark);color:#fff;border-radius:16px;padding:28px 30px;display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap}
-.cta-band h3{margin:0;font-size:1.3rem}.cta-band p{margin:5px 0 0;color:#c8dcd2;font-size:.92rem}
+.cta-band h3{margin:0;font-size:1.3rem}.cta-band p{margin:5px 0 0;color:#e6ccd4;font-size:.92rem}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow-sm)}
 .card h3{margin:.1em 0 .4em;font-size:1.12rem}.card p{margin:0;color:#4a4a4a;font-size:.92rem}
 .chips{display:flex;flex-wrap:wrap;gap:9px}.chip{background:#fff;border:1px solid var(--border);border-radius:999px;padding:7px 13px;font-size:.82rem;font-weight:500}
@@ -179,7 +199,7 @@ a.chip{text-decoration:none;color:var(--ev)}
 .rcard-preview img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 .rcard-badge{position:absolute;top:8px;left:8px;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:999px;font-family:var(--font-body);z-index:1}
 .rcard-badge.gravel{background:#b8860b;color:#1a1a1a}
-.rcard-badge.road{background:#2d4a3e;color:#fff}
+.rcard-badge.road{background:#2e151c;color:#fff}
 .rcard-body{flex:1;min-width:0;padding:16px 18px 16px 16px;display:flex;flex-direction:column;min-height:148px}
 .rcard h3{margin:0 0 7px;font-size:.98rem;font-family:var(--font-display);color:var(--fg);line-height:1.2}
 .rcard-meta{display:flex;gap:8px;flex-wrap:wrap;font-size:.78rem;color:#4a4a4a}
@@ -196,11 +216,11 @@ a.chip{text-decoration:none;color:var(--ev)}
 .g2{grid-template-columns:repeat(2,1fr)}@media(max-width:820px){.g2{grid-template-columns:1fr}}
 
 /* subpage hero */
-.hero{color:#fff;padding:70px 0 60px;background:linear-gradient(120deg,var(--dark),#1a3a2e)}
-.hero.premium{background:linear-gradient(120deg,#2d4a3e,#6b4a10 120%);border-bottom:4px solid var(--gold)}
-.hero h1{font-size:2.4rem;margin:.3em 0 .3em;line-height:1.05;max-width:760px}.hero p.lead{font-size:1.06rem;max-width:640px;color:#c8dcd2;margin:0}
+.hero{color:#fff;padding:70px 0 60px;background:linear-gradient(120deg,var(--dark),#47202b)}
+.hero.premium{background:linear-gradient(120deg,#2e151c,#6b4a10 120%);border-bottom:4px solid var(--gold)}
+.hero h1{font-size:2.4rem;margin:.3em 0 .3em;line-height:1.05;max-width:760px}.hero p.lead{font-size:1.06rem;max-width:640px;color:#e6ccd4;margin:0}
 .ribbon{display:inline-block;background:var(--gold);color:#1a1a1a;font-weight:700;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 13px;border-radius:999px;margin-bottom:14px;font-family:var(--font-body)}
-.ribbon.std{background:#c8dcd2;color:#2d4a3e}
+.ribbon.std{background:#e6ccd4;color:#2e151c}
 .badge-verif{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;font-weight:700;font-size:.74rem;padding:7px 13px;border-radius:999px;margin-bottom:14px;font-family:var(--font-body)}
 .editorial{background:#fff;border-radius:16px;padding:26px 28px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}.editorial p{font-size:1rem;color:#3a3a3a}
 .editorial p:first-child{margin-top:0}.editorial p:last-child{margin-bottom:0}
@@ -250,5 +270,5 @@ a.chip{text-decoration:none;color:var(--ev)}
 .maplibregl-popup{z-index:900}
 .maplibregl-popup-content{border-radius:14px!important;padding:0!important;box-shadow:0 8px 32px rgba(0,0,0,.22)!important;font-family:var(--font-body);overflow:hidden}
 
-footer{background:var(--dark);color:#a8c4b4;padding:38px 0;margin-top:0;font-size:.85rem}footer a{color:#c8dcd2}
+footer{background:var(--dark);color:#d6aeb9;padding:38px 0;margin-top:0;font-size:.85rem}footer a{color:#e6ccd4}
 .muted{color:var(--muted)}.small{font-size:.82rem}

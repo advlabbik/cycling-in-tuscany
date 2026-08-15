@@ -1,5 +1,5 @@
 ---
-order: 4
+order: 7
 question: "Do I need a guide?"
-answer: "No. The guide is designed to be self-guided, with route packs and stay details that make planning easy. A local guide is optional if you want a more tailored experience."
+answer: "No. Every route is designed to be ridden self-supported, with the practical details already on the page. Local guides, rentals and shuttles are available in most areas if you want a more tailored experience."
 ---

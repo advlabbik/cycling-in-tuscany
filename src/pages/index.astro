@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import Map from '../components/Map.astro';
+import Stay22MapSection from '../components/Stay22MapSection.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { getCollection } from 'astro:content';
 import { site } from '../../site.config';
@@ -9,6 +9,7 @@ import heroImg from '../assets/images/hero.jpg';
 
 const territori = await getCollection('territori');
 const struttureAll = await getCollection('strutture');
+const itinerari = await getCollection('itinerari');
 // Ordinate per `order`, non per nome file: dal CMS lo slug viene dalla domanda (#34).
 const faqEntries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
 
@@ -33,6 +34,7 @@ const monterotondo = territori.find((item) => item.data.tier !== 'premium') || t
 const heroBg = await bgUrl(heroImg, 1600);
 const campigliaBg = await bgUrl(campiglia?.data.heroImage, 1600);
 const monterotondoBg = await bgUrl(monterotondo.data.heroImage, 700);
+const campigliaSlideBg = await bgUrl(campiglia?.data.heroImage, 700);
 // Oggetto e non `new Map()`: in questo file `Map` è il componente della mappa,
 // che ombreggia il costruttore globale.
 const struttureBg: Record<string, string> = Object.fromEntries(
@@ -55,32 +57,41 @@ const faqSchema = {
 ---
 
 <Base
-  title="Cycling in Tuscany — plan your Tuscany cycling holiday"
+  title="Tuscany Trail 365 — the Tuscany Trail's Tuscany, all year round"
   description="Handpicked territories, verified bike-friendly stays and routes ready to download."
-  maplibre={true}
   schema={faqSchema}
 >
-  <section class="hero-glass">
+  <section class="hero-glass slim">
     {heroBg && <div class="hero-bg" style={`background-image:url('${heroBg}')`}></div>}
     <div class="hero-glow-gold"></div>
     <div class="hero-glow-green"></div>
     <div class="wrap hero-grid">
       <div class="hero-left">
-        <div class="hero-sys-tag"><span class="sys-dot"></span>Cycling Destination · Costa degli Etruschi</div>
-        <h1 class="hero-title">Plan your<br /><em class="hero-em">Tuscany</em><br />cycling holiday.</h1>
-        <p class="hero-lead">Handpicked territories, verified bike-friendly stays and routes ready to download. Curated by the team behind the Tuscany Trail.</p>
+        <div class="hero-sys-tag"><span class="sys-dot"></span>A Tuscany Trail project · year-round</div>
+        <h1 class="hero-title">The Tuscany Trail's<br /><em class="hero-em">Tuscany</em>.<br />All year round.</h1>
+        <p class="hero-lead">The start-line booking map, verified routes and bike-friendly stays — curated by the team that created the Tuscany Trail, the world's largest bikepacking event.</p>
         <div class="hero-actions">
-          <a class="btn gold neon-glow" href="#map">Explore the map →</a>
-          <a class="btn ghost-white" href="#stays">See verified stays</a>
+          <a class="btn gold neon-glow" href="#book">Book your first night →</a>
         </div>
       </div>
     </div>
   </section>
 
+  <Stay22MapSection
+    id="book"
+    lat={43.0302}
+    lng={10.6055}
+    venue="Fiere di Venturina — Tuscany Trail Start"
+    campaign="cit-home-fiera"
+    badge="★ The Tuscany Trail starts here"
+    title="Book your first night in Campiglia Marittima"
+    text="The map is centred on the Fiere di Venturina, where thousands of riders roll out for the Tuscany Trail every year. Everything you see is bookable — move the map to explore the rest of the coast."
+  />
+
   {campiglia && (
     <section
       class="feature"
-      style={`background-image:linear-gradient(rgba(10,5,8,.45),rgba(10,5,8,.88))${campigliaBg ? `, url('${campigliaBg}')` : ''}, linear-gradient(135deg,#2d4a3e,#6b4a10);border-radius:28px 28px 0 0;margin-top:-40px;position:relative;z-index:5;box-shadow:0 -12px 48px rgba(0,0,0,.55)`}
+      style={`background-image:linear-gradient(rgba(10,5,8,.45),rgba(10,5,8,.88))${campigliaBg ? `, url('${campigliaBg}')` : ''}, linear-gradient(135deg,#2e151c,#6b4a10)`}
     >
       <div class="wrap">
         <div class="ribbon">Home of the Tuscany Trail</div>
@@ -115,10 +126,6 @@ const faqSchema = {
                     <span>See the stay</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                   </a>
-                  <a class="dcard-btn-sec" href={`/strutture/${slug}#routes`}>
-                    <span>See the routes</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                  </a>
                 </div>
               </div>
             </div>
@@ -128,16 +135,17 @@ const faqSchema = {
     </div>
   </section>
 
-  <section id="map" style="padding:80px 0 0;background:var(--cream)">
-    <div class="wrap" style="position:relative;z-index:10">
-      <SectionHeader
-        tag="Explore the destination"
-        title="The destination map"
-        description="Official territories and stays, all in one place. Click a pin for routes, details and booking."
-        marginBottom="40px"
-      />
+  <section
+    class="feature routes-band"
+    style={`background-image:linear-gradient(rgba(18,10,13,.35),rgba(18,10,13,.82))${heroBg ? `, url('${heroBg}')` : ''}`}
+  >
+    <div class="wrap">
+      <div class="ribbon">✔ Verified routes</div>
+      <div class="kick">{itinerari.length} loops · gravel & road</div>
+      <h2>The ones worth riding.</h2>
+      <p>Every route designed, ridden and verified by the people behind the Tuscany Trail — studied on the map with elevation, water stops and food, and the GPX ready for your bike computer.</p>
+      <a class="btn gold" href="/itinerari/">Browse the {itinerari.length} routes →</a>
     </div>
-    <Map territories={territori} structures={strutture} />
   </section>
 
   <section id="territories" style="background:var(--cream);padding:80px 0">
@@ -160,6 +168,20 @@ const faqSchema = {
     </div>
 
     <div class="ter-carousel-scroll" id="ter-carousel-scroll">
+      {campiglia && (
+        <a class="ter-slide" href={`/territori/${getSlug(campiglia.id)}`}>
+          <div class="ter-slide-inner" style="box-shadow:0 8px 32px rgba(184,134,11,.35)">
+            {campigliaSlideBg && <div class="ter-slide-img" style={`background-image:url('${campigliaSlideBg}')`}></div>}
+            <div class="ter-slide-grad"></div>
+            <div class="ter-slide-body">
+              <span class="ter-slide-tag">★ Home of the Tuscany Trail</span>
+              <div class="ter-slide-title">{campiglia.data.name}</div>
+              <div class="ter-slide-desc">Start and finish of the Tuscany Trail — medieval borough, thermal springs, Monte Calvi trails.</div>
+              <div class="ter-slide-cta">Discover <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></div>
+            </div>
+          </div>
+        </a>
+      )}
       <a class="ter-slide" href={`/territori/${getSlug(monterotondo.id)}`}>
         <div class="ter-slide-inner">
           {monterotondoBg && <div class="ter-slide-img" style={`background-image:url('${monterotondoBg}')`}></div>}
@@ -186,7 +208,7 @@ const faqSchema = {
               <path d="M90 48 L53 43 L57 48 L53 53 Z" fill="rgba(255,255,255,.18)" />
               <path d="M6 48 L43 53 L39 48 L43 43 Z" fill="rgba(255,255,255,.18)" />
               <circle cx="48" cy="48" r="6" fill="#f5a623" opacity=".9" />
-              <circle cx="48" cy="48" r="2.5" fill="#0e1a12" />
+              <circle cx="48" cy="48" r="2.5" fill="#1a0e12" />
               <text x="48" y="24" text-anchor="middle" dominant-baseline="middle" fill="rgba(245,166,35,.55)" font-size="8" font-family="monospace" font-weight="700" letter-spacing="2">N</text>
             </svg>
           </div>
@@ -198,50 +220,12 @@ const faqSchema = {
         </div>
       </div>
 
-      <div class="ter-slide ter-slide-soon">
-        <div class="ter-slide-inner">
-          <div class="ter-soon-glow"></div>
-          <div class="ter-soon-lines"></div>
-          <div class="ter-soon-icon">
-            <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="48" cy="48" r="44" stroke="rgba(245,166,35,.22)" stroke-width="1.5" stroke-dasharray="3 7" />
-              <path d="M16 72 Q22 54 38 48 Q54 42 62 30 Q68 18 80 14" stroke="rgba(255,255,255,.38)" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="5 5" />
-              <circle cx="16" cy="72" r="5" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2" />
-              <circle cx="48" cy="39" r="4.5" fill="#f5a623" opacity=".85" />
-              <circle cx="80" cy="14" r="10" fill="rgba(245,166,35,.18)" stroke="rgba(245,166,35,.4)" stroke-width="1.5" />
-              <circle cx="80" cy="14" r="4" fill="#f5a623" opacity=".9" />
-              <path d="M76 14 L80 10 L84 14" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".7" />
-            </svg>
-          </div>
-          <div class="ter-slide-body">
-            <span class="soon-badge"><span class="soon-badge-dot"></span>More to come</span>
-            <div class="ter-slide-title">Keep riding</div>
-            <div class="ter-slide-desc">Cycling in Tuscany keeps growing. More territories, more routes, more reasons to come back.</div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="ter-dots">
       <button class="ter-dot active" aria-label="Slide 1"></button>
       <button class="ter-dot" aria-label="Slide 2"></button>
       <button class="ter-dot" aria-label="Slide 3"></button>
-    </div>
-  </section>
-
-  <section id="magazine">
-    <div class="wrap">
-      <SectionHeader
-        tag="From the field"
-        title="Cycling in Tuscany Magazine"
-        description="Real stories from each territory — routes, places, people. Read here, no PDF."
-      />
-      <div class="cta-band" style="margin-top:0">
-        <div>
-          <p style="color:var(--muted);margin:0">First issue: {monterotondo.data.name} — the geothermal hills, where the earth breathes.</p>
-        </div>
-        <a class="btn gold" href={`/territori/${getSlug(monterotondo.id)}`}>Read now →</a>
-      </div>
     </div>
   </section>
 
@@ -259,6 +243,23 @@ const faqSchema = {
     </div>
   </section>
 </Base>
+
+<script>
+  /* Le tre strutture appaiono in ordine CASUALE a ogni visita (Andrea, 15/8):
+     sono partner alla pari e da telefono l'ordine decide chi viene visto.
+     Lato client e non al build, altrimenti l'ordine resterebbe fisso fino al
+     deploy successivo; senza JS resta l'ordine di site.config. */
+  (function () {
+    var grid = document.querySelector('.stays-grid');
+    if (!grid) return;
+    var cards = Array.from(grid.children);
+    for (var i = cards.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = cards[i]; cards[i] = cards[j]; cards[j] = t;
+    }
+    cards.forEach(function (c) { grid.appendChild(c); });
+  })();
+</script>
 
 <script>
   (function () {

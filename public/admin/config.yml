@@ -69,6 +69,24 @@ collections:
             label: Ride with GPS URL
             widget: string
             pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
+          - name: page
+            label: "Pagina itinerario interna"
+            widget: string
+            required: false
+            hint: "Es. /itinerari/mr-gravel-1 — se presente, la card porta lì invece che su Ride with GPS."
+      - name: stay22Map
+        label: "Mappa prenotazioni Stay22 (testa pagina)"
+        widget: object
+        required: false
+        hint: "La mappa embeddata subito dopo l'hero. Vuota = niente mappa."
+        fields:
+          - { name: lat, label: Latitude, widget: number, value_type: float }
+          - { name: lng, label: Longitude, widget: number, value_type: float }
+          - { name: venue, label: Venue (etichetta sulla mappa), widget: string }
+          - { name: campaign, label: "Campagna Stay22 (es. cit-campiglia)", widget: string }
+          - { name: badge, label: Badge (opzionale), widget: string, required: false }
+          - { name: title, label: Titolo sezione, widget: string }
+          - { name: text, label: Testo sezione, widget: text }
       - name: magazine
         label: Magazine
         widget: object
@@ -104,11 +122,28 @@ collections:
           - { name: label, label: Label, widget: string }
           - { name: value, label: Value, widget: string }
       # I PDF restano in public/: sono serviti così come sono, non passano da astro:assets.
+      # Dal 15/8 il campo è facoltativo: le guide non si scaricano più, i contenuti
+      # vivono nelle sezioni extra della pagina.
       - name: guidaPdf
         label: Guide PDF
         widget: file
+        required: false
         media_folder: /public/guide-pdf
         public_folder: /guide-pdf
+      - name: extraSections
+        label: "Sezioni extra (contenuti della guida)"
+        widget: list
+        required: false
+        hint: "I contenuti della guida territorio, in chiaro nella pagina."
+        fields:
+          - { name: title, label: Titolo sezione, widget: string }
+          - { name: sub, label: Sottotitolo, widget: string, required: false }
+          - name: cards
+            label: Card
+            widget: list
+            fields:
+              - { name: label, label: Titolo card, widget: string }
+              - { name: text, label: Testo card, widget: text }
       - { name: body, label: Magazine body, widget: markdown }
 
   - name: faq
@@ -177,8 +212,93 @@ collections:
             label: Ride with GPS URL
             widget: string
             pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
+          - name: page
+            label: "Pagina itinerario interna"
+            widget: string
+            required: false
+            hint: "Es. /itinerari/vt-gravel-1 — se presente, la card porta lì invece che su Ride with GPS."
       - name: guidaPdf
         label: Guide PDF
         widget: file
+        required: false
         media_folder: /public/guide-pdf
         public_folder: /guide-pdf
+      - name: extraSections
+        label: "Sezioni extra (contenuti del Ride Base Pack)"
+        widget: list
+        required: false
+        hint: "I contenuti del pack che vivono nella scheda: aree di riding, itinerari-tipo, tips."
+        fields:
+          - { name: title, label: Titolo sezione, widget: string }
+          - { name: sub, label: Sottotitolo, widget: string, required: false }
+          - name: cards
+            label: Card
+            widget: list
+            fields:
+              - { name: label, label: Titolo card, widget: string }
+              - { name: text, label: Testo card, widget: text }
+
+  - name: itinerari
+    label: Itinerari
+    folder: src/content/itinerari
+    create: true
+    slug: "{{slug}}"
+    media_folder: ../../assets/images
+    public_folder: ../../assets/images
+    fields:
+      - { name: name, label: Name, widget: string }
+      - { name: type, label: Type, widget: select, options: [Gravel, Road] }
+      - { name: area, label: Area, widget: string }
+      - { name: tagline, label: Tagline, widget: string }
+      - { name: intro, label: Intro, widget: text }
+      - { name: km, label: "KM (ufficiali, dal pack)", widget: string }
+      - { name: dislivello, label: Dislivello, widget: string }
+      - { name: diff, label: Difficulty, widget: string }
+      - { name: surface, label: Surface, widget: string }
+      - { name: time, label: Time, widget: string }
+      - { name: heroImage, label: Hero image, widget: image, required: false }
+      - name: base
+        label: "Struttura partner (esclusiva alloggio)"
+        widget: object
+        required: false
+        hint: "Se impostata, sull'itinerario si dorme SOLO da lei — niente altri alloggi in pagina."
+        fields:
+          - { name: slug, label: "Slug struttura (es. villa-toscana)", widget: string }
+          - { name: name, label: Nome, widget: string }
+          - name: site
+            label: Sito prenotazioni
+            widget: string
+            pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
+      - name: territory
+        label: "Territorio (per route senza partner)"
+        widget: object
+        required: false
+        fields:
+          - { name: slug, label: "Slug territorio (es. monterotondo-marittimo)", widget: string }
+          - { name: name, label: Nome, widget: string }
+      - { name: highlights, label: Highlights, widget: list }
+      - name: rwgpsUrl
+        label: Ride with GPS URL
+        widget: string
+        required: false
+        pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
+      - { name: gpx, label: "GPX (path in public/, es. /gpx/X.gpx)", widget: string }
+      - name: goodToKnow
+        label: "Good to know (contenuti del pack)"
+        widget: list
+        required: false
+        fields:
+          - { name: label, label: Titolo, widget: string }
+          - { name: text, label: Testo, widget: text }
+      - name: trackData
+        label: "Dati traccia (path JSON generato)"
+        widget: string
+        hint: "Generato da scripts/gen_poi.py — NON scrivere a mano (es. /data/itinerari/x.json)."
+      - { name: stay22Campaign, label: "Campagna Stay22 (es. cit-vt-gravel-1)", widget: string }
+      - name: stay22Center
+        label: "Centro mappa Stay22"
+        widget: object
+        fields:
+          - { name: lat, label: Latitude, widget: number, value_type: float }
+          - { name: lng, label: Longitude, widget: number, value_type: float }
+      - { name: body, label: Body, widget: markdown, required: false }

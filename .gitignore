@@ -22,3 +22,5 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+_osm_*.json
+_osm_*.json.parziale

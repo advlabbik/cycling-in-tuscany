@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import RouteCard from '../../components/RouteCard.astro';
-import { site } from '../../../site.config';
 import { bgUrl } from '../../lib/images';
 
 export async function getStaticPaths() {
@@ -15,11 +14,18 @@ export async function getStaticPaths() {
 
 const { struttura } = Astro.props;
 
-const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${site.stay22Campaign}&lat=${struttura.data.coords.lat}&lng=${struttura.data.coords.lng}&product_medium=apps`;
+// Niente Stay22 sulla scheda: il partner paga, in pagina si prenota solo da lui (Andrea, 14/8).
 // Sfondo a tutta pagina, quindi 1600px: sotto c'è comunque un gradiente scuro (#42).
+const bookUtm = (url: string) =>
+  url + (url.includes('?') ? '&' : '?') + 'utm_source=tuscanytrail365&utm_medium=referral&utm_campaign=scheda-' + struttura.id.replace(/\.md$/, '');
 const heroImage = await bgUrl(struttura.data.heroImage, 1600);
 const gravelCount = struttura.data.ridePack.filter((route) => route.type.toLowerCase() === 'gravel').length;
 const roadCount = struttura.data.ridePack.length - gravelCount;
+/* Se tutte le route hanno la pagina interna, il pack vive nel sito e il PDF
+   non si offre più in download (Andrea, 14/8): solo GPX, dalle pagine
+   itinerario. Il controllo sulla lunghezza evita il vero-per-vuoto: una
+   struttura appena creata senza route non deve dichiarare "tutto sul sito". */
+const allOnSite = struttura.data.ridePack.length > 0 && struttura.data.ridePack.every((route) => route.page);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -42,7 +48,7 @@ const schema = {
 };
 ---
 
-<Base title={`${struttura.data.name} — Cycling in Tuscany`} description={struttura.data.intro} schema={schema} ogImage={struttura.data.heroImage}>
+<Base title={`${struttura.data.name} — Tuscany Trail 365`} description={struttura.data.intro} schema={schema} ogImage={struttura.data.heroImage}>
   <div
     class="hero"
     style={heroImage
@@ -50,7 +56,7 @@ const schema = {
       : undefined}
   >
     <div class="wrap">
-      <div class="badge-verif">✔ Official Bike-Friendly Stay · verified by the Tuscany Trail</div>
+      <a class="badge-verif" href="https://www.tuscanytrail.it" target="_blank" rel="noopener" style="text-decoration:none">✔ Official Bike-Friendly Stay · verified by the Tuscany Trail →</a>
       <div class="kick">Stay · {struttura.data.town}</div>
       <h1>{struttura.data.name}</h1>
       <p class="lead">{struttura.data.intro}</p>
@@ -70,43 +76,65 @@ const schema = {
   <section id="routes" style="background:#fff">
     <div class="wrap">
       <h2 class="sec">The Ride Base Pack</h2>
-      <p class="sub">Starting right from the stay's doorstep. Open the track on Ride with GPS and go.</p>
+      <p class="sub">
+        {allOnSite
+          ? `${struttura.data.ridePack.length} tested routes starting right from the stay's doorstep — study each one on the site, with map, elevation and everything along the way.`
+          : "Starting right from the stay's doorstep. Open the track on Ride with GPS and go."}
+      </p>
       <div class="grid g2">
         {struttura.data.ridePack.map((route) => <RouteCard route={route} />)}
       </div>
 
-      <div class="pack-dl-bar">
-        <div class="pack-dl-bar-glow"></div>
-        <div class="pack-dl-bar-left">
-          <div class="pack-dl-label">Ride Base Pack · {gravelCount} gravel · {roadCount} road</div>
-          <h3 class="pack-dl-title">Download all the routes for {struttura.data.name}</h3>
+      {!allOnSite && struttura.data.guidaPdf && (
+        <div class="pack-dl-bar">
+          <div class="pack-dl-bar-glow"></div>
+          <div class="pack-dl-bar-left">
+            <div class="pack-dl-label">Ride Base Pack · {gravelCount} gravel · {roadCount} road</div>
+            <h3 class="pack-dl-title">Download all the routes for {struttura.data.name}</h3>
+          </div>
+          <div class="pack-dl-bar-right">
+            <a class="pack-dl-btn" href={struttura.data.guidaPdf} target="_blank">
+              <span class="pack-dl-circle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </span>
+              Download PDF
+            </a>
+          </div>
         </div>
-        <div class="pack-dl-bar-right">
-          <a class="pack-dl-btn" href={struttura.data.guidaPdf} target="_blank">
-            <span class="pack-dl-circle">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-            </span>
-            Download PDF
-          </a>
-        </div>
-      </div>
+      )}
     </div>
   </section>
+
+  {struttura.data.extraSections.map((sec, i) => (
+    <section style={i % 2 === 1 ? 'background:#fff' : undefined}>
+      <div class="wrap">
+        <h2 class="sec">{sec.title}</h2>
+        {sec.sub && <p class="sub">{sec.sub}</p>}
+        <div class="grid g2">
+          {sec.cards.map((card) => (
+            <div class="card">
+              <h3>{card.label}</h3>
+              <p>{card.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
 
   <section>
     <div class="wrap">
       <div class="cta-band">
         <div>
           <h3>Book your stay</h3>
-          <p>Book directly with the stay, or look for alternatives in the area.</p>
+          <p>Book directly with {struttura.data.name} — your hosts know these routes first-hand.</p>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <a class="btn gold" href={struttura.data.site} target="_blank" rel="noopener">Book with {struttura.data.name} →</a>
-          <a class="btn dark" href={stay22Url} target="_blank" rel="noopener">Other stays in the area</a>
+          <a class="btn gold" href={bookUtm(struttura.data.site)} target="_blank" rel="noopener">Book with {struttura.data.name} →</a>
         </div>
       </div>
     </div>

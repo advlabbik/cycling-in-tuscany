@@ -1,0 +1,253 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import RouteViewer from '../../components/RouteViewer.astro';
+import { stay22RoamUrl } from '../../lib/stay22';
+import { bgUrl } from '../../lib/images';
+
+export async function getStaticPaths() {
+  const itinerari = await getCollection('itinerari');
+  return itinerari.map((itinerario) => ({
+    params: { slug: itinerario.id.replace(/\.md$/, '') },
+    props: { itinerario },
+  }));
+}
+
+const { itinerario } = Astro.props;
+const d = itinerario.data;
+
+const routeColor = d.type === 'Gravel' ? '#b8860b' : '#a80030';
+/* Stay22 centrato sulla zona dell'anello, con campagna dedicata all'itinerario:
+   è la campagna che rende attribuibile ogni prenotazione nel CSV di Stay22. */
+const stay22Url = stay22RoamUrl(d.stay22Center.lat, d.stay22Center.lng, d.stay22Campaign);
+/* UTM sul link di prenotazione del partner: cosi' l'albergatore vede nel suo
+   Analytics quanto traffico gli manda il progetto — l'argomento del rinnovo */
+const bookUtm = (url: string) =>
+  url + (url.includes('?') ? '&' : '?') + 'utm_source=tuscanytrail365&utm_medium=referral&utm_campaign=' + itinerario.id.replace(/\.md$/, '');
+const heroImage = await bgUrl(d.heroImage, 1600);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsActivityLocation',
+  name: `${d.name} — ${d.type} route`,
+  description: d.intro,
+  address: { '@type': 'PostalAddress', addressRegion: 'Tuscany', addressCountry: 'IT' },
+};
+---
+
+<Base title={`${d.name} — ${d.type} route · Tuscany Trail 365`} description={d.intro} schema={schema} ogImage={d.heroImage} maplibre={true}>
+  <div
+    class="hero"
+    style={heroImage
+      ? `background-image:linear-gradient(rgba(20,10,15,.5),rgba(20,10,15,.75)),url(${heroImage});background-size:cover;background-position:center`
+      : undefined}
+  >
+    <div class="wrap">
+      <a class="badge-verif" href="https://www.tuscanytrail.it" target="_blank" rel="noopener" style="text-decoration:none">✔ Verified route · by the people behind the Tuscany Trail →</a>
+      <div class="kick">{d.type} itinerary · {d.area}</div>
+      <h1>{d.name}</h1>
+      <p class="lead">{d.tagline}</p>
+      <div class="it-stats">
+        <span><b>{d.km} km</b></span>
+        <span><b>{d.dislivello}</b> D+</span>
+        <span>{d.time}</span>
+        <span>{d.diff}</span>
+        <span>{d.surface}</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="study">
+    <div class="wrap">
+      <h2 class="sec">Study the route</h2>
+      <p class="sub">
+        Map, elevation and everything you'll find along the way. Touch the profile to follow the
+        route on the map, tap a pin for details.
+      </p>
+      <RouteViewer src={d.trackData} color={routeColor} />
+    </div>
+  </section>
+
+  <section style="background:#fff">
+    <div class="wrap">
+      <h2 class="sec">Highlights</h2>
+      <p class="sub">What makes this loop worth riding.</p>
+      <div class="chips">
+        {d.highlights.map((h) => <span class="chip">{h}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section id="goodtoknow">
+    <div class="wrap">
+      <h2 class="sec">Good to know</h2>
+      <p class="sub">Everything from the Ride Base Pack, right here on the page.</p>
+      <div class="grid g2">
+        {d.goodToKnow.map((g) => (
+          <div class="card">
+            <h3>{g.label}</h3>
+            <p>{g.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="sleep" style="background:#fff">
+    <div class="wrap">
+      {d.base ? (
+        <>
+          <h2 class="sec">Your base for this loop</h2>
+          <p class="sub">
+            This route belongs to an Official Bike-Friendly Stay — the loop starts and ends right
+            at its door.
+          </p>
+          <div class="cta-band">
+            <div>
+              <h3>{d.base.name} — your base for this loop</h3>
+              <p>Bike storage, bike wash, early breakfast and local route knowledge. Verified by the Tuscany Trail.</p>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <a class="btn gold" href={bookUtm(d.base.site)} target="_blank" rel="noopener">Book {d.base.name} →</a>
+              <a class="btn dark" href={`/strutture/${d.base.slug}`}>See the stay</a>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <h2 class="sec">Sleep along this route</h2>
+          <p class="sub">Browse every stay along the route on the live map.</p>
+          <div class="it-otherstays">
+            <a class="chip" href={stay22Url} target="_blank" rel="noopener">All stays along the route (live map) →</a>
+          </div>
+          {d.territory && (
+            <div class="cta-band" style="margin-top:22px">
+              <div>
+                <h3>An Official Territory route</h3>
+                <p>This loop belongs to {d.territory.name}, official territory of Tuscany Trail 365.</p>
+              </div>
+              <a class="btn gold" href={`/territori/${d.territory.slug}`}>Discover {d.territory.name} →</a>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  </section>
+
+  <section id="gpx">
+    <div class="wrap">
+      <div class="pack-dl-bar">
+        <div class="pack-dl-bar-glow"></div>
+        <div class="pack-dl-bar-left">
+          <div class="pack-dl-label">GPX track · free</div>
+          <h3 class="pack-dl-title">Take this route with you</h3>
+          <p class="it-gatehint">Leave your email and the GPX file is yours, ready for your bike computer.</p>
+        </div>
+        <div class="pack-dl-bar-right">
+          {/* method="post": se lo script muore prima di agganciare il submit,
+              il browser NON deve fare un GET con l'email in chiaro nell'URL */}
+          <form id="gpx-gate" class="it-gate" method="post" novalidate data-area={d.area} data-type={d.type} data-diff={d.diff}>
+            <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address" />
+            <button type="submit" class="pack-dl-btn" style="border:0;cursor:pointer">
+              <span class="pack-dl-circle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </span>
+              Get the GPX
+            </button>
+            <label class="it-consent">
+              <input type="checkbox" name="consent" />
+              <span>Send me new verified routes and Tuscany riding tips (a few emails a year, no spam)</span>
+            </label>
+          </form>
+          <div id="gpx-unlocked" class="it-unlocked" hidden>
+            <a class="pack-dl-btn" href={d.gpx} download>Download the GPX</a>
+          </div>
+        </div>
+      </div>
+      {d.rwgpsUrl && (
+        <p class="it-rwgps">
+          Already ride with a GPS account? <a href={d.rwgpsUrl} target="_blank" rel="noopener">Open this route on Ride with GPS →</a>
+        </p>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .it-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+  .it-stats span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:999px;padding:7px 15px;font-size:.86rem}
+  .it-stats b{font-weight:700}
+  .it-otherstays{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .it-gatehint{margin:8px 0 0;color:#e6ccd4;font-size:.88rem;max-width:380px}
+  .it-gate{display:flex;gap:10px;flex-wrap:wrap;align-items:center;max-width:420px}
+  .it-gate input[type='email']{flex:1;min-width:200px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;border-radius:999px;padding:12px 18px;font-size:.9rem;font-family:var(--font-body)}
+  .it-gate input[type='email']::placeholder{color:rgba(255,255,255,.5)}
+  .it-consent{display:flex;gap:8px;align-items:flex-start;font-size:.72rem;color:#e6ccd4;line-height:1.4;max-width:400px;cursor:pointer}
+  .it-consent input{margin-top:2px}
+  .it-unlocked{display:flex;gap:12px;flex-wrap:wrap}
+  .it-rwgps{margin:18px 0 0;font-size:.88rem;color:var(--muted)}
+</style>
+
+<script>
+  /**
+   * Gate email del GPX. Regole:
+   * - lo sblocco e' immediato e il lead parte in background (keepalive):
+   *   niente attese sulla CTA di conversione;
+   * - lo sblocco e' globale (un'email sola per sempre) ma il TAG di intento
+   *   parte per OGNI percorso scaricato — e' il dato che vale per i territori
+   *   ("X contatti hanno cercato percorsi da te", doc TT365);
+   * - localStorage puo' essere bloccato dal browser: tutto in try/catch,
+   *   senza storage il gate funziona comunque (solo, richiede l'email ogni volta).
+   */
+  const form = document.getElementById('gpx-gate') as HTMLFormElement | null;
+  const unlocked = document.getElementById('gpx-unlocked');
+  const store = {
+    get(k: string) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k: string, v: string) { try { localStorage.setItem(k, v); } catch { /* niente storage, pazienza */ } },
+  };
+  if (form && unlocked) {
+    const routeKey = 'cit-lead:' + location.pathname;
+    const sendLead = (email: string, consent: boolean) => {
+      const meta = form.dataset;
+      try {
+        fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          keepalive: true,
+          body: JSON.stringify({
+            email, consent,
+            itinerary: location.pathname, lang: 'en',
+            area: meta.area, type: meta.type, diff: meta.diff,
+          }),
+        }).catch(() => {});
+      } catch { /* offline: il download resta sbloccato comunque */ }
+      store.set(routeKey, '1');
+    };
+    if (store.get('cit-gpx-unlocked')) {
+      form.hidden = true;
+      unlocked.hidden = false;
+      const email = store.get('cit-gpx-email');
+      if (email && !store.get(routeKey)) {
+        unlocked.addEventListener('click', () => {
+          if (!store.get(routeKey)) sendLead(email, store.get('cit-gpx-consent') === '1');
+        }, { once: true });
+      }
+    }
+    form.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
+      if (!email || !email.includes('@')) return;
+      const consent = (form.elements.namedItem('consent') as HTMLInputElement).checked;
+      store.set('cit-gpx-unlocked', '1');
+      store.set('cit-gpx-email', email);
+      store.set('cit-gpx-consent', consent ? '1' : '0');
+      sendLead(email, consent);
+      form.hidden = true;
+      unlocked.hidden = false;
+    });
+  }
+</script>

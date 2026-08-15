@@ -22,20 +22,106 @@ I due percorsi scrivono gli stessi file, quindi non c'è una fonte "vera" e una 
 
 ```text
 src/
-├─ content/            # LA fonte dati — territori, strutture, faq (Content Collections)
+├─ content/            # LA fonte dati — territori, strutture, itinerari, faq (Content Collections)
 ├─ content.config.ts   # schema Zod delle collezioni
 ├─ assets/images/      # immagini ottimizzate da astro:assets
-├─ components/         # Map.astro, card, sezioni
+├─ components/         # Map.astro, RouteViewer.astro (mappa+altimetria+POI), card, sezioni
 ├─ layouts/Base.astro  # head, SEO, nav, footer
-└─ pages/              # index + rotte dinamiche /territori/[slug] e /strutture/[slug]
+└─ pages/              # index + rotte dinamiche /territori/, /strutture/ e /itinerari/[slug]
 public/
 ├─ admin/              # Sveltia CMS: index.html + config.yml
-└─ guide-pdf/          # PDF serviti così come sono, fuori da astro:assets
+├─ guide-pdf/          # PDF serviti così come sono, fuori da astro:assets
+├─ data/itinerari/     # traccia+POI per itinerario, GENERATI da scripts/gen_poi.py — mai a mano
+└─ gpx/                # GPX scaricabili (dietro il gate email)
+functions/api/lead.js  # Pages Function del gate email → Brevo (chiavi nelle env Cloudflare)
+scripts/gen_poi.py     # genera public/data/itinerari/<slug>.json da GPX + OpenStreetMap
 site.config.ts         # aid Stay22, brand, centro mappa, ordine strutture in home
 docs/fonti/            # brief, sorgenti magazine, dati partner del vecchio prototipo
+docs/liste-poi/        # liste POI leggibili per la revisione umana, una per itinerario
 ```
 
 **Le immagini vanno in `src/assets/images/`, non in `public/`.** I `.md` le referenziano con path relativo (`../../assets/images/x.jpg`): è l'unica forma che `image()` di `astro:assets` risolve, e il CMS è configurato per scrivere esattamente quella. Un path assoluto tipo `/images/x.jpg` fa fallire il build con `ImageNotFound`. I PDF invece stanno in `public/guide-pdf/` proprio perché **non** devono passare dalla pipeline di ottimizzazione.
+
+## Gli itinerari (mini-guide)
+
+Ogni itinerario in `src/content/itinerari/` è una pagina con il RouteViewer
+(mappa MapLibre + altimetria + POI filtrabili), la sezione Good to know coi
+contenuti che prima stavano nel PDF, e il gate email che sblocca il solo GPX.
+Regole decise da Andrea il 14/8/2026:
+
+- **Il Ride Base Pack non si scarica**: i contenuti vivono nelle pagine
+  (Good to know per itinerario, `extraSections` nella scheda struttura).
+  L'unico download è il GPX, dietro email.
+- **Esclusiva partner**: sugli itinerari con `base` (la struttura pagante)
+  non compaiono Stay22, Airbnb né alloggi concorrenti nei POI — si dorme solo
+  dal partner. Il blocco Stay22+Airbnb esiste nel template solo per itinerari
+  senza `base` (es. la futura pagina del Tuscany Trail).
+- **POI solo da `scripts/gen_poi.py`** (OSM/Overpass, porting dello script di
+  tg-guida con le sue trappole documentate): mai stimare coordinate a mano.
+  Le liste in `docs/liste-poi/` vanno riviste da un umano prima di pubblicare.
+- **Km e dislivelli ufficiali** vengono dal materiale del partner (PDF/frontmatter),
+  mai ricalcolati dal GPX.
+
+## Da implementare al momento giusto (decisioni già prese)
+
+**App partecipanti Tuscany Trail + "Arriva preparato" (Andrea, 15/8/2026).**
+L'app partecipanti del TT nascerà derivandola da `advlabbik/tg-guida` (repo da
+creare; il TT è l'unico evento che sviluppa anche la parte turistica, cioè
+questo sito). Nella checklist pre-evento dell'app va aggiunto il punto
+**"Arriva preparato"**: la lista delle cose che il partecipante potrebbe dover
+comprare, ogni voce linkata allo shop online dello sponsor con lo sconto
+dedicato ai partecipanti — gomme Vittoria, borse Miss Grape, sella Selle
+Italia, scarpe Northwave, casco e antifurto Abus, nutrizione Enervit,
+abbigliamento RH+ — e **Sportler** (sponsor) per tutto il resto. Si sperimenta
+solo sul Tuscany Trail; se funziona si estende a tutti gli eventi. Prima dello
+sviluppo servono codici sconto, link shop e testi IT/EN. Nota gemella nel
+README di tg-guida.
+
+**Email post-acquisto Tuscany Trail — "due piccioni con una fava" (Andrea, 14/8/2026).**
+Nell'email di avvenuto acquisto TT il link prenotazioni porta alla mappa
+**Stay22 centrata sulla fiera di Venturina** (il quartier generale dell'evento),
+così tutti prenotano subito; **sotto la mappa, le strutture consigliate** per
+chi vuole allungare la vacanza prima o dopo — anch'esse linkate **via Stay22**,
+così nessun partner può obiettare sulla parità di trattamento. Niente schede o
+pagine intermedie dove la gente si perde: un link, una mappa, si prenota.
+Campagna Stay22 dedicata per misurare tutto.
+
+## Lavoro in sospeso: rigenerazione POI (15/8, sera)
+
+I negozi di bici (categoria `b`) e il raggruppamento delle fontane sono attivi
+nel generatore e nel viewer, ma **solo 3 percorsi su 16 hanno i dati nuovi**
+(vt-gravel-1, vt-gravel-2, vt-road-1): la rigenerazione completa richiede di
+riscaricare tutto da Overpass (le cache vecchie non contengono i bike shop) ed
+è stata interrotta per scelta — Overpass rispondeva a singhiozzo. Gli altri 13
+JSON restano validi, semplicemente senza negozi e con le fontane non
+raggruppate. Per completare, in un momento in cui Overpass respira:
+
+```bash
+python scripts/gen_poi.py vt-road-2="<gpx>" pacr-gravel-1="public/gpx/PACR-Gravel-1.gpx" ... mr-road-2="public/gpx/MR-Road-2.gpx"
+```
+
+(i tre gia' fatti hanno la cache in `scripts/_osm_*.json` e si saltano da soli;
+la lista completa degli argomenti e' nel commit "Marker stabili su mobile...").
+
+## Regole di gestione del progetto (imparate su tg-guida)
+
+Prese dal README/CLAUDE.md di `advlabbik/tg-guida`, valgono anche qui:
+
+- **Sempre branch dedicato + merge**, mai commit diretti su `main` (che qui è
+  produzione via Cloudflare Pages). Ogni branch ha il suo preview automatico.
+- **Tag di ritorno prima di ogni pubblicazione grossa** (`v-...`): il rollback
+  è un force-push della tag vecchia su main, un comando solo.
+- **Verificare in locale prima di pushare**: main non è l'ambiente di anteprima.
+- **README e issue GitHub aggiornati come parte del lavoro**, nello stesso
+  commit o in quello dopo — non su richiesta. Un README che descrive uno stato
+  superato fa perdere tempo a chi arriva dopo.
+- **Tracciare i problemi come issue GitHub**, chiuderle o commentarle quando
+  il lavoro le supera.
+- **Airbnb: SOLO dentro la mappa Stay22** (regola di Andrea, 15/8, valida per
+  tutti i progetti con Stay22 — anche Trentino Gravel). Finché non troviamo il
+  parametro che mostra Airbnb dentro l'embed, NIENTE pulsanti o link che
+  portano su Airbnb. Il metodo andrebbe cercato con Francesco o col supporto
+  Stay22 (nel repo stay22-gpx non c'è, verificato 15/8).
 
 ## I tier dei territori
 

@@ -1,6 +1,12 @@
 export const site = {
-  stay22Aid: '694570b3581ec595fca56708',
-  stay22Campaign: 'tuscanytrail',
+  /**
+   * AID unificato su `adventurelabsrl` (15/8, richiesta Andrea): è l'account
+   * della guida Trentino, quello agganciato alle commissioni al 30% —
+   * "il codice del Trentino sennò non arrivano le commissioni". Il vecchio
+   * `694570b3581ec595fca56708` restava solo qui ed era da verificare.
+   */
+  stay22Aid: 'adventurelabsrl',
+  stay22Campaign: 'cit-sito',
   /**
    * GA4 Measurement ID (formato G-XXXXXXXXXX). Stringa vuota = analitica
    * completamente spenta: niente gtag, niente banner consenso (issue #19).
