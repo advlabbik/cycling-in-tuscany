@@ -149,6 +149,7 @@ def query(cs):
 (
   nwr[amenity~"^(restaurant|cafe|bar|fast_food|pub|ice_cream)$"](around:{BUF_POI},{cs});
   nwr[shop~"^(supermarket|convenience|bakery)$"](around:{BUF_POI},{cs});
+  nwr[shop=bicycle](around:{BUF_POI},{cs});
   nwr[tourism~"^(hotel|guest_house|hostel|motel|alpine_hut|wilderness_hut|camp_site|chalet|apartment)$"](around:{BUF_POI},{cs});
   node[amenity=drinking_water](around:{BUF_WATER},{cs});
   node[man_made=water_tap](around:{BUF_WATER},{cs});
@@ -226,7 +227,9 @@ def elabora(pts2d, cum, elements, partner_route):
             ((el["center"]["lat"], el["center"]["lon"]) if el.get("center") else None)
         if not p:
             continue
-        if t.get("amenity") == "drinking_water" or t.get("man_made") == "water_tap":
+        if t.get("shop") == "bicycle":
+            cat, sub = "b", "bike shop"
+        elif t.get("amenity") == "drinking_water" or t.get("man_made") == "water_tap":
             cat, sub = "a", "fountain"
         elif t.get("amenity") in EAT or t.get("shop") in EAT:
             cat, sub = "m", EAT.get(t.get("amenity")) or EAT.get(t.get("shop"))
@@ -267,7 +270,10 @@ def elabora(pts2d, cum, elements, partner_route):
     gruppi = defaultdict(lambda: {"m": [], "d": [], "a": [], "p": None})
     solitari = []
     for poi in pois:
-        if poi["luogo"]:
+        # i negozi di bici sono preziosi: mai assorbiti nei conteggi dei centri
+        if poi["cat"] == "b":
+            solitari.append(poi)
+        elif poi["luogo"]:
             g = gruppi[poi["luogo"]]
             g[poi["cat"]].append(poi)
             g["p"] = poi["luogo_p"]
@@ -290,15 +296,32 @@ def elabora(pts2d, cum, elements, partner_route):
             for x in g["m"]+g["d"]+g["a"]:
                 x["centro_piccolo"] = nome
                 solitari.append(x)
+    # le fontane della stessa localita' diventano UNA voce con il conteggio:
+    # "Fountain San Lorenzo" ripetuto 2-3 volte era solo rumore (Andrea, 15/8)
+    fonti = [x for x in solitari if x["cat"] == "a" and x.get("centro_piccolo")]
+    altri = [x for x in solitari if not (x["cat"] == "a" and x.get("centro_piccolo"))]
+    per_luogo = {}
+    for f in sorted(fonti, key=lambda x: x["km"]):
+        per_luogo.setdefault(f["centro_piccolo"], []).append(f)
+    solitari = altri
+    for luogo, fs in per_luogo.items():
+        capo = dict(fs[0])
+        if len(fs) > 1:
+            capo["n"] = len(fs)
+            capo["p"] = None  # piu' fontane: il segno si aggancia alla traccia al km
+        solitari.append(capo)
+    solitari.sort(key=lambda x: x["km"])
     for x in solitari:
         e = {"t": x["cat"], "km": round(x["km"], 1), "name": x["nome"], "sub": x["sub"]}
+        if x.get("n"):
+            e["n"] = x["n"]
         if x.get("centro_piccolo"):
             e["luogo"] = x["centro_piccolo"]
         # come in tg-guida: le coordinate vere restano solo dove servono al
         # bottone Prenota (dormire). Acqua e cibo si appoggiano alla traccia
         # al loro km — i punti OSM grezzi possono stare fino a 500 m dal
         # percorso e sulla mappa finivano in mare (bagni sulla spiaggia).
-        if x["cat"] == "d":
+        if x["cat"] in ("d", "b") and x.get("p"):
             e["lat"], e["lng"] = round(x["p"][0], 5), round(x["p"][1], 5)
         entries.append(e)
     # SOLO sui percorsi partner: i servizi del primo/ultimo km sono la base
@@ -351,13 +374,13 @@ for key, path in GPX.items():
         entries.append(e)
         entries.sort(key=lambda x: x["km"])
 
-    tot = {"a": 0, "m": 0, "d": 0}
+    tot = {"a": 0, "m": 0, "d": 0, "b": 0}
     for e in entries:
         if e["t"] == "c":
             tot["a"] += e["nf"]; tot["m"] += e["ne"]; tot["d"] += e["ns"]
         else:
             tot[e["t"]] = tot.get(e["t"], 0) + 1
-    print(f"  -> {len(entries)} righe | acqua {tot['a']} | mangiare {tot['m']} | dormire {tot['d']}", flush=True)
+    print(f"  -> {len(entries)} righe | acqua {tot['a']} | mangiare {tot['m']} | dormire {tot['d']} | bici {tot['b']}", flush=True)
 
     out = {"slug": key, "kmTot": round(cum[-1], 1), "points": track, "poi": entries}
     open(os.path.join(OUTDIR, f"{key}.json"), "w", encoding="utf-8", newline="\n").write(
