@@ -132,7 +132,10 @@ h2.sec{font-size:1.9rem;margin:0 0 8px}
 .ter-nav-btn{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--fg);transition:background .2s,border-color .2s,color .2s,opacity .2s}
 .ter-nav-btn:hover{background:var(--fg);color:#fff;border-color:var(--fg)}
 .ter-nav-btn:disabled{opacity:.28;cursor:default;pointer-events:none}
-.ter-carousel-scroll{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-left:max(22px,calc((100vw - 1120px)/2 + 22px));padding-right:max(22px,calc((100vw - 1120px)/2 + 22px));padding-bottom:4px}
+/* `safe center` (15/8): con tre slide che ci stanno tutte il carosello sta
+   centrato; se in futuro i territori crescono e sfora, torna a sinistra da
+   solo senza tagliare la prima slide */
+.ter-carousel-scroll{display:flex;gap:20px;justify-content:safe center;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-left:max(22px,calc((100vw - 1120px)/2 + 22px));padding-right:max(22px,calc((100vw - 1120px)/2 + 22px));padding-bottom:4px}
 .ter-carousel-scroll::-webkit-scrollbar{display:none}
 .ter-slide{flex:0 0 340px;scroll-snap-align:start;text-decoration:none;color:inherit;display:block}
 .ter-slide-inner{position:relative;height:490px;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 8px 32px rgba(0,0,0,.18);transition:transform .35s cubic-bezier(.25,1,.5,1),box-shadow .35s ease}
