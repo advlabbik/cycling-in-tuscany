@@ -87,10 +87,6 @@ collections:
           - { name: badge, label: Badge (opzionale), widget: string, required: false }
           - { name: title, label: Titolo sezione, widget: string }
           - { name: text, label: Testo sezione, widget: text }
-          - name: airbnbUrl
-            label: URL ricerca Airbnb
-            widget: string
-            pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
       - name: magazine
         label: Magazine
         widget: object
@@ -265,7 +261,7 @@ collections:
         label: "Struttura partner (esclusiva alloggio)"
         widget: object
         required: false
-        hint: "Se impostata, sull'itinerario si dorme SOLO da lei: niente Stay22 né Airbnb."
+        hint: "Se impostata, sull'itinerario si dorme SOLO da lei — niente altri alloggi in pagina."
         fields:
           - { name: slug, label: "Slug struttura (es. villa-toscana)", widget: string }
           - { name: name, label: Nome, widget: string }
@@ -281,11 +277,6 @@ collections:
           - { name: slug, label: "Slug territorio (es. monterotondo-marittimo)", widget: string }
           - { name: name, label: Nome, widget: string }
       - { name: highlights, label: Highlights, widget: list }
-      - name: airbnbUrl
-        label: "URL ricerca Airbnb della zona"
-        widget: string
-        required: false
-        pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
       - name: rwgpsUrl
         label: Ride with GPS URL
         widget: string

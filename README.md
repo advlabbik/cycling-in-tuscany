@@ -87,6 +87,11 @@ Prese dal README/CLAUDE.md di `advlabbik/tg-guida`, valgono anche qui:
   superato fa perdere tempo a chi arriva dopo.
 - **Tracciare i problemi come issue GitHub**, chiuderle o commentarle quando
   il lavoro le supera.
+- **Airbnb: SOLO dentro la mappa Stay22** (regola di Andrea, 15/8, valida per
+  tutti i progetti con Stay22 — anche Trentino Gravel). Finché non troviamo il
+  parametro che mostra Airbnb dentro l'embed, NIENTE pulsanti o link che
+  portano su Airbnb. Il metodo andrebbe cercato con Francesco o col supporto
+  Stay22 (nel repo stay22-gpx non c'è, verificato 15/8).
 
 ## I tier dei territori
 

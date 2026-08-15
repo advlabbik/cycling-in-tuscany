@@ -16,7 +16,6 @@ territory:
 highlights:
   - "Parco di Montioni"
   - "Massa Marittima"
-airbnbUrl: "https://www.airbnb.com/s/Monterotondo-Marittimo--Tuscany--Italy/homes"
 rwgpsUrl: "https://ridewithgps.com/routes/53994764"
 gpx: "/gpx/MR-Road-1.gpx"
 goodToKnow:

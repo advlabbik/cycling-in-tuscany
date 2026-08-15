@@ -17,7 +17,6 @@ highlights:
   - "Le Fumarole and the steam vents"
   - "La Leccia and the geothermal plants"
   - "Parco delle Biancane"
-airbnbUrl: "https://www.airbnb.com/s/Monterotondo-Marittimo--Tuscany--Italy/homes"
 rwgpsUrl: "https://ridewithgps.com/routes/53994755"
 gpx: "/gpx/MR-Gravel-2.gpx"
 goodToKnow:

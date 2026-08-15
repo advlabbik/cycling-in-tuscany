@@ -79,7 +79,6 @@ const territori = defineCollection({
           badge: z.string().optional(),
           title: z.string(),
           text: z.string(),
-          airbnbUrl: z.string().url(),
         })
         .nullable()
         .default(null),
@@ -176,8 +175,6 @@ const itinerari = defineCollection({
        *  OBBLIGATORIO: un default geografico mandava la mappa a 30-80 km
        *  dal percorso senza che nessun build se ne accorgesse. */
       stay22Center: z.object({ lat: z.number(), lng: z.number() }),
-      /** ricerca Airbnb della zona (regola: Airbnb sempre accanto a Stay22) */
-      airbnbUrl: z.string().url().optional(),
     }),
 });
 

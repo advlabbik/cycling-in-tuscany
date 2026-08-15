@@ -20,10 +20,6 @@ const routeColor = d.type === 'Gravel' ? '#b8860b' : '#2d4a3e';
 /* Stay22 centrato sulla zona dell'anello, con campagna dedicata all'itinerario:
    è la campagna che rende attribuibile ogni prenotazione nel CSV di Stay22. */
 const stay22Url = stay22RoamUrl(d.stay22Center.lat, d.stay22Center.lng, d.stay22Campaign);
-/* Stay22 non include Airbnb: link sempre accanto, mai al suo posto. La zona
-   viene dal frontmatter — hardcodata su Venturina mandava i percorsi di
-   Monterotondo a cercare casa a 35 km dal giro. */
-const airbnbUrl = d.airbnbUrl ?? 'https://www.airbnb.com/s/Tuscany--Italy/homes';
 const heroImage = await bgUrl(d.heroImage, 1600);
 
 const schema = {
@@ -119,7 +115,6 @@ const schema = {
           <p class="sub">Browse every stay along the route on the live map.</p>
           <div class="it-otherstays">
             <a class="chip" href={stay22Url} target="_blank" rel="noopener">All stays along the route (live map) →</a>
-            <a class="chip" href={airbnbUrl} target="_blank" rel="noopener">Search on Airbnb →</a>
           </div>
           {d.territory && (
             <div class="cta-band" style="margin-top:22px">

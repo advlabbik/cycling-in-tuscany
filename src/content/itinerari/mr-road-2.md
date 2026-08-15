@@ -17,7 +17,6 @@ highlights:
   - "Montieri and Radicondoli"
   - "Castelnuovo Val di Cecina"
   - "Le Fumarole and Sasso Pisano"
-airbnbUrl: "https://www.airbnb.com/s/Monterotondo-Marittimo--Tuscany--Italy/homes"
 rwgpsUrl: "https://ridewithgps.com/routes/53994774"
 gpx: "/gpx/MR-Road-2.gpx"
 goodToKnow:

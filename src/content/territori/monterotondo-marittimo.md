@@ -48,7 +48,6 @@ stay22Map:
   campaign: "cit-monterotondo"
   title: "Sleep in Monterotondo Marittimo"
   text: "The map is centred on the medieval borough, steps from the steaming Biancane park. Everything you see is bookable — move the map to explore the Colline Metallifere."
-  airbnbUrl: "https://www.airbnb.com/s/Monterotondo-Marittimo--Tuscany--Italy/homes"
 ---
 
 <p>You arrive in Monterotondo by bike climbing through chestnut forests, and the first thing that strikes you is the sound: a continuous hiss rising from the earth. These are the steam vents, the geothermal breath of these hills. The medieval borough, gathered around Piazza Casalini and the Logge, then opens onto the white and steaming landscape of Biancane, a natural amphitheater that seems to belong to another planet.</p><p>This is a territory that reveals itself slowly: mining and steam, chestnut forests, cheese makers and beers produced with earth's heat. Cycling here means traversing geology, history and flavor in the same loop.</p>

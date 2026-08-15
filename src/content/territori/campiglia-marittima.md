@@ -96,5 +96,4 @@ stay22Map:
   badge: "★ The Tuscany Trail starts here"
   title: "Sleep at the start of the Tuscany Trail"
   text: "The map is centred on the Fiere di Venturina, where thousands of riders roll out for the Tuscany Trail every year. Everything you see is bookable — move the map to explore the rest of the territory."
-  airbnbUrl: "https://www.airbnb.com/s/Venturina-Terme--Tuscany--Italy/homes"
 ---
