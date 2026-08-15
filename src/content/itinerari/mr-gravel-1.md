@@ -17,6 +17,7 @@ highlights:
   - "Rocchette Pannocchieschi"
   - "Monte Arsenti ridges"
   - "Views to the Tyrrhenian and the Archipelago"
+airbnbUrl: "https://www.airbnb.com/s/Monterotondo-Marittimo--Tuscany--Italy/homes"
 rwgpsUrl: "https://ridewithgps.com/routes/53994750"
 gpx: "/gpx/MR-Gravel-1.gpx"
 goodToKnow:

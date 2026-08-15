@@ -3,7 +3,7 @@ import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import RouteCard from '../../components/RouteCard.astro';
-import { site } from '../../../site.config';
+import { stay22RoamUrl, stay22EmbedUrl } from '../../lib/stay22';
 import { bgUrl } from '../../lib/images';
 
 export async function getStaticPaths() {
@@ -17,16 +17,12 @@ export async function getStaticPaths() {
 const { territorio } = Astro.props;
 const { Content } = await render(territorio);
 
-const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${site.stay22Campaign}&lat=${territorio.data.coords.lat}&lng=${territorio.data.coords.lng}&product_medium=apps`;
+const stay22Url = stay22RoamUrl(territorio.data.coords.lat, territorio.data.coords.lng);
 
-/* Mappa Stay22 in testa alla pagina — stesso embed e stesso AID della guida
-   Trentino (adventurelabsrl, quello agganciato alle commissioni), formato
-   /embed/gm come in tg-guida. Campagna per territorio per l'attribuzione. */
+/* Mappa Stay22 in testa alla pagina, campagna per territorio per
+   l'attribuzione. URL e AID vengono dall'helper unico (src/lib/stay22). */
 const s22 = territorio.data.stay22Map;
-const s22EmbedUrl = s22
-  ? `https://www.stay22.com/embed/gm?aid=adventurelabsrl&campaign=${s22.campaign}&lat=${s22.lat}&lng=${s22.lng}` +
-    `&maincolor=C74634&venue=${encodeURIComponent(s22.venue)}&ljs=en&mapstyle=outdoors`
-  : null;
+const s22Embed = s22 ? stay22EmbedUrl(s22.lat, s22.lng, s22.campaign, s22.venue) : null;
 // Sfondo a tutta pagina, quindi 1600px: sotto c'è comunque un gradiente scuro (#42).
 const heroImage = await bgUrl(territorio.data.heroImage, 1600);
 const premium = territorio.data.tier === 'premium';
@@ -67,7 +63,7 @@ const schema = {
     </div>
   </div>
 
-  {s22 && s22EmbedUrl && (
+  {s22 && s22Embed && (
     <section id="sleep">
       <div class="wrap">
         {s22.badge && <div class="ribbon" style="margin-bottom:10px">{s22.badge}</div>}
@@ -75,7 +71,7 @@ const schema = {
         <p class="sub">{s22.text}</p>
         <div class="s22card">
           <iframe
-            src={s22EmbedUrl}
+            src={s22Embed}
             title={`Book your stay — ${territorio.data.name}`}
             allow="geolocation"
             loading="lazy"
@@ -126,7 +122,11 @@ const schema = {
     <section id="routes" style="background:#fff">
       <div class="wrap">
         <h2 class="sec">Official routes</h2>
-        <p class="sub">Four loops ready to download — open the track in Ride with GPS and ride.</p>
+        <p class="sub">
+          {territorio.data.ridePack.some((route) => route.page)
+            ? `${territorio.data.ridePack.length} loops from the borough — study each one on the site, with map, elevation and everything along the way.`
+            : `${territorio.data.ridePack.length} loops ready to download — open the track in Ride with GPS and ride.`}
+        </p>
         <div class="grid g2">
           {territorio.data.ridePack.map((route) => <RouteCard route={route} />)}
         </div>

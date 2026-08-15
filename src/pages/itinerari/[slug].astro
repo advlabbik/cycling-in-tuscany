@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import RouteViewer from '../../components/RouteViewer.astro';
-import { site } from '../../../site.config';
+import { stay22RoamUrl } from '../../lib/stay22';
 import { bgUrl } from '../../lib/images';
 
 export async function getStaticPaths() {
@@ -19,9 +19,11 @@ const d = itinerario.data;
 const routeColor = d.type === 'Gravel' ? '#b8860b' : '#2d4a3e';
 /* Stay22 centrato sulla zona dell'anello, con campagna dedicata all'itinerario:
    è la campagna che rende attribuibile ogni prenotazione nel CSV di Stay22. */
-const stay22Url = `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${d.stay22Campaign}&lat=${d.stay22Center.lat}&lng=${d.stay22Center.lng}&product_medium=apps`;
-/* Stay22 non include Airbnb: link sempre accanto, mai al suo posto. */
-const airbnbUrl = 'https://www.airbnb.com/s/Venturina-Terme--Tuscany--Italy/homes';
+const stay22Url = stay22RoamUrl(d.stay22Center.lat, d.stay22Center.lng, d.stay22Campaign);
+/* Stay22 non include Airbnb: link sempre accanto, mai al suo posto. La zona
+   viene dal frontmatter — hardcodata su Venturina mandava i percorsi di
+   Monterotondo a cercare casa a 35 km dal giro. */
+const airbnbUrl = d.airbnbUrl ?? 'https://www.airbnb.com/s/Tuscany--Italy/homes';
 const heroImage = await bgUrl(d.heroImage, 1600);
 
 const schema = {
@@ -33,7 +35,7 @@ const schema = {
 };
 ---
 
-<Base title={`${d.name} — ${d.type} route · Cycling in Tuscany`} description={d.intro} schema={schema} ogImage={d.heroImage}>
+<Base title={`${d.name} — ${d.type} route · Cycling in Tuscany`} description={d.intro} schema={schema} ogImage={d.heroImage} maplibre={true}>
   <div
     class="hero"
     style={heroImage
@@ -143,7 +145,9 @@ const schema = {
           <p class="it-gatehint">Leave your email and the GPX file is yours, ready for your bike computer.</p>
         </div>
         <div class="pack-dl-bar-right">
-          <form id="gpx-gate" class="it-gate" novalidate data-area={d.area} data-type={d.type} data-diff={d.diff}>
+          {/* method="post": se lo script muore prima di agganciare il submit,
+              il browser NON deve fare un GET con l'email in chiaro nell'URL */}
+          <form id="gpx-gate" class="it-gate" method="post" novalidate data-area={d.area} data-type={d.type} data-diff={d.diff}>
             <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address" />
             <button type="submit" class="pack-dl-btn" style="border:0;cursor:pointer">
               <span class="pack-dl-circle">
@@ -156,7 +160,7 @@ const schema = {
               Get the GPX
             </button>
             <label class="it-consent">
-              <input type="checkbox" name="consent" checked />
+              <input type="checkbox" name="consent" />
               <span>Send me new verified routes and Tuscany riding tips (a few emails a year, no spam)</span>
             </label>
           </form>
@@ -191,45 +195,58 @@ const schema = {
 
 <script>
   /**
-   * Gate email del GPX. Il POST va alla Pages Function /api/lead (che in
-   * produzione scrive su Brevo); se la function non c'è — ad esempio in
-   * `npm run dev`, che non esegue le functions — il prototipo sblocca
-   * comunque, perché qui l'obiettivo è mostrare il flusso.
+   * Gate email del GPX. Regole:
+   * - lo sblocco e' immediato e il lead parte in background (keepalive):
+   *   niente attese sulla CTA di conversione;
+   * - lo sblocco e' globale (un'email sola per sempre) ma il TAG di intento
+   *   parte per OGNI percorso scaricato — e' il dato che vale per i territori
+   *   ("X contatti hanno cercato percorsi da te", doc TT365);
+   * - localStorage puo' essere bloccato dal browser: tutto in try/catch,
+   *   senza storage il gate funziona comunque (solo, richiede l'email ogni volta).
    */
   const form = document.getElementById('gpx-gate') as HTMLFormElement | null;
   const unlocked = document.getElementById('gpx-unlocked');
+  const store = {
+    get(k: string) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k: string, v: string) { try { localStorage.setItem(k, v); } catch { /* niente storage, pazienza */ } },
+  };
   if (form && unlocked) {
-    if (localStorage.getItem('cit-gpx-unlocked')) {
+    const routeKey = 'cit-lead:' + location.pathname;
+    const sendLead = (email: string, consent: boolean) => {
+      const meta = form.dataset;
+      try {
+        fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          keepalive: true,
+          body: JSON.stringify({
+            email, consent,
+            itinerary: location.pathname, lang: 'en',
+            area: meta.area, type: meta.type, diff: meta.diff,
+          }),
+        }).catch(() => {});
+      } catch { /* offline: il download resta sbloccato comunque */ }
+      store.set(routeKey, '1');
+    };
+    if (store.get('cit-gpx-unlocked')) {
       form.hidden = true;
       unlocked.hidden = false;
+      const email = store.get('cit-gpx-email');
+      if (email && !store.get(routeKey)) {
+        unlocked.addEventListener('click', () => {
+          if (!store.get(routeKey)) sendLead(email, store.get('cit-gpx-consent') === '1');
+        }, { once: true });
+      }
     }
-    form.addEventListener('submit', async (ev) => {
+    form.addEventListener('submit', (ev) => {
       ev.preventDefault();
       const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
       if (!email || !email.includes('@')) return;
       const consent = (form.elements.namedItem('consent') as HTMLInputElement).checked;
-      try {
-        /* tagging degli intenti (doc TT365): ogni download dice zona, tipo e
-           difficoltà — è quello che trasforma la lista in contatti qualificati
-           da vendere ai territori ("X contatti hanno cercato percorsi da te") */
-        const meta = document.getElementById('gpx-gate')!.dataset;
-        await fetch('/api/lead', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            consent,
-            itinerary: location.pathname,
-            lang: 'en',
-            area: meta.area,
-            type: meta.type,
-            diff: meta.diff,
-          }),
-        });
-      } catch {
-        /* prototipo: senza function si prosegue lo stesso */
-      }
-      localStorage.setItem('cit-gpx-unlocked', '1');
+      store.set('cit-gpx-unlocked', '1');
+      store.set('cit-gpx-email', email);
+      store.set('cit-gpx-consent', consent ? '1' : '0');
+      sendLead(email, consent);
       form.hidden = true;
       unlocked.hidden = false;
     });

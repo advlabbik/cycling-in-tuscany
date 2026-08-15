@@ -74,12 +74,18 @@ SLEEP = {"hotel": "hotel", "guest_house": "B&B", "hostel": "hostel", "motel": "m
 
 
 def parse_gpx(path):
-    pts = []
-    for p in ET.parse(path).getroot().iter("{http://www.topografix.com/GPX/1/1}trkpt"):
-        e = p.find("{http://www.topografix.com/GPX/1/1}ele")
-        pts.append((float(p.get("lat")), float(p.get("lon")),
-                    float(e.text) if e is not None else 0.0))
-    return pts
+    root = ET.parse(path).getroot()
+    # alcuni export (Garmin vecchi) sono GPX 1.0: senza questo giro il file
+    # parserebbe a zero punti e lo script morirebbe dopo con un IndexError opaco
+    for ns in ("http://www.topografix.com/GPX/1/1", "http://www.topografix.com/GPX/1/0"):
+        pts = []
+        for p in root.iter(f"{{{ns}}}trkpt"):
+            e = p.find(f"{{{ns}}}ele")
+            pts.append((float(p.get("lat")), float(p.get("lon")),
+                        float(e.text) if e is not None else 0.0))
+        if pts:
+            return pts
+    sys.exit(f"nessun trkpt riconosciuto in {path} (namespace GPX non standard)")
 
 
 def hav(a, b):
@@ -284,12 +290,6 @@ def elabora(pts2d, cum, elements, partner_route):
             for x in g["m"]+g["d"]+g["a"]:
                 x["centro_piccolo"] = nome
                 solitari.append(x)
-    # I servizi della zona di partenza/arrivo (primo e ultimo km) sono quelli
-    # della base stessa: stanno nella scheda della struttura, non nella lista
-    # del percorso — senza questo filtro il campeggio riversava 10 righe a
-    # km 0 e il gruppo sulla mappa sembrava "10 posti per dormire" (15/8).
-    km_tot = cum[-1]
-    solitari = [x for x in solitari if 1.0 <= x["km"] <= km_tot - 1.0]
     for x in solitari:
         e = {"t": x["cat"], "km": round(x["km"], 1), "name": x["nome"], "sub": x["sub"]}
         if x.get("centro_piccolo"):
@@ -301,6 +301,14 @@ def elabora(pts2d, cum, elements, partner_route):
         if x["cat"] == "d":
             e["lat"], e["lng"] = round(x["p"][0], 5), round(x["p"][1], 5)
         entries.append(e)
+    # SOLO sui percorsi partner: i servizi del primo/ultimo km sono la base
+    # stessa (stanno nella sua scheda, non nella lista del percorso — senza
+    # filtro il campeggio riversava 10 righe a km 0). Vale anche per i centri
+    # raggruppati, che prima bypassavano il filtro. Sui percorsi di territorio
+    # invece la partenza È il borgo: fontane e negozi a km 0 sono il servizio.
+    if partner_route:
+        km_tot = cum[-1]
+        entries = [e for e in entries if 1.0 <= e["km"] <= km_tot - 1.0]
     entries.sort(key=lambda e: e["km"])
     return entries
 
@@ -312,26 +320,34 @@ ENDPOINTS.extend(collauda_endpoint(primo[0], primo[1]))
 for key, path in GPX.items():
     print(f"\n=== {key} ===", flush=True)
     pts = parse_gpx(path)
-    # traccia per il viewer: ricampionata sotto i ~1500 punti, quota lisciata
-    step = max(1, len(pts)//1500)
-    tp = pts[::step]
-    cum_t = cumulate(tp)
-    ele = [p[2] for p in tp]
-    sm = [max(0, round(sum(ele[max(0, i-2):i+3])/len(ele[max(0, i-2):i+3]))) for i in range(len(ele))]
-    track = [[round(p[0], 5), round(p[1], 5), sm[i], round(cum_t[i], 2)] for i, p in enumerate(tp)]
-
     pts2d = [(p[0], p[1]) for p in pts]
+    # UNA sola scala chilometrica per tutto il file: la cumulata a piena
+    # risoluzione. Prima la traccia ricampionata aveva la SUA cumulata (piu'
+    # corta del 2-5% per l'accorciamento delle corde) mentre i km dei POI
+    # venivano da quella piena: i pin senza coordinate finivano 1-2,5 km piu'
+    # avanti sulla mappa e potevano sforare l'asse del profilo.
     cum = cumulate(pts2d)
+    step = max(1, len(pts)//1500)
+    idxs = list(range(0, len(pts), step))
+    if idxs[-1] != len(pts) - 1:
+        idxs.append(len(pts) - 1)  # mai perdere la chiusura dell'anello
+    ele = [pts[i][2] for i in idxs]
+    sm = [max(0, round(sum(ele[max(0, j-2):j+3])/len(ele[max(0, j-2):j+3]))) for j in range(len(ele))]
+    track = [[round(pts[i][0], 5), round(pts[i][1], 5), sm[j], round(cum[i], 2)] for j, i in enumerate(idxs)]
     corr = campiona(pts, cum, PASSO)
     print(f"  {cum[-1]:.0f} km, corridoio {len(corr)} punti, {math.ceil(len(corr)/CHUNK)} tratti", flush=True)
     el = scarica(key, corr)
     partner = next((v for pre, v in PARTNER.items() if key.startswith(pre)), None)
     entries = elabora(pts2d, cum, el, partner_route=bool(partner))
     if partner:
-        # il POI del partner si aggancia al punto della traccia piu' vicino
+        # il POI del partner si aggancia al punto della traccia piu' vicino;
+        # su un anello partenza=arrivo il jitter GPS puo' scegliere la fine
+        # (vo-road-1 usciva a km 107,6): in quel caso e' la partenza, km 0
         e = dict(partner)
         pp = (partner["lat"], partner["lng"])
         e["km"] = round(min((hav(pp, pts2d[i]), cum[i]) for i in range(len(pts2d)))[1], 1)
+        if e["km"] > cum[-1] - 1.0:
+            e["km"] = 0.0
         entries.append(e)
         entries.sort(key=lambda x: x["km"])
 
@@ -341,9 +357,9 @@ for key, path in GPX.items():
             tot["a"] += e["nf"]; tot["m"] += e["ne"]; tot["d"] += e["ns"]
         else:
             tot[e["t"]] = tot.get(e["t"], 0) + 1
-    print(f"  -> {len(entries)} righe | acqua {tot['a']} · mangiare {tot['m']} · dormire {tot['d']}", flush=True)
+    print(f"  -> {len(entries)} righe | acqua {tot['a']} | mangiare {tot['m']} | dormire {tot['d']}", flush=True)
 
-    out = {"slug": key, "kmTot": round(cum_t[-1], 1), "points": track, "poi": entries}
+    out = {"slug": key, "kmTot": round(cum[-1], 1), "points": track, "poi": entries}
     open(os.path.join(OUTDIR, f"{key}.json"), "w", encoding="utf-8", newline="\n").write(
         json.dumps(out, ensure_ascii=False, separators=(",", ":")))
 

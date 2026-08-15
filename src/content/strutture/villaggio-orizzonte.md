@@ -38,7 +38,7 @@ ridePack:
     page: "/itinerari/vo-gravel-1"
   - name: "Etruscan Coast Gravel Loop"
     type: "Gravel"
-    km: "51,6"
+    km: "51.6"
     dislivello: "243 m"
     diff: "Easy"
     surface: "39% gravel"

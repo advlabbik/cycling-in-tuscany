@@ -2,6 +2,7 @@
 
 Centri con molti servizi raggruppati in una riga. Km indicativi.
 
+- 🛏️ km 0 — Villaggio Orizzonte
 - 🍝 km 15 — Bar Cafaggio (Cafaggio)
 - 🍝 km 16 — restaurant
 **km 21 — Suvereto** · 14 eat · 5 fountains
@@ -47,4 +48,3 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 - 🍝 km 86 — La Carraia (Populonia Stazione)
 - ⛲ km 86 — fountain (Populonia Stazione)
 **km 94 — Venturina Terme** · 44 eat · 3 fountains
-- 🛏️ km 108 — Villaggio Orizzonte

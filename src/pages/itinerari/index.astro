@@ -16,17 +16,28 @@ for (const it of itinerari) {
   const d = it.data;
   const key = groupKey(d);
   if (!groups.has(key)) {
-    groups.set(key, {
-      label: d.base ? d.base.name : d.territory ? d.territory.name : 'Other routes',
-      sub: d.base ? 'Official Bike-Friendly Stay · routes from the doorstep' : 'Official Territory · routes from the borough',
-      href: d.base ? `/strutture/${d.base.slug}` : d.territory ? `/territori/${d.territory.slug}` : '/',
-      items: [] as typeof itinerari,
-    });
+    // un solo discriminatore per label/sub/href: prima erano tre ternari da
+    // tenere allineati a mano, e al sub mancava già il terzo ramo
+    const info = d.base
+      ? { label: d.base.name, sub: 'Official Bike-Friendly Stay · routes from the doorstep', href: `/strutture/${d.base.slug}` }
+      : d.territory
+        ? { label: d.territory.name, sub: 'Official Territory · routes from the borough', href: `/territori/${d.territory.slug}` }
+        : { label: 'More verified routes', sub: 'Curated by the Cycling in Tuscany team', href: '/itinerari/' };
+    groups.set(key, { ...info, items: [] as typeof itinerari });
   }
   groups.get(key)!.items.push(it);
 }
 for (const g of groups.values())
   g.items.sort((a, b) => a.data.type.localeCompare(b.data.type) || a.data.name.localeCompare(b.data.name));
+/* ordine esplicito: prima i partner paganti (stay), poi i territori, ognuno in
+   alfabetico — senza questo l'ordine era quello dei filename su disco, col
+   territorio gratuito sopra le strutture che pagano la scheda */
+const groupList = [...groups.entries()]
+  .sort(([ka, a], [kb, b]) => {
+    const rank = (k: string) => (k.startsWith('stay:') ? 0 : k.startsWith('terr:') ? 1 : 2);
+    return rank(ka) - rank(kb) || a.label.localeCompare(b.label);
+  })
+  .map(([, g]) => g);
 
 const total = itinerari.length;
 const gravel = itinerari.filter((i) => i.data.type === 'Gravel').length;
@@ -45,15 +56,15 @@ const gravel = itinerari.filter((i) => i.data.type === 'Gravel').length;
         {total} loops — {gravel} gravel, {total - gravel} road — each with map, elevation, water and
         food stops, and the GPX ready for your bike computer.
       </p>
-      <div class="it-stats" style="margin-top:20px">
-        <button type="button" class="itx-fil on" data-f="all">All routes</button>
-        <button type="button" class="itx-fil" data-f="Gravel">Gravel</button>
-        <button type="button" class="itx-fil" data-f="Road">Road</button>
+      <div class="itx-fils">
+        <button type="button" class="itx-fil on" aria-pressed="true" data-f="all">All routes</button>
+        <button type="button" class="itx-fil" aria-pressed="false" data-f="Gravel">Gravel</button>
+        <button type="button" class="itx-fil" aria-pressed="false" data-f="Road">Road</button>
       </div>
     </div>
   </div>
 
-  {[...groups.values()].map((group) => (
+  {groupList.map((group) => (
     <section class="itx-group">
       <div class="wrap">
         <div class="itx-head">
@@ -100,6 +111,7 @@ const gravel = itinerari.filter((i) => i.data.type === 'Gravel').length;
 </style>
 
 <style is:global>
+  .itx-fils{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
   .itx-fil{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:999px;padding:8px 18px;font-size:.86rem;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:background .2s}
   .itx-fil.on{background:#f5a623;border-color:#f5a623;color:#1a1a1a}
 </style>
@@ -109,7 +121,10 @@ const gravel = itinerari.filter((i) => i.data.type === 'Gravel').length;
   fils.forEach((b) =>
     b.addEventListener('click', () => {
       const f = b.dataset.f!;
-      fils.forEach((x) => x.classList.toggle('on', x === b));
+      fils.forEach((x) => {
+        x.classList.toggle('on', x === b);
+        x.setAttribute('aria-pressed', String(x === b));
+      });
       document.querySelectorAll<HTMLElement>('.itxcard').forEach((c) => {
         c.hidden = f !== 'all' && c.dataset.type !== f;
       });

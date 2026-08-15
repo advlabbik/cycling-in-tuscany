@@ -20,8 +20,10 @@ const heroImage = await bgUrl(struttura.data.heroImage, 1600);
 const gravelCount = struttura.data.ridePack.filter((route) => route.type.toLowerCase() === 'gravel').length;
 const roadCount = struttura.data.ridePack.length - gravelCount;
 /* Se tutte le route hanno la pagina interna, il pack vive nel sito e il PDF
-   non si offre più in download (Andrea, 14/8): solo GPX, dalle pagine itinerario. */
-const allOnSite = struttura.data.ridePack.every((route) => route.page);
+   non si offre più in download (Andrea, 14/8): solo GPX, dalle pagine
+   itinerario. Il controllo sulla lunghezza evita il vero-per-vuoto: una
+   struttura appena creata senza route non deve dichiarare "tutto sul sito". */
+const allOnSite = struttura.data.ridePack.length > 0 && struttura.data.ridePack.every((route) => route.page);
 
 const schema = {
   '@context': 'https://schema.org',

@@ -158,8 +158,12 @@ const itinerari = defineCollection({
       /** dati traccia+POI generati da script, serviti da public/ */
       trackData: z.string(),
       stay22Campaign: z.string(),
-      /** centro della mappa Stay22, di norma il baricentro dell'anello */
-      stay22Center: z.object({ lat: z.number(), lng: z.number() }).default({ lat: 43.01, lng: 10.63 }),
+      /** centro della mappa Stay22, di norma il baricentro dell'anello.
+       *  OBBLIGATORIO: un default geografico mandava la mappa a 30-80 km
+       *  dal percorso senza che nessun build se ne accorgesse. */
+      stay22Center: z.object({ lat: z.number(), lng: z.number() }),
+      /** ricerca Airbnb della zona (regola: Airbnb sempre accanto a Stay22) */
+      airbnbUrl: z.string().url().optional(),
     }),
 });
 

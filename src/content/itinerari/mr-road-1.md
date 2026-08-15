@@ -4,8 +4,8 @@ type: "Road"
 area: "Metalliferous Hills · Maremma"
 tagline: "A long endurance ride through the Montioni forest to medieval Massa Marittima"
 intro: "A 78.6 km road loop with 1,270 metres of climbing. Down from Monterotondo through the Montioni Natural Park — where boar and deer outnumber cars — then up to the magnificent medieval square of Massa Marittima before the final climb home."
-km: "78,6"
-dislivello: "1.270 m"
+km: "78.6"
+dislivello: "1270 m"
 diff: "Long endurance effort"
 surface: "paved road"
 time: "4–6 h"
@@ -16,6 +16,7 @@ territory:
 highlights:
   - "Parco di Montioni"
   - "Massa Marittima"
+airbnbUrl: "https://www.airbnb.com/s/Monterotondo-Marittimo--Tuscany--Italy/homes"
 rwgpsUrl: "https://ridewithgps.com/routes/53994764"
 gpx: "/gpx/MR-Road-1.gpx"
 goodToKnow:

@@ -6,6 +6,7 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 - 🍝 km 1 — Baia Verde Supermarket SAS
 - ⛲ km 1 — fountain
 - ⛲ km 1 — fountain
+- ⛲ km 1 — fountain
 - 🍝 km 1 — Il Salto della Capriola
 - 🍝 km 11 — Trentino
 - 🍝 km 12 — Bar Pizzeria La Corte (Pian di Rocca)

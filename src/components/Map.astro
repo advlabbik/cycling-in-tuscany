@@ -20,8 +20,9 @@ interface Props {
 
 const { territories, structures } = Astro.props;
 const getSlug = (id: string) => id.replace(/\.md$/, '');
-const stay22 = (lat: number, lng: number) =>
-  `https://www.stay22.com/allez/roam?aid=${site.stay22Aid}&campaign=${site.stay22Campaign}&lat=${lat}&lng=${lng}&product_medium=apps`;
+import { stay22RoamUrl } from '../lib/stay22';
+
+const stay22 = (lat: number, lng: number) => stay22RoamUrl(lat, lng);
 
 const territoryMarker = async (entry: CollectionEntry<'territori'>) => ({
   name: entry.data.name,

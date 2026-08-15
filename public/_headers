@@ -1,0 +1,8 @@
+# Cache per gli asset dei percorsi: cambiano solo a rigenerazione/deploy.
+# Senza queste regole Cloudflare Pages serve i JSON con max-age=0 e ogni
+# vista ripaga una rivalidazione.
+/data/itinerari/*
+  Cache-Control: public, max-age=3600
+
+/gpx/*
+  Cache-Control: public, max-age=86400
