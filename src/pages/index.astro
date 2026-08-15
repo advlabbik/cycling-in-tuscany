@@ -72,7 +72,6 @@ const faqSchema = {
         <p class="hero-lead">The start-line booking map, verified routes and bike-friendly stays — curated by the team that created the Tuscany Trail, the world's largest bikepacking event.</p>
         <div class="hero-actions">
           <a class="btn gold neon-glow" href="#book">Book your first night →</a>
-          <a class="btn ghost-white" href="/itinerari/">Browse the routes</a>
         </div>
       </div>
     </div>
@@ -92,7 +91,7 @@ const faqSchema = {
   {campiglia && (
     <section
       class="feature"
-      style={`background-image:linear-gradient(rgba(10,5,8,.45),rgba(10,5,8,.88))${campigliaBg ? `, url('${campigliaBg}')` : ''}, linear-gradient(135deg,#2d4a3e,#6b4a10)`}
+      style={`background-image:linear-gradient(rgba(10,5,8,.45),rgba(10,5,8,.88))${campigliaBg ? `, url('${campigliaBg}')` : ''}, linear-gradient(135deg,#2e151c,#6b4a10)`}
     >
       <div class="wrap">
         <div class="ribbon">Home of the Tuscany Trail</div>
@@ -133,13 +132,19 @@ const faqSchema = {
           );
         })}
       </div>
-      <div class="cta-band" style="margin-top:40px">
-        <div>
-          <h3>{itinerari.length} verified routes, ready to ride</h3>
-          <p>Designed, ridden and verified by the people behind the Tuscany Trail — with map, elevation and every water stop.</p>
-        </div>
-        <a class="btn gold" href="/itinerari/">Browse the routes →</a>
-      </div>
+    </div>
+  </section>
+
+  <section
+    class="feature routes-band"
+    style={`background-image:linear-gradient(rgba(18,10,13,.35),rgba(18,10,13,.82))${heroBg ? `, url('${heroBg}')` : ''}`}
+  >
+    <div class="wrap">
+      <div class="ribbon">✔ Verified routes</div>
+      <div class="kick">{itinerari.length} loops · gravel & road</div>
+      <h2>The ones worth riding.</h2>
+      <p>Every route designed, ridden and verified by the people behind the Tuscany Trail — studied on the map with elevation, water stops and food, and the GPX ready for your bike computer.</p>
+      <a class="btn gold" href="/itinerari/">Browse the {itinerari.length} routes →</a>
     </div>
   </section>
 
@@ -203,7 +208,7 @@ const faqSchema = {
               <path d="M90 48 L53 43 L57 48 L53 53 Z" fill="rgba(255,255,255,.18)" />
               <path d="M6 48 L43 53 L39 48 L43 43 Z" fill="rgba(255,255,255,.18)" />
               <circle cx="48" cy="48" r="6" fill="#f5a623" opacity=".9" />
-              <circle cx="48" cy="48" r="2.5" fill="#0e1a12" />
+              <circle cx="48" cy="48" r="2.5" fill="#1a0e12" />
               <text x="48" y="24" text-anchor="middle" dominant-baseline="middle" fill="rgba(245,166,35,.55)" font-size="8" font-family="monospace" font-weight="700" letter-spacing="2">N</text>
             </svg>
           </div>

@@ -1,5 +1,5 @@
 ---
-order: 7
+order: 2
 question: "What is the Tuscany Trail?"
-answer: "The Tuscany Trail is the regional cycling idea that connects the best riding territories, stays and route experiences across the Costa degli Etruschi and beyond."
+answer: "The world's largest bikepacking event — thousands of riders crossing Tuscany on white roads every spring, starting and finishing in Campiglia Marittima. Tuscany Trail 365 brings the same roads, knowledge and verified places to anyone, on any day of the year."
 ---

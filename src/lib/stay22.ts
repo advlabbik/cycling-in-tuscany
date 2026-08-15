@@ -22,5 +22,5 @@ export const stay22EmbedUrl = (
   checkout?: string,
 ) =>
   `https://www.stay22.com/embed/gm?aid=${site.stay22Aid}&campaign=${encodeURIComponent(campaign)}` +
-  `&lat=${lat}&lng=${lng}&maincolor=C74634&venue=${encodeURIComponent(venue)}&ljs=en&mapstyle=outdoors` +
+  `&lat=${lat}&lng=${lng}&maincolor=A80030&venue=${encodeURIComponent(venue)}&ljs=en&mapstyle=outdoors` +
   (checkin && checkout ? `&checkin=${checkin}&checkout=${checkout}` : '');

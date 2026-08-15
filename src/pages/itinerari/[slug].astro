@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 const { itinerario } = Astro.props;
 const d = itinerario.data;
 
-const routeColor = d.type === 'Gravel' ? '#b8860b' : '#2d4a3e';
+const routeColor = d.type === 'Gravel' ? '#b8860b' : '#a80030';
 /* Stay22 centrato sulla zona dell'anello, con campagna dedicata all'itinerario:
    è la campagna che rende attribuibile ogni prenotazione nel CSV di Stay22. */
 const stay22Url = stay22RoamUrl(d.stay22Center.lat, d.stay22Center.lng, d.stay22Campaign);
@@ -182,11 +182,11 @@ const schema = {
   .it-stats span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:999px;padding:7px 15px;font-size:.86rem}
   .it-stats b{font-weight:700}
   .it-otherstays{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-  .it-gatehint{margin:8px 0 0;color:#c8dcd2;font-size:.88rem;max-width:380px}
+  .it-gatehint{margin:8px 0 0;color:#e6ccd4;font-size:.88rem;max-width:380px}
   .it-gate{display:flex;gap:10px;flex-wrap:wrap;align-items:center;max-width:420px}
   .it-gate input[type='email']{flex:1;min-width:200px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;border-radius:999px;padding:12px 18px;font-size:.9rem;font-family:var(--font-body)}
   .it-gate input[type='email']::placeholder{color:rgba(255,255,255,.5)}
-  .it-consent{display:flex;gap:8px;align-items:flex-start;font-size:.72rem;color:#c8dcd2;line-height:1.4;max-width:400px;cursor:pointer}
+  .it-consent{display:flex;gap:8px;align-items:flex-start;font-size:.72rem;color:#e6ccd4;line-height:1.4;max-width:400px;cursor:pointer}
   .it-consent input{margin-top:2px}
   .it-unlocked{display:flex;gap:12px;flex-wrap:wrap}
   .it-rwgps{margin:18px 0 0;font-size:.88rem;color:var(--muted)}

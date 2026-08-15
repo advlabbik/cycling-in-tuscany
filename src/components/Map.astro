@@ -74,7 +74,7 @@ const markers = await Promise.all([
     var markers = JSON.parse(container.dataset.markers || '[]');
     var center = JSON.parse(container.dataset.center || '[10.68,42.98]');
     var zoom = Number(container.dataset.zoom || 9);
-    var col: Record<string, string> = { premium: '#f5a623', territory: '#2d4a3e', structure: '#c74634' };
+    var col: Record<string, string> = { premium: '#f5a623', territory: '#2e151c', structure: '#a80030' };
 
     var map = new maplibregl.Map({
       container: 'map-el',
@@ -147,7 +147,7 @@ const markers = await Promise.all([
             '<span style="color:#777;font-size:.8rem">' + m.sub + '</span>' +
             '<div style="margin-top:12px;display:flex;flex-direction:column;gap:7px">' +
             '<a href="' + m.page +
-            '" style="display:block;background:#c74634;color:#fff;font-weight:700;font-size:.84rem;padding:11px 16px;border-radius:10px;text-decoration:none;text-align:center;letter-spacing:.01em">' +
+            '" style="display:block;background:#a80030;color:#fff;font-weight:700;font-size:.84rem;padding:11px 16px;border-radius:10px;text-decoration:none;text-align:center;letter-spacing:.01em">' +
             ctaLabel + '</a>' +
             (m.rp
               ? '<a href="' + m.page + '#' + m.rp +
@@ -156,7 +156,7 @@ const markers = await Promise.all([
               : '') +
             (m.book
               ? '<a href="' + m.book +
-                '" target="_blank" rel="noopener" style="display:block;background:#2d4a3e;color:#fff;font-weight:700;font-size:.84rem;padding:11px 16px;border-radius:10px;text-decoration:none;text-align:center;letter-spacing:.01em">' +
+                '" target="_blank" rel="noopener" style="display:block;background:#2e151c;color:#fff;font-weight:700;font-size:.84rem;padding:11px 16px;border-radius:10px;text-decoration:none;text-align:center;letter-spacing:.01em">' +
                 bookLabel + '</a>'
               : '') +
             '</div></div></div>'

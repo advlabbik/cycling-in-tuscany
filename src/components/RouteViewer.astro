@@ -97,7 +97,7 @@ const { src, color } = Astro.props;
     const poi: any[] = data.poi;
 
     /* colori e icone per tipo — oro = partner/dormire, come il tier premium del sito */
-    const TCOL: Record<string, string> = { a: '#1971c2', m: '#8a6d1c', c: '#2d4a3e', d: '#f5a623' };
+    const TCOL: Record<string, string> = { a: '#1971c2', m: '#8a6d1c', c: '#2e151c', d: '#f5a623' };
     const TLAB: Record<string, string> = { a: 'Water', m: 'Food', c: 'Villages', d: 'Sleep' };
     const ICO: Record<string, string> = {
       a: '<path d="M12 2.7C9.2 6.5 6 10.2 6 13.5a6 6 0 0 0 12 0c0-3.3-3.2-7-6-10.8z"/>',
@@ -311,7 +311,7 @@ const { src, color } = Astro.props;
       if (selKm != null) {
         const i = idxFromKm(selKm);
         const x = X(pts[i][3]), y = Y(pts[i][2]);
-        ctx.strokeStyle = '#16211a'; ctx.setLineDash([4, 3]);
+        ctx.strokeStyle = '#1f1216'; ctx.setLineDash([4, 3]);
         ctx.beginPath(); ctx.moveTo(x, 12); ctx.lineTo(x, H - 24); ctx.stroke(); ctx.setLineDash([]);
         ctx.beginPath(); ctx.arc(x, y, 5, 0, 7); ctx.fillStyle = '#1971c2'; ctx.fill();
         ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
