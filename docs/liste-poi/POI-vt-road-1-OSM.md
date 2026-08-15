@@ -13,6 +13,5 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 - 🍝 km 57 — Ristorante Pratella
 - 🍝 km 66 — Agriturismo Il Palazzotto
 - ⛲ km 67 — fountain (San Lorenzo)
-- ⛲ km 68 — fountain (San Lorenzo)
 - 🍝 km 78 — Bar Cafaggio (Cafaggio)
 **km 82 — Venturina Terme** · 11 eat · 2 fountains

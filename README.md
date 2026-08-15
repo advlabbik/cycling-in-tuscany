@@ -86,6 +86,23 @@ così nessun partner può obiettare sulla parità di trattamento. Niente schede 
 pagine intermedie dove la gente si perde: un link, una mappa, si prenota.
 Campagna Stay22 dedicata per misurare tutto.
 
+## Lavoro in sospeso: rigenerazione POI (15/8, sera)
+
+I negozi di bici (categoria `b`) e il raggruppamento delle fontane sono attivi
+nel generatore e nel viewer, ma **solo 3 percorsi su 16 hanno i dati nuovi**
+(vt-gravel-1, vt-gravel-2, vt-road-1): la rigenerazione completa richiede di
+riscaricare tutto da Overpass (le cache vecchie non contengono i bike shop) ed
+è stata interrotta per scelta — Overpass rispondeva a singhiozzo. Gli altri 13
+JSON restano validi, semplicemente senza negozi e con le fontane non
+raggruppate. Per completare, in un momento in cui Overpass respira:
+
+```bash
+python scripts/gen_poi.py vt-road-2="<gpx>" pacr-gravel-1="public/gpx/PACR-Gravel-1.gpx" ... mr-road-2="public/gpx/MR-Road-2.gpx"
+```
+
+(i tre gia' fatti hanno la cache in `scripts/_osm_*.json` e si saltano da soli;
+la lista completa degli argomenti e' nel commit "Marker stabili su mobile...").
+
 ## Regole di gestione del progetto (imparate su tg-guida)
 
 Prese dal README/CLAUDE.md di `advlabbik/tg-guida`, valgono anche qui:

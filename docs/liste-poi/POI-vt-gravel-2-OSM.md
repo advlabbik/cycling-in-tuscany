@@ -18,8 +18,10 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 - ⛲ km 23 — fountain (Falcone)
 - 🍝 km 24 — fast food (Falcone)
 - 🍝 km 24 — Calamoresca Beach (Falcone)
-- ⛲ km 24 — fountain (Falcone)
+- 🚲 km 26 — MetaBike
 **km 27 — Piombino** · 93 eat · 4 fountains
+- 🚲 km 28 — BikeRevolution
+- 🚲 km 28 — Cicli Lancioni
 - 🍝 km 38 — I Tretruschi
 - 🍝 km 42 — Zia Seconda
 - 🍝 km 42 — cafe (Populonia Stazione)

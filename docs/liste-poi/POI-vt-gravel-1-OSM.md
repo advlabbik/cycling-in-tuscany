@@ -3,8 +3,8 @@
 Centri con molti servizi raggruppati in una riga. Km indicativi.
 
 **km 6 — Venturina Terme** · 22 eat · 2 fountains
+- 🚲 km 6 — R.A.A.M. srl
 **km 16 — Suvereto** · 14 eat · 4 fountains
-- ⛲ km 23 — fountain (San Lorenzo)
 - ⛲ km 23 — fountain (San Lorenzo)
 **km 35 — Riotorto** · 10 eat · 5 fountains
 - 🍝 km 44 — Nano Verde

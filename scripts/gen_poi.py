@@ -394,7 +394,7 @@ for key, path in GPX.items():
                    f"{e['nf']} fountains" if e['nf'] else ""]
             md.append(f"**km {e['km']:.0f} — {e['name']}** · " + " · ".join(x for x in det if x))
         else:
-            ico = {"a": "⛲", "m": "🍝", "d": "🛏️"}[e["t"]]
+            ico = {"a": "⛲", "m": "🍝", "d": "🛏️", "b": "🚲"}[e["t"]]
             n = e.get("name") or e.get("sub", "")
             luogo = f" ({e['luogo']})" if e.get("luogo") else ""
             md.append(f"- {ico} km {e['km']:.0f} — {n}{luogo}")
