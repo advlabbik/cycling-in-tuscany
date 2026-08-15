@@ -34,6 +34,7 @@ const monterotondo = territori.find((item) => item.data.tier !== 'premium') || t
 const heroBg = await bgUrl(heroImg, 1600);
 const campigliaBg = await bgUrl(campiglia?.data.heroImage, 1600);
 const monterotondoBg = await bgUrl(monterotondo.data.heroImage, 700);
+const campigliaSlideBg = await bgUrl(campiglia?.data.heroImage, 700);
 // Oggetto e non `new Map()`: in questo file `Map` è il componente della mappa,
 // che ombreggia il costruttore globale.
 const struttureBg: Record<string, string> = Object.fromEntries(
@@ -162,6 +163,20 @@ const faqSchema = {
     </div>
 
     <div class="ter-carousel-scroll" id="ter-carousel-scroll">
+      {campiglia && (
+        <a class="ter-slide" href={`/territori/${getSlug(campiglia.id)}`}>
+          <div class="ter-slide-inner" style="box-shadow:0 8px 32px rgba(184,134,11,.35)">
+            {campigliaSlideBg && <div class="ter-slide-img" style={`background-image:url('${campigliaSlideBg}')`}></div>}
+            <div class="ter-slide-grad"></div>
+            <div class="ter-slide-body">
+              <span class="ter-slide-tag">★ Home of the Tuscany Trail</span>
+              <div class="ter-slide-title">{campiglia.data.name}</div>
+              <div class="ter-slide-desc">Start and finish of the Tuscany Trail — medieval borough, thermal springs, Monte Calvi trails.</div>
+              <div class="ter-slide-cta">Discover <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></div>
+            </div>
+          </div>
+        </a>
+      )}
       <a class="ter-slide" href={`/territori/${getSlug(monterotondo.id)}`}>
         <div class="ter-slide-inner">
           {monterotondoBg && <div class="ter-slide-img" style={`background-image:url('${monterotondoBg}')`}></div>}
@@ -228,6 +243,7 @@ const faqSchema = {
       <button class="ter-dot active" aria-label="Slide 1"></button>
       <button class="ter-dot" aria-label="Slide 2"></button>
       <button class="ter-dot" aria-label="Slide 3"></button>
+      <button class="ter-dot" aria-label="Slide 4"></button>
     </div>
   </section>
 
@@ -245,6 +261,23 @@ const faqSchema = {
     </div>
   </section>
 </Base>
+
+<script>
+  /* Le tre strutture appaiono in ordine CASUALE a ogni visita (Andrea, 15/8):
+     sono partner alla pari e da telefono l'ordine decide chi viene visto.
+     Lato client e non al build, altrimenti l'ordine resterebbe fisso fino al
+     deploy successivo; senza JS resta l'ordine di site.config. */
+  (function () {
+    var grid = document.querySelector('.stays-grid');
+    if (!grid) return;
+    var cards = Array.from(grid.children);
+    for (var i = cards.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = cards[i]; cards[i] = cards[j]; cards[j] = t;
+    }
+    cards.forEach(function (c) { grid.appendChild(c); });
+  })();
+</script>
 
 <script>
   (function () {

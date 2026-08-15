@@ -31,13 +31,14 @@ for (const g of groups.values())
   g.items.sort((a, b) => a.data.type.localeCompare(b.data.type) || a.data.name.localeCompare(b.data.name));
 /* ordine esplicito: prima i partner paganti (stay), poi i territori, ognuno in
    alfabetico — senza questo l'ordine era quello dei filename su disco, col
-   territorio gratuito sopra le strutture che pagano la scheda */
+   territorio gratuito sopra le strutture che pagano la scheda. Fra di loro i
+   gruppi stay vengono poi mescolati lato client a ogni visita (equita'). */
 const groupList = [...groups.entries()]
   .sort(([ka, a], [kb, b]) => {
     const rank = (k: string) => (k.startsWith('stay:') ? 0 : k.startsWith('terr:') ? 1 : 2);
     return rank(ka) - rank(kb) || a.label.localeCompare(b.label);
   })
-  .map(([, g]) => g);
+  .map(([k, g]) => ({ ...g, kind: k.startsWith('stay:') ? 'stay' : 'other' }));
 
 const total = itinerari.length;
 const gravel = itinerari.filter((i) => i.data.type === 'Gravel').length;
@@ -65,7 +66,7 @@ const gravel = itinerari.filter((i) => i.data.type === 'Gravel').length;
   </div>
 
   {groupList.map((group) => (
-    <section class="itx-group">
+    <section class="itx-group" data-kind={group.kind}>
       <div class="wrap">
         <div class="itx-head">
           <div>
@@ -117,6 +118,24 @@ const gravel = itinerari.filter((i) => i.data.type === 'Gravel').length;
 </style>
 
 <script>
+  /* i gruppi dei partner paganti si mescolano a ogni visita (Andrea, 15/8):
+     sono alla pari e chi sta primo si vede di piu'. I territori restano dopo. */
+  (function () {
+    const stays = Array.from(document.querySelectorAll<HTMLElement>('.itx-group[data-kind="stay"]'));
+    if (stays.length > 1) {
+      /* ancora stabile: il primo gruppo NON-stay dopo di loro (i territori),
+         che non si muove — reinserire prima di un elemento che si sta
+         spostando avrebbe mescolato male */
+      const parent = stays[0].parentNode!;
+      const anchorEl = stays[stays.length - 1].nextElementSibling;
+      for (let i = stays.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [stays[i], stays[j]] = [stays[j], stays[i]];
+      }
+      stays.forEach((s) => parent.insertBefore(s, anchorEl));
+    }
+  })();
+
   const fils = document.querySelectorAll<HTMLElement>('.itx-fil');
   fils.forEach((b) =>
     b.addEventListener('click', () => {
