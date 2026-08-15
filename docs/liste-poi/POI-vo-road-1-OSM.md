@@ -47,6 +47,4 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 - 🍝 km 86 — La Carraia (Populonia Stazione)
 - ⛲ km 86 — fountain (Populonia Stazione)
 **km 94 — Venturina Terme** · 44 eat · 3 fountains
-- 🍝 km 107 — Bar Ristorante Il Diavolino
-- 🍝 km 108 — InCoop
 - 🛏️ km 108 — Villaggio Orizzonte

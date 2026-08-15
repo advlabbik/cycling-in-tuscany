@@ -161,11 +161,18 @@ const { src, color } = Astro.props;
     /* POI sulla mappa, raggruppati se cadono quasi sullo stesso punto */
     type MapGroup = { members: any[]; lat: number; lng: number; marker?: maplibregl.Marker; el?: HTMLElement };
     const groupsMap: MapGroup[] = [];
-    poi.forEach((e) => {
+    /* il partner ha SEMPRE il suo marker, mai in un gruppo: raggruppato coi
+       servizi di zona il segno diventava un "10" dorato che sembrava una
+       lista di alloggi (15/8) */
+    poi.filter((e) => !e.partner).forEach((e) => {
       const [lat, lng] = posOf(e);
       const near = groupsMap.find((g) => Math.abs(g.lat - lat) < 0.004 && Math.abs(g.lng - lng) < 0.004);
       if (near) near.members.push(e);
       else groupsMap.push({ members: [e], lat, lng });
+    });
+    poi.filter((e) => e.partner).forEach((e) => {
+      const [lat, lng] = posOf(e);
+      groupsMap.push({ members: [e], lat, lng });
     });
     const popupHtml = (members: any[]) =>
       '<div style="padding:12px 14px;min-width:190px;max-height:260px;overflow-y:auto">' +

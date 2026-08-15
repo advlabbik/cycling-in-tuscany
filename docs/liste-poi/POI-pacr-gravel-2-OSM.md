@@ -2,9 +2,6 @@
 
 Centri con molti servizi raggruppati in una riga. Km indicativi.
 
-- 🍝 km 0 — Isolotto Cafe & Restaurant
-- 🍝 km 0 — Beach Bar
-- ⛲ km 0 — fountain
 - 🛏️ km 0 — PuntAla Camp & Resort
 - 🍝 km 6 — Ristorante Le Zucche Quadre
 - ⛲ km 21 — fountain (Ampio)
@@ -19,19 +16,3 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 **km 51 — Pian d'Alma** · 5 eat
 - 🍝 km 54 — Il Salto della Capriola
 - ⛲ km 55 — fountain
-- 🍝 km 55 — Baia Verde Supermarket SAS
-- ⛲ km 55 — fountain
-- 🍝 km 55 — restaurant
-- 🍝 km 55 — Bar Spiaggia
-- ⛲ km 55 — fountain
-- ⛲ km 55 — fountain
-- 🍝 km 55 — bar
-- 🍝 km 55 — restaurant
-- ⛲ km 55 — fountain
-- ⛲ km 55 — fountain
-- ⛲ km 55 — fountain
-- ⛲ km 56 — fountain
-- 🍝 km 56 — PuntAla Market
-- 🍝 km 56 — PuntAla Delicacies
-- 🍝 km 56 — Bar Centrale
-- 🍝 km 56 — Ristorante Centrale

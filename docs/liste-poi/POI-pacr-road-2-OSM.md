@@ -2,20 +2,7 @@
 
 Centri con molti servizi raggruppati in una riga. Km indicativi.
 
-- 🍝 km 0 — Beach Bar
-- ⛲ km 0 — fountain
 - 🛏️ km 0 — PuntAla Camp & Resort
-- 🍝 km 0 — PuntAla Market
-- 🍝 km 0 — PuntAla Delicacies
-- 🍝 km 0 — Bar Centrale
-- 🍝 km 0 — Ristorante Centrale
-- ⛲ km 1 — fountain
-- ⛲ km 1 — fountain
-- ⛲ km 1 — fountain
-- 🍝 km 1 — restaurant
-- 🍝 km 1 — bar
-- 🍝 km 1 — restaurant
-- ⛲ km 1 — fountain
 - 🍝 km 1 — Baia Verde Supermarket SAS
 - ⛲ km 1 — fountain
 - ⛲ km 1 — fountain
@@ -49,5 +36,3 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 - ⛲ km 40 — fountain (Ampio)
 **km 47 — Tirli** · 4 eat · 5 fountains
 - 🍝 km 54 — Ristorante Le Zucche Quadre
-- 🍝 km 60 — Isolotto Cafe & Restaurant
-- ⛲ km 60 — fountain

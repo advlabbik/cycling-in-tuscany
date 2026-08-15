@@ -2,9 +2,7 @@
 
 Centri con molti servizi raggruppati in una riga. Km indicativi.
 
-- 🍝 km 0 — Bar Ristorante Il Diavolino
 - 🛏️ km 0 — Villaggio Orizzonte
-- 🍝 km 0 — InCoop
 - 🍝 km 1 — Ristorante 2 su 2
 - 🍝 km 1 — Dvne Beach Club
 - 🍝 km 2 — Kiosco Beach

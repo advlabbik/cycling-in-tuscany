@@ -2,14 +2,6 @@
 
 Centri con molti servizi raggruppati in una riga. Km indicativi.
 
-- 🍝 km 0 — PuntAla Market
-- 🍝 km 0 — PuntAla Delicacies
-- 🍝 km 0 — Isolotto Cafe & Restaurant
-- 🍝 km 0 — Bar Centrale
-- 🍝 km 0 — Ristorante Centrale
-- 🍝 km 0 — Beach Bar
-- ⛲ km 0 — fountain
-- ⛲ km 0 — fountain
 - 🛏️ km 0 — PuntAla Camp & Resort
 - 🍝 km 3 — Il Ristoro da Lisa (Pian d'Alma)
 - 🍝 km 3 — Bubula (Pian d'Alma)

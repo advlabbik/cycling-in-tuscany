@@ -2,9 +2,7 @@
 
 Centri con molti servizi raggruppati in una riga. Km indicativi.
 
-- 🍝 km 0 — InCoop
 - 🛏️ km 0 — Villaggio Orizzonte
-- 🍝 km 0 — Bar Ristorante Il Diavolino
 - 🍝 km 15 — Bar Cafaggio (Cafaggio)
 - 🍝 km 16 — restaurant
 **km 20 — Suvereto** · 14 eat · 5 fountains

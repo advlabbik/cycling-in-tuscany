@@ -284,11 +284,22 @@ def elabora(pts2d, cum, elements, partner_route):
             for x in g["m"]+g["d"]+g["a"]:
                 x["centro_piccolo"] = nome
                 solitari.append(x)
+    # I servizi della zona di partenza/arrivo (primo e ultimo km) sono quelli
+    # della base stessa: stanno nella scheda della struttura, non nella lista
+    # del percorso — senza questo filtro il campeggio riversava 10 righe a
+    # km 0 e il gruppo sulla mappa sembrava "10 posti per dormire" (15/8).
+    km_tot = cum[-1]
+    solitari = [x for x in solitari if 1.0 <= x["km"] <= km_tot - 1.0]
     for x in solitari:
         e = {"t": x["cat"], "km": round(x["km"], 1), "name": x["nome"], "sub": x["sub"]}
         if x.get("centro_piccolo"):
             e["luogo"] = x["centro_piccolo"]
-        e["lat"], e["lng"] = round(x["p"][0], 5), round(x["p"][1], 5)
+        # come in tg-guida: le coordinate vere restano solo dove servono al
+        # bottone Prenota (dormire). Acqua e cibo si appoggiano alla traccia
+        # al loro km — i punti OSM grezzi possono stare fino a 500 m dal
+        # percorso e sulla mappa finivano in mare (bagni sulla spiaggia).
+        if x["cat"] == "d":
+            e["lat"], e["lng"] = round(x["p"][0], 5), round(x["p"][1], 5)
         entries.append(e)
     entries.sort(key=lambda e: e["km"])
     return entries
