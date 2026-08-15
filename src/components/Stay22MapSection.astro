@@ -1,0 +1,45 @@
+---
+/**
+ * Sezione prenotazioni con la mappa Stay22 embeddata — usata in home (fiera
+ * di Venturina) e nelle pagine territorio. URL e AID dall'helper unico
+ * (src/lib/stay22): l'AID è quello agganciato alle commissioni.
+ * Niente link Airbnb qui: regola del 15/8, solo dentro la mappa quando si
+ * troverà il parametro.
+ */
+import { stay22EmbedUrl } from '../lib/stay22';
+
+interface Props {
+  lat: number;
+  lng: number;
+  venue: string;
+  campaign: string;
+  title: string;
+  text: string;
+  badge?: string;
+  /** id dell'ancora, es. "book" in home */
+  id?: string;
+  /** sfondo bianco invece di crema */
+  white?: boolean;
+}
+
+const { lat, lng, venue, campaign, title, text, badge, id, white = false } = Astro.props;
+const embedUrl = stay22EmbedUrl(lat, lng, campaign, venue);
+---
+
+<section id={id} style={white ? 'background:#fff' : undefined}>
+  <div class="wrap">
+    {badge && <div class="ribbon" style="margin-bottom:10px">{badge}</div>}
+    <h2 class="sec">{title}</h2>
+    <p class="sub">{text}</p>
+    <div class="s22card">
+      <iframe src={embedUrl} title={title} allow="geolocation" loading="lazy"></iframe>
+    </div>
+    <p class="muted small" style="margin-top:12px">Everything on the map is bookable.</p>
+  </div>
+</section>
+
+<style>
+  .s22card{border-radius:16px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-md);background:var(--surface);transform:translateZ(0)}
+  .s22card iframe{display:block;width:100%;height:480px;border:0}
+  @media(max-width:820px){.s22card iframe{height:420px}}
+</style>

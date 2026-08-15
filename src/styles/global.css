@@ -63,6 +63,12 @@ header.nav-glass.nav-open .nav-mobile-panel{display:block}
 .hero-glow-green{position:absolute;bottom:-60px;left:5%;width:500px;height:500px;background:radial-gradient(circle,rgba(45,74,62,.55) 0%,transparent 70%);filter:blur(80px);pointer-events:none}
 /* issue #13: la colonna destra dell'hero non è mai stata usata → hero a colonna singola */
 .hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1fr;gap:56px;align-items:center;padding-top:48px;padding-bottom:80px}
+/* hero "slim" (15/8): la home non si prende più tutto lo schermo — sotto c'è
+   subito la mappa prenotazioni, che è il vero motivo per cui si arriva */
+.hero-glass.slim{min-height:auto}
+.hero-glass.slim .hero-grid{padding-top:36px;padding-bottom:56px}
+.hero-glass.slim .hero-title{font-size:3.4rem}
+@media(max-width:860px){.hero-glass.slim .hero-title{font-size:2.6rem}}
 .hero-left{min-width:0}
 .hero-sys-tag{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:24px}
 .hero-title{font-size:4.6rem;line-height:.9;color:#fff;margin:0 0 26px;letter-spacing:-.03em;font-weight:700;font-family:var(--font-display)}
