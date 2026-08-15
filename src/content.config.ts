@@ -51,6 +51,25 @@ const territori = defineCollection({
       channels: z.array(z.object({ label: z.string(), url: z.string().url() })).default([]),
       numeriUtili: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
       guidaPdf: z.string(),
+      /**
+       * Mappa Stay22 embeddata in testa alla pagina territorio (Andrea, 15/8).
+       * L'AID è `adventurelabsrl` (lo stesso della guida Trentino, quello che
+       * incassa le commissioni al 30%) — è fissato nel template, qui solo
+       * posizione, testi e campagna per l'attribuzione nel CSV Stay22.
+       */
+      stay22Map: z
+        .object({
+          lat: z.number(),
+          lng: z.number(),
+          venue: z.string(),
+          campaign: z.string(),
+          badge: z.string().optional(),
+          title: z.string(),
+          text: z.string(),
+          airbnbUrl: z.string().url(),
+        })
+        .nullable()
+        .default(null),
     }),
 });
 

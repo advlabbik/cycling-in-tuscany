@@ -59,4 +59,13 @@ numeriUtili:
   - label: "Town Hall"
     value: "0565 839111 — Via Roma 5"
 guidaPdf: "/guide-pdf/Guida-Campiglia-Marittima.pdf"
+stay22Map:
+  lat: 43.0302
+  lng: 10.6055
+  venue: "Fiere di Venturina — Tuscany Trail Start"
+  campaign: "cit-campiglia"
+  badge: "★ The Tuscany Trail starts here"
+  title: "Sleep at the start of the Tuscany Trail"
+  text: "The map is centred on the Fiere di Venturina, where thousands of riders roll out for the Tuscany Trail every year. Everything you see is bookable — move the map to explore the rest of the territory."
+  airbnbUrl: "https://www.airbnb.com/s/Venturina-Terme--Tuscany--Italy/homes"
 ---
