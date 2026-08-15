@@ -119,6 +119,15 @@ const schema = {
             <a class="chip" href={stay22Url} target="_blank" rel="noopener">All stays along the route (live map) →</a>
             <a class="chip" href={airbnbUrl} target="_blank" rel="noopener">Search on Airbnb →</a>
           </div>
+          {d.territory && (
+            <div class="cta-band" style="margin-top:22px">
+              <div>
+                <h3>An Official Territory route</h3>
+                <p>This loop belongs to {d.territory.name}, official territory of Cycling in Tuscany.</p>
+              </div>
+              <a class="btn gold" href={`/territori/${d.territory.slug}`}>Discover {d.territory.name} →</a>
+            </div>
+          )}
         </>
       )}
     </div>
@@ -134,7 +143,7 @@ const schema = {
           <p class="it-gatehint">Leave your email and the GPX file is yours, ready for your bike computer.</p>
         </div>
         <div class="pack-dl-bar-right">
-          <form id="gpx-gate" class="it-gate" novalidate>
+          <form id="gpx-gate" class="it-gate" novalidate data-area={d.area} data-type={d.type} data-diff={d.diff}>
             <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address" />
             <button type="submit" class="pack-dl-btn" style="border:0;cursor:pointer">
               <span class="pack-dl-circle">
@@ -200,10 +209,22 @@ const schema = {
       if (!email || !email.includes('@')) return;
       const consent = (form.elements.namedItem('consent') as HTMLInputElement).checked;
       try {
+        /* tagging degli intenti (doc TT365): ogni download dice zona, tipo e
+           difficoltà — è quello che trasforma la lista in contatti qualificati
+           da vendere ai territori ("X contatti hanno cercato percorsi da te") */
+        const meta = document.getElementById('gpx-gate')!.dataset;
         await fetch('/api/lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, consent, itinerary: location.pathname, lang: 'en' }),
+          body: JSON.stringify({
+            email,
+            consent,
+            itinerary: location.pathname,
+            lang: 'en',
+            area: meta.area,
+            type: meta.type,
+            diff: meta.diff,
+          }),
         });
       } catch {
         /* prototipo: senza function si prosegue lo stesso */

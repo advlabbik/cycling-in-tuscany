@@ -1,0 +1,118 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+/**
+ * Catalogo dei percorsi verificati — la porta d'ingresso B2C del sito.
+ * Raggruppa gli itinerari per base (struttura partner) o territorio,
+ * così ogni partner ha la sua vetrina anche qui.
+ */
+const itinerari = await getCollection('itinerari');
+
+const groupKey = (d: (typeof itinerari)[number]['data']) =>
+  d.base ? `stay:${d.base.slug}` : d.territory ? `terr:${d.territory.slug}` : 'other';
+const groups = new Map<string, { label: string; sub: string; href: string; items: typeof itinerari }>();
+for (const it of itinerari) {
+  const d = it.data;
+  const key = groupKey(d);
+  if (!groups.has(key)) {
+    groups.set(key, {
+      label: d.base ? d.base.name : d.territory ? d.territory.name : 'Other routes',
+      sub: d.base ? 'Official Bike-Friendly Stay · routes from the doorstep' : 'Official Territory · routes from the borough',
+      href: d.base ? `/strutture/${d.base.slug}` : d.territory ? `/territori/${d.territory.slug}` : '/',
+      items: [] as typeof itinerari,
+    });
+  }
+  groups.get(key)!.items.push(it);
+}
+for (const g of groups.values())
+  g.items.sort((a, b) => a.data.type.localeCompare(b.data.type) || a.data.name.localeCompare(b.data.name));
+
+const total = itinerari.length;
+const gravel = itinerari.filter((i) => i.data.type === 'Gravel').length;
+---
+
+<Base
+  title="Verified Routes — Cycling in Tuscany"
+  description="Every route designed, ridden and verified by the people behind the Tuscany Trail: study it on the map, see what's along the way, take the GPX with you."
+>
+  <div class="hero">
+    <div class="wrap">
+      <div class="badge-verif">✔ Designed, ridden and verified by the people behind the Tuscany Trail</div>
+      <div class="kick">Verified routes</div>
+      <h1>We don't have every route in Tuscany. We have the ones worth riding.</h1>
+      <p class="lead">
+        {total} loops — {gravel} gravel, {total - gravel} road — each with map, elevation, water and
+        food stops, and the GPX ready for your bike computer.
+      </p>
+      <div class="it-stats" style="margin-top:20px">
+        <button type="button" class="itx-fil on" data-f="all">All routes</button>
+        <button type="button" class="itx-fil" data-f="Gravel">Gravel</button>
+        <button type="button" class="itx-fil" data-f="Road">Road</button>
+      </div>
+    </div>
+  </div>
+
+  {[...groups.values()].map((group) => (
+    <section class="itx-group">
+      <div class="wrap">
+        <div class="itx-head">
+          <div>
+            <h2 class="sec">{group.label}</h2>
+            <p class="sub" style="margin-bottom:0">{group.sub}</p>
+          </div>
+          <a class="chip" href={group.href}>See {group.label} →</a>
+        </div>
+        <div class="grid g2" style="margin-top:26px">
+          {group.items.map((it) => {
+            const d = it.data;
+            return (
+              <a class="itxcard" data-type={d.type} href={`/itinerari/${it.id.replace(/\.md$/, '')}`}>
+                <span class={`rcard-badge ${d.type.toLowerCase()}`} style="position:static">{d.type}</span>
+                <b>{d.name}</b>
+                <span class="itx-tag">{d.tagline}</span>
+                <span class="itx-meta">
+                  <span><b>{d.km} km</b></span>
+                  <span>{d.dislivello} D+</span>
+                  <span>{d.time}</span>
+                  <span>{d.diff}</span>
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .itx-group:nth-of-type(even){background:#fff}
+  .itx-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .itxcard{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;transition:transform .25s cubic-bezier(.25,1,.5,1),box-shadow .25s}
+  .itxcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+  .itxcard>span.rcard-badge{align-self:flex-start}
+  .itxcard b{font-family:var(--font-display);font-size:1.25rem;line-height:1.15}
+  .itx-tag{font-size:.86rem;color:var(--muted);line-height:1.45}
+  .itx-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:.8rem;color:#4a4a4a;margin-top:4px}
+  .itx-meta b{color:var(--fg)}
+  .itxcard[hidden]{display:none}
+</style>
+
+<style is:global>
+  .itx-fil{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:999px;padding:8px 18px;font-size:.86rem;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:background .2s}
+  .itx-fil.on{background:#f5a623;border-color:#f5a623;color:#1a1a1a}
+</style>
+
+<script>
+  const fils = document.querySelectorAll<HTMLElement>('.itx-fil');
+  fils.forEach((b) =>
+    b.addEventListener('click', () => {
+      const f = b.dataset.f!;
+      fils.forEach((x) => x.classList.toggle('on', x === b));
+      document.querySelectorAll<HTMLElement>('.itxcard').forEach((c) => {
+        c.hidden = f !== 'all' && c.dataset.type !== f;
+      });
+    })
+  );
+</script>

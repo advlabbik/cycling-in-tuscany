@@ -143,6 +143,9 @@ const itinerari = defineCollection({
         .object({ slug: z.string(), name: z.string(), site: z.string().url() })
         .nullable()
         .default(null),
+      /** territorio (comune) a cui appartiene la route — per gli itinerari
+       *  senza struttura partner, es. quelli di Monterotondo */
+      territory: z.object({ slug: z.string(), name: z.string() }).nullable().default(null),
       highlights: z.array(z.string()),
       rwgpsUrl: z.string().url().optional(),
       /** GPX servito da public/, sbloccato dal gate email */

@@ -34,6 +34,11 @@ export async function onRequestPost(context) {
         CIT_ITINERARY: String(body.itinerary || ''),
         CIT_CONSENT: Boolean(body.consent),
         CIT_LANG: String(body.lang || 'en'),
+        // tagging degli intenti (doc TT365): zona, tipo e difficoltà del
+        // percorso scaricato — la base della "intent-qualified visibility"
+        CIT_AREA: String(body.area || ''),
+        CIT_TYPE: String(body.type || ''),
+        CIT_DIFF: String(body.diff || ''),
       },
     }),
   });

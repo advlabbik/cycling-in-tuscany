@@ -9,6 +9,7 @@ import heroImg from '../assets/images/hero.jpg';
 
 const territori = await getCollection('territori');
 const struttureAll = await getCollection('strutture');
+const itinerari = await getCollection('itinerari');
 // Ordinate per `order`, non per nome file: dal CMS lo slug viene dalla domanda (#34).
 const faqEntries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
 
@@ -124,6 +125,13 @@ const faqSchema = {
             </div>
           );
         })}
+      </div>
+      <div class="cta-band" style="margin-top:40px">
+        <div>
+          <h3>{itinerari.length} verified routes, ready to ride</h3>
+          <p>Designed, ridden and verified by the people behind the Tuscany Trail — with map, elevation and every water stop.</p>
+        </div>
+        <a class="btn gold" href="/itinerari/">Browse the routes →</a>
       </div>
     </div>
   </section>
