@@ -12,7 +12,7 @@ import '@fontsource/dm-sans/500.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 import { Image, getImage } from 'astro:assets';
-import logo from '../assets/images/logo.png';
+import ttLogoWhite from '../assets/images/tuscany-trail-logo-white.png';
 import heroDefault from '../assets/images/hero.jpg';
 import { site } from '../../site.config';
 import ConsentBanner from '../components/ConsentBanner.astro';
@@ -28,7 +28,7 @@ interface Props {
   ogImage?: ImageMetadata;
 }
 
-const { title, description = 'Cycling in Tuscany', maplibre = false, schema, ogImage = heroDefault } = Astro.props;
+const { title, description = 'Tuscany Trail 365', maplibre = false, schema, ogImage = heroDefault } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
 // 1200×630 è il ritaglio che ogni piattaforma si aspetta; jpg e non webp perché
 // alcuni scraper social (WhatsApp in testa) il webp non lo mostrano.
@@ -89,7 +89,10 @@ const ogImageUrl = new URL(ogImg.src, Astro.site ?? Astro.url.origin).href;
   <body>
     <header class="nav-glass" id="main-nav">
       <div class="nav-inner">
-        <a class="brand" href="/"><Image src={logo} alt="Cycling in Tuscany" width={240} densities={[1, 2]} loading="eager" /></a>
+        <a class="brand brand-tt" href="/">
+          <Image src={ttLogoWhite} alt="Tuscany Trail" width={361} densities={[1, 2]} loading="eager" />
+          <span class="brand-365">365</span>
+        </a>
         <nav class="nav-pill" aria-label="Primary navigation">
           <ul>
             <li><a href="/">Home</a></li>
@@ -122,8 +125,8 @@ const ogImageUrl = new URL(ogImg.src, Astro.site ?? Astro.url.origin).href;
 
     <footer>
       <div class="wrap">
-        <b style="color:#fff">Cycling in Tuscany</b> — where to ride and where to stay in this Tuscany, from the team behind the Tuscany Trail.<br />
-        <span class="small">Official territories & bike-friendly stays · tracked booking · routes on Ride with GPS.</span><br /><br />
+        <b style="color:#fff">Tuscany Trail 365</b> — the Tuscany Trail's Tuscany, all year round.<br />
+        <span class="small">Official territories & bike-friendly stays · verified routes · a <a href="https://www.tuscanytrail.it" target="_blank" rel="noopener">Tuscany Trail</a> · Bike Adventure Series project.</span><br /><br />
         <a href="/">Home</a> · <a href="/privacy-policy/">Privacy policy</a> · <a href="/cookie-policy/">Cookie policy</a> · <a href="/affiliate-disclosure/">Affiliate disclosure</a> · <a href={`mailto:${site.brand.email}`}>{site.brand.email}</a> · <a href={`https://instagram.com/${site.brand.instagram.replace('@', '')}`}>Instagram {site.brand.instagram}</a>
       </div>
     </footer>

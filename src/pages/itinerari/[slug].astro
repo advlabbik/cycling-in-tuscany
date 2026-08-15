@@ -20,6 +20,10 @@ const routeColor = d.type === 'Gravel' ? '#b8860b' : '#2d4a3e';
 /* Stay22 centrato sulla zona dell'anello, con campagna dedicata all'itinerario:
    è la campagna che rende attribuibile ogni prenotazione nel CSV di Stay22. */
 const stay22Url = stay22RoamUrl(d.stay22Center.lat, d.stay22Center.lng, d.stay22Campaign);
+/* UTM sul link di prenotazione del partner: cosi' l'albergatore vede nel suo
+   Analytics quanto traffico gli manda il progetto — l'argomento del rinnovo */
+const bookUtm = (url: string) =>
+  url + (url.includes('?') ? '&' : '?') + 'utm_source=tuscanytrail365&utm_medium=referral&utm_campaign=' + itinerario.id.replace(/\.md$/, '');
 const heroImage = await bgUrl(d.heroImage, 1600);
 
 const schema = {
@@ -31,7 +35,7 @@ const schema = {
 };
 ---
 
-<Base title={`${d.name} — ${d.type} route · Cycling in Tuscany`} description={d.intro} schema={schema} ogImage={d.heroImage} maplibre={true}>
+<Base title={`${d.name} — ${d.type} route · Tuscany Trail 365`} description={d.intro} schema={schema} ogImage={d.heroImage} maplibre={true}>
   <div
     class="hero"
     style={heroImage
@@ -39,7 +43,7 @@ const schema = {
       : undefined}
   >
     <div class="wrap">
-      <div class="badge-verif">✔ Verified route · designed and ridden by the people behind the Tuscany Trail</div>
+      <a class="badge-verif" href="https://www.tuscanytrail.it" target="_blank" rel="noopener" style="text-decoration:none">✔ Verified route · by the people behind the Tuscany Trail →</a>
       <div class="kick">{d.type} itinerary · {d.area}</div>
       <h1>{d.name}</h1>
       <p class="lead">{d.tagline}</p>
@@ -104,7 +108,7 @@ const schema = {
               <p>Bike storage, bike wash, early breakfast and local route knowledge. Verified by the Tuscany Trail.</p>
             </div>
             <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <a class="btn gold" href={d.base.site} target="_blank" rel="noopener">Book {d.base.name} →</a>
+              <a class="btn gold" href={bookUtm(d.base.site)} target="_blank" rel="noopener">Book {d.base.name} →</a>
               <a class="btn dark" href={`/strutture/${d.base.slug}`}>See the stay</a>
             </div>
           </div>
@@ -120,7 +124,7 @@ const schema = {
             <div class="cta-band" style="margin-top:22px">
               <div>
                 <h3>An Official Territory route</h3>
-                <p>This loop belongs to {d.territory.name}, official territory of Cycling in Tuscany.</p>
+                <p>This loop belongs to {d.territory.name}, official territory of Tuscany Trail 365.</p>
               </div>
               <a class="btn gold" href={`/territori/${d.territory.slug}`}>Discover {d.territory.name} →</a>
             </div>

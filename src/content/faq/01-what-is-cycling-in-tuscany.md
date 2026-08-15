@@ -1,5 +1,5 @@
 ---
 order: 1
-question: "What is Cycling in Tuscany?"
-answer: "Cycling in Tuscany is a destination guide focused on handpicked territories, bike-friendly stays and routes ready to download."
+question: "What is Tuscany Trail 365?"
+answer: "The Tuscany Trail's Tuscany, all year round — verified routes, bike-friendly stays and official territories, curated by the team behind the Tuscany Trail, the world's largest bikepacking event."
 ---

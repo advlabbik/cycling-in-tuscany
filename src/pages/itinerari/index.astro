@@ -22,7 +22,7 @@ for (const it of itinerari) {
       ? { label: d.base.name, sub: 'Official Bike-Friendly Stay · routes from the doorstep', href: `/strutture/${d.base.slug}` }
       : d.territory
         ? { label: d.territory.name, sub: 'Official Territory · routes from the borough', href: `/territori/${d.territory.slug}` }
-        : { label: 'More verified routes', sub: 'Curated by the Cycling in Tuscany team', href: '/itinerari/' };
+        : { label: 'More verified routes', sub: 'Curated by the Tuscany Trail 365 team', href: '/itinerari/' };
     groups.set(key, { ...info, items: [] as typeof itinerari });
   }
   groups.get(key)!.items.push(it);
@@ -45,12 +45,12 @@ const gravel = itinerari.filter((i) => i.data.type === 'Gravel').length;
 ---
 
 <Base
-  title="Verified Routes — Cycling in Tuscany"
+  title="Verified Routes — Tuscany Trail 365"
   description="Every route designed, ridden and verified by the people behind the Tuscany Trail: study it on the map, see what's along the way, take the GPX with you."
 >
   <div class="hero">
     <div class="wrap">
-      <div class="badge-verif">✔ Designed, ridden and verified by the people behind the Tuscany Trail</div>
+      <a class="badge-verif" href="https://www.tuscanytrail.it" target="_blank" rel="noopener" style="text-decoration:none">✔ Designed, ridden and verified by the people behind the Tuscany Trail →</a>
       <div class="kick">Verified routes</div>
       <h1>We don't have every route in Tuscany. We have the ones worth riding.</h1>
       <p class="lead">

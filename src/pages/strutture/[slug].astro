@@ -16,6 +16,8 @@ const { struttura } = Astro.props;
 
 // Niente Stay22 sulla scheda: il partner paga, in pagina si prenota solo da lui (Andrea, 14/8).
 // Sfondo a tutta pagina, quindi 1600px: sotto c'è comunque un gradiente scuro (#42).
+const bookUtm = (url: string) =>
+  url + (url.includes('?') ? '&' : '?') + 'utm_source=tuscanytrail365&utm_medium=referral&utm_campaign=scheda-' + struttura.id.replace(/\.md$/, '');
 const heroImage = await bgUrl(struttura.data.heroImage, 1600);
 const gravelCount = struttura.data.ridePack.filter((route) => route.type.toLowerCase() === 'gravel').length;
 const roadCount = struttura.data.ridePack.length - gravelCount;
@@ -46,7 +48,7 @@ const schema = {
 };
 ---
 
-<Base title={`${struttura.data.name} — Cycling in Tuscany`} description={struttura.data.intro} schema={schema} ogImage={struttura.data.heroImage}>
+<Base title={`${struttura.data.name} — Tuscany Trail 365`} description={struttura.data.intro} schema={schema} ogImage={struttura.data.heroImage}>
   <div
     class="hero"
     style={heroImage
@@ -54,7 +56,7 @@ const schema = {
       : undefined}
   >
     <div class="wrap">
-      <div class="badge-verif">✔ Official Bike-Friendly Stay · verified by the Tuscany Trail</div>
+      <a class="badge-verif" href="https://www.tuscanytrail.it" target="_blank" rel="noopener" style="text-decoration:none">✔ Official Bike-Friendly Stay · verified by the Tuscany Trail →</a>
       <div class="kick">Stay · {struttura.data.town}</div>
       <h1>{struttura.data.name}</h1>
       <p class="lead">{struttura.data.intro}</p>
@@ -132,7 +134,7 @@ const schema = {
           <p>Book directly with {struttura.data.name} — your hosts know these routes first-hand.</p>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <a class="btn gold" href={struttura.data.site} target="_blank" rel="noopener">Book with {struttura.data.name} →</a>
+          <a class="btn gold" href={bookUtm(struttura.data.site)} target="_blank" rel="noopener">Book with {struttura.data.name} →</a>
         </div>
       </div>
     </div>

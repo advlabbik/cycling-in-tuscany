@@ -34,7 +34,7 @@ magazine:
       testo: "Just a few kilometers away: Fonte dell'Abbondanza, Torre del Candeliere, the Duomo and the medieval Zecca."
     - titolo: "Geothermal flavors"
       testo: "Cheese makers, breweries powered by geothermal steam (Birrificio Vapori di Birra at Sasso Pisano) and local specialties: ricotta tortelli, ribollita, pappardelle with wild boar, grape schiaccia."
-  fonte: "Editorial content from Cycling in Tuscany magazine. Sources in publication/Monterotondo Bibliography."
+  fonte: "Editorial content from Tuscany Trail 365 magazine. Sources in publication/Monterotondo Bibliography."
 channels:
   - label: "Municipality of Monterotondo Marittimo"
     url: "https://www.comune.monterotondomarittimo.gr.it/"

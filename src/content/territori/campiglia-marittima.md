@@ -47,7 +47,7 @@ magazine:
       testo: "Mines, museum and bike park: one of the strongest, most tangible stories in the area."
     - titolo: "Thermal springs & wellness"
       testo: "Terme del Calidario is the perfect complement to a day on the bike."
-  fonte: "Editorial content from Cycling in Tuscany magazine."
+  fonte: "Editorial content from Tuscany Trail 365 magazine."
 channels:
   - label: "Parco Archeominerario di San Silvestro"
     url: "https://www.parchivaldicornia.it/parchi-archeologici/parco-archeominerario-di-san-silvestro/"

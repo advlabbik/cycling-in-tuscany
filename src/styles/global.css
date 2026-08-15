@@ -28,6 +28,12 @@ header.nav-glass *{pointer-events:auto}
 .nav-inner{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{display:flex;align-items:center;text-decoration:none;line-height:1}
 .brand img{height:80px;width:auto;display:block;filter:brightness(0) invert(1);opacity:1}
+/* lockup Tuscany Trail 365 (branch brand): il logo TT bianco ufficiale ha il
+   simbolo rosso — niente filtro invert, che lo cancellerebbe */
+.brand-tt{gap:10px}
+.brand-tt img{height:34px;width:auto;filter:none}
+.brand-365{font-family:var(--font-display);font-weight:700;font-style:italic;font-size:1.5rem;color:#f5a623;line-height:1;letter-spacing:.02em}
+@media(max-width:560px){.brand-tt img{height:26px}.brand-365{font-size:1.2rem}}
 .nav-pill{background:rgba(255,255,255,.07);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.13);border-radius:999px;padding:12px 30px}
 .nav-pill ul{list-style:none;display:flex;gap:28px;margin:0;padding:0}
 .nav-pill ul a{color:rgba(255,255,255,.72);text-decoration:none;font-size:.96rem;font-weight:500;letter-spacing:.01em;transition:color .2s}
