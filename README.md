@@ -64,6 +64,19 @@ Regole decise da Andrea il 14/8/2026:
 
 ## Da implementare al momento giusto (decisioni già prese)
 
+**App partecipanti Tuscany Trail + "Arriva preparato" (Andrea, 15/8/2026).**
+L'app partecipanti del TT nascerà derivandola da `advlabbik/tg-guida` (repo da
+creare; il TT è l'unico evento che sviluppa anche la parte turistica, cioè
+questo sito). Nella checklist pre-evento dell'app va aggiunto il punto
+**"Arriva preparato"**: la lista delle cose che il partecipante potrebbe dover
+comprare, ogni voce linkata allo shop online dello sponsor con lo sconto
+dedicato ai partecipanti — gomme Vittoria, borse Miss Grape, sella Selle
+Italia, scarpe Northwave, casco e antifurto Abus, nutrizione Enervit,
+abbigliamento RH+ — e **Sportler** (sponsor) per tutto il resto. Si sperimenta
+solo sul Tuscany Trail; se funziona si estende a tutti gli eventi. Prima dello
+sviluppo servono codici sconto, link shop e testi IT/EN. Nota gemella nel
+README di tg-guida.
+
 **Email post-acquisto Tuscany Trail — "due piccioni con una fava" (Andrea, 14/8/2026).**
 Nell'email di avvenuto acquisto TT il link prenotazioni porta alla mappa
 **Stay22 centrata sulla fiera di Venturina** (il quartier generale dell'evento),
