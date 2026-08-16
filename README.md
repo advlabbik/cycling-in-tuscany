@@ -171,3 +171,12 @@ Due cose da sapere quando il login smette di funzionare:
 
 1. Il dominio da cui si apre `/admin/` deve stare negli `ALLOWED_DOMAINS` del worker, altrimenti risponde `UNSUPPORTED_DOMAIN`. Per questo progetto l'unico dominio in lista è `cyclingintuscany.tuscanytrail.it`: da `cycling-in-tuscany-astro.pages.dev` e da `cyclingintuscany.com` il CMS si apre ma il login non parte. È un Secret: si aggiunge un dominio riscrivendo **tutta** la lista, quindi va ricopiata per intero o si cancellano i domini di bikepacking.it.
 2. La org GitHub `advlabbik` ha attive le *OAuth App access restrictions*: la app di auth va approvata a livello di org.
+
+## Decisioni ecosistema — 16 agosto 2026
+
+Analisi completa dei 4 progetti digitali e registro decisioni con le motivazioni nella pagina Notion [Ecosistema App BAS — analisi e registro decisioni](https://app.notion.com/p/3bef88ad0121819487aceb41d1a89781). Qui solo ciò che tocca questo repo.
+
+- **PRIORITÀ 1 — verificare `BREVO_API_KEY` e `BREVO_LIST_ID` nelle env di Cloudflare Pages** — senza chiave `/api/lead` risponde `{ok, demo}` in silenzio e i lead del gate vanno persi (il gate è live dal 15/8 sera). Gli attributi `CIT_*` vanno creati in Brevo PRIMA di mettere la chiave.
+- **Privacy policy da riscrivere** — dichiara "this site has no forms" mentre il gate email è live; da sistemare anche il paragrafo Airbnb rimasto nella affiliate disclosure.
+- **UTM anche nei bottoni partner dentro il RouteViewer** — oggi i "Book …" di popup e card usano l'URL grezzo del JSON — traffico non attribuito, e il report di attribuzione è l'argomento di rinnovo dei partner.
+- **Stay22 — si resta, si negozia lo split** — Booking ha chiuso gli affiliati diretti sotto €1k/mese (giu 2025), 37 delle nostre 38 prenotazioni sono Booking, e nessun altro ha l'embed lungo-GPX multi-OTA. Call post-evento TG col dossier dati per salire dal tier d'ingresso (30%) + domanda Airbnb-dentro-l'embed. `src/lib/stay22.ts` è il candidato a modulo condiviso per le app evento.
