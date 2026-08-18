@@ -5,8 +5,8 @@ tagline: "A quiet base in the heart of Val di Cornia"
 intro: "At Venturina Terme, between the Costa degli Etruschi and hills: a secluded setting with direct access to scenic secondary roads and unpaved tracks."
 site: "https://www.villatoscanavacanze.it/"
 coords:
-  lat: 42.99
-  lng: 10.606
+  lat: 43.02884
+  lng: 10.56358
 heroImage: ../../assets/images/villa-toscana.jpg
 card:
   categoria: "Relax & Ride"
