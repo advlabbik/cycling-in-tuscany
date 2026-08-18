@@ -18,9 +18,21 @@ export const stay22EmbedUrl = (
   lng: number,
   campaign: string,
   venue: string,
-  checkin?: string,
-  checkout?: string,
+  opts: {
+    checkin?: string;
+    checkout?: string;
+    /** URL ASSOLUTO del GPX: Stay22 lo scarica dai suoi server e disegna la
+     *  traccia sulla mappa, con gli alloggi sopra (contratto di tg-guida).
+     *  Serve per non mandare mai l'utente fuori sui portali di prenotazione. */
+    gpx?: string;
+    /** colore della traccia, esadecimale SENZA cancelletto */
+    gpxColor?: string;
+  } = {},
 ) =>
   `https://www.stay22.com/embed/gm?aid=${site.stay22Aid}&campaign=${encodeURIComponent(campaign)}` +
   `&lat=${lat}&lng=${lng}&maincolor=A80030&venue=${encodeURIComponent(venue)}&ljs=en&mapstyle=outdoors` +
-  (checkin && checkout ? `&checkin=${checkin}&checkout=${checkout}` : '');
+  (opts.checkin && opts.checkout ? `&checkin=${opts.checkin}&checkout=${opts.checkout}` : '') +
+  (opts.gpx
+    ? `&gpx=${encodeURIComponent(opts.gpx)}&gpxlinecolor=${opts.gpxColor || 'A80030'}` +
+      `&gpxlinethickness=4&gpxlineopacity=1.00`
+    : '');

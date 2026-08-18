@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import RouteViewer from '../../components/RouteViewer.astro';
-import { stay22RoamUrl } from '../../lib/stay22';
+import Stay22MapSection from '../../components/Stay22MapSection.astro';
 import { bgUrl } from '../../lib/images';
 
 export async function getStaticPaths() {
@@ -19,7 +19,11 @@ const d = itinerario.data;
 const routeColor = d.type === 'Gravel' ? '#b8860b' : '#a80030';
 /* Stay22 centrato sulla zona dell'anello, con campagna dedicata all'itinerario:
    è la campagna che rende attribuibile ogni prenotazione nel CSV di Stay22. */
-const stay22Url = stay22RoamUrl(d.stay22Center.lat, d.stay22Center.lng, d.stay22Campaign);
+/* La mappa alloggi mostra la TRACCIA e gli hotel sopra, dentro la pagina:
+   il vecchio link /allez/roam era un redirect e sbatteva fuori su Booking o
+   Expedia a caso (Andrea, 18/8). Stay22 scarica il GPX dai suoi server,
+   quindi serve un URL assoluto. */
+const gpxAbs = new URL(d.gpx, Astro.site ?? Astro.url.origin).href;
 /* UTM sul link di prenotazione del partner: cosi' l'albergatore vede nel suo
    Analytics quanto traffico gli manda il progetto — l'argomento del rinnovo */
 const bookUtm = (url: string) =>
@@ -93,46 +97,53 @@ const schema = {
     </div>
   </section>
 
-  <section id="sleep" style="background:#fff">
-    <div class="wrap">
-      {d.base ? (
-        <>
-          <h2 class="sec">Your base for this loop</h2>
-          <p class="sub">
-            This route belongs to an Official Bike-Friendly Stay — the loop starts and ends right
-            at its door.
-          </p>
-          <div class="cta-band">
-            <div>
-              <h3>{d.base.name} — your base for this loop</h3>
-              <p>Bike storage, bike wash, early breakfast and local route knowledge. Verified by the Tuscany Trail.</p>
-            </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <a class="btn gold" href={bookUtm(d.base.site)} target="_blank" rel="noopener">Book {d.base.name} →</a>
-              <a class="btn dark" href={`/strutture/${d.base.slug}`}>See the stay</a>
-            </div>
+  {d.base && (
+    <section id="sleep" style="background:#fff">
+      <div class="wrap">
+        <h2 class="sec">Your base for this loop</h2>
+        <p class="sub">
+          This route belongs to an Official Bike-Friendly Stay — the loop starts and ends right
+          at its door.
+        </p>
+        <div class="cta-band">
+          <div>
+            <h3>{d.base.name} — your base for this loop</h3>
+            <p>Bike storage, bike wash, early breakfast and local route knowledge. Verified by the Tuscany Trail.</p>
           </div>
-        </>
-      ) : (
-        <>
-          <h2 class="sec">Sleep along this route</h2>
-          <p class="sub">Browse every stay along the route on the live map.</p>
-          <div class="it-otherstays">
-            <a class="chip" href={stay22Url} target="_blank" rel="noopener">All stays along the route (live map) →</a>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn gold" href={bookUtm(d.base.site)} target="_blank" rel="noopener">Book {d.base.name} →</a>
+            <a class="btn dark" href={`/strutture/${d.base.slug}`}>See the stay</a>
           </div>
-          {d.territory && (
-            <div class="cta-band" style="margin-top:22px">
-              <div>
-                <h3>An Official Territory route</h3>
-                <p>This loop belongs to {d.territory.name}, official territory of Tuscany Trail 365.</p>
-              </div>
-              <a class="btn gold" href={`/territori/${d.territory.slug}`}>Discover {d.territory.name} →</a>
-            </div>
-          )}
-        </>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {!d.base && (
+    <Stay22MapSection
+      id="sleep"
+      white={true}
+      lat={d.stay22Center.lat}
+      lng={d.stay22Center.lng}
+      venue={d.name}
+      campaign={d.stay22Campaign}
+      title="Sleep along this route"
+      text="The whole loop is drawn on the map. Move it along the track to find a place to stay wherever you want to break the ride — hotels, B&Bs and campgrounds, all bookable from here."
+      gpx={gpxAbs}
+      gpxColor={routeColor.replace('#', '')}
+      note="Everything on the map is bookable, without leaving this page."
+    >
+      {d.territory && (
+        <div class="cta-band" style="margin-top:22px">
+          <div>
+            <h3>An Official Territory route</h3>
+            <p>This loop belongs to {d.territory.name}, official territory of Tuscany Trail 365.</p>
+          </div>
+          <a class="btn gold" href={`/territori/${d.territory.slug}`}>Discover {d.territory.name} →</a>
+        </div>
       )}
-    </div>
-  </section>
+    </Stay22MapSection>
+  )}
 
   <section id="gpx">
     <div class="wrap">
@@ -181,7 +192,6 @@ const schema = {
   .it-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
   .it-stats span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:999px;padding:7px 15px;font-size:.86rem}
   .it-stats b{font-weight:700}
-  .it-otherstays{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
   .it-gatehint{margin:8px 0 0;color:#e6ccd4;font-size:.88rem;max-width:380px}
   .it-gate{display:flex;gap:10px;flex-wrap:wrap;align-items:center;max-width:420px}
   .it-gate input[type='email']{flex:1;min-width:200px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;border-radius:999px;padding:12px 18px;font-size:.9rem;font-family:var(--font-body)}

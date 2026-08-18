@@ -3,7 +3,6 @@ import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import RouteCard from '../../components/RouteCard.astro';
-import { stay22RoamUrl } from '../../lib/stay22';
 import Stay22MapSection from '../../components/Stay22MapSection.astro';
 import { bgUrl } from '../../lib/images';
 
@@ -17,8 +16,6 @@ export async function getStaticPaths() {
 
 const { territorio } = Astro.props;
 const { Content } = await render(territorio);
-
-const stay22Url = stay22RoamUrl(territorio.data.coords.lat, territorio.data.coords.lng);
 
 /* Mappa Stay22 in testa alla pagina, campagna per territorio per
    l'attribuzione — stesso componente della home. */
@@ -172,9 +169,9 @@ const schema = {
       <div class="cta-band">
         <div>
           <h3>Stay near {territorio.data.name}</h3>
-          <p>Book from verified bike-friendly stays in the area — tracked by Tuscany Trail 365.</p>
+          <p>The booking map at the top of this page shows every stay in the area — no need to leave the site.</p>
         </div>
-        <a class="btn gold" href={stay22Url} target="_blank" rel="noopener">Find accommodation →</a>
+        <a class="btn gold" href="#sleep">See the booking map ↑</a>
       </div>
 
       <div class="grid g2" style="margin-top:22px">

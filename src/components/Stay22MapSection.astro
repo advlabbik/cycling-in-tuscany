@@ -20,10 +20,16 @@ interface Props {
   id?: string;
   /** sfondo bianco invece di crema */
   white?: boolean;
+  /** URL assoluto del GPX: la traccia viene disegnata sulla mappa */
+  gpx?: string;
+  /** colore traccia, esadecimale senza cancelletto */
+  gpxColor?: string;
+  /** testo sotto la mappa */
+  note?: string;
 }
 
-const { lat, lng, venue, campaign, title, text, badge, id, white = false } = Astro.props;
-const embedUrl = stay22EmbedUrl(lat, lng, campaign, venue);
+const { lat, lng, venue, campaign, title, text, badge, id, white = false, gpx, gpxColor, note } = Astro.props;
+const embedUrl = stay22EmbedUrl(lat, lng, campaign, venue, { gpx, gpxColor });
 ---
 
 <section id={id} style={white ? 'background:#fff' : undefined}>
@@ -34,7 +40,8 @@ const embedUrl = stay22EmbedUrl(lat, lng, campaign, venue);
     <div class="s22card">
       <iframe src={embedUrl} title={title} allow="geolocation" loading="lazy"></iframe>
     </div>
-    <p class="muted small" style="margin-top:12px">Everything on the map is bookable.</p>
+    <p class="muted small" style="margin-top:12px">{note || 'Everything on the map is bookable.'}</p>
+    <slot />
   </div>
 </section>
 
