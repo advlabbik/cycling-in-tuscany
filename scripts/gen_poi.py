@@ -34,7 +34,11 @@ os.makedirs(OUTDIR, exist_ok=True)
 PARTNER = {
     "vt-": {"t": "d", "name": "Villa Toscana",
             "desc": "Your base — Official Bike-Friendly Stay",
-            "lat": 42.99, "lng": 10.606, "partner": True,
+            # partenza delle 4 tracce = la porta della struttura. NON le
+            # coordinate della scheda (42.99,10.606), che stanno 5,5 km piu' a
+            # sud e mettevano il segno del partner fuori dal percorso: da
+            # verificare quale delle due sia la posizione vera (18/8).
+            "lat": 43.02884, "lng": 10.56358, "partner": True,
             "url": "https://www.villatoscanavacanze.it/"},
     "pacr-": {"t": "d", "name": "PuntAla Camp & Resort",
               "desc": "Your base — Official Bike-Friendly Stay",
@@ -58,6 +62,7 @@ if not GPX:
     sys.exit(__doc__)
 
 BUF_POI, BUF_WATER, BUF_PLACE, SOGLIA = 500, 300, 2500, 4
+FONTI_KM = 1.0       # fontane entro questo raggio di percorso = una voce sola
 PASSO = 0.7          # km fra i punti del corridoio: 700 m < 2x500 m di buffer (trappola 1)
 CHUNK = 22
 CANDIDATI = ["https://overpass-api.de/api/interpreter",
@@ -296,20 +301,24 @@ def elabora(pts2d, cum, elements, partner_route):
             for x in g["m"]+g["d"]+g["a"]:
                 x["centro_piccolo"] = nome
                 solitari.append(x)
-    # le fontane della stessa localita' diventano UNA voce con il conteggio:
-    # "Fountain San Lorenzo" ripetuto 2-3 volte era solo rumore (Andrea, 15/8)
-    fonti = [x for x in solitari if x["cat"] == "a" and x.get("centro_piccolo")]
-    altri = [x for x in solitari if not (x["cat"] == "a" and x.get("centro_piccolo"))]
-    per_luogo = {}
-    for f in sorted(fonti, key=lambda x: x["km"]):
-        per_luogo.setdefault(f["centro_piccolo"], []).append(f)
-    solitari = altri
-    for luogo, fs in per_luogo.items():
-        capo = dict(fs[0])
-        if len(fs) > 1:
-            capo["n"] = len(fs)
-            capo["p"] = None  # piu' fontane: il segno si aggancia alla traccia al km
-        solitari.append(capo)
+    # UNA voce di fontane per chilometro di percorso: tre fontane in 400 m sono
+    # la stessa sosta, non tre soste (Andrea, 18/8). Il raggruppamento e' per
+    # distanza lungo la traccia, non per nome della localita': cosi' funziona
+    # anche per le fontane isolate, che un paese di riferimento non ce l'hanno.
+    fonti = sorted([x for x in solitari if x["cat"] == "a"], key=lambda x: x["km"])
+    solitari = [x for x in solitari if x["cat"] != "a"]
+    gruppo = []
+    for f in fonti + [None]:
+        if f is not None and gruppo and f["km"] - gruppo[0]["km"] <= FONTI_KM:
+            gruppo.append(f)
+            continue
+        if gruppo:
+            capo = dict(gruppo[0])
+            if len(gruppo) > 1:
+                capo["n"] = len(gruppo)
+                capo["p"] = None  # il segno si aggancia alla traccia al km
+            solitari.append(capo)
+        gruppo = [f] if f is not None else []
     solitari.sort(key=lambda x: x["km"])
     for x in solitari:
         e = {"t": x["cat"], "km": round(x["km"], 1), "name": x["nome"], "sub": x["sub"]}

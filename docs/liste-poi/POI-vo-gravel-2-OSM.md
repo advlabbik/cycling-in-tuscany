@@ -11,6 +11,5 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 - 🍝 km 4 — Nano Verde
 **km 12 — Riotorto** · 10 eat · 4 fountains
 - ⛲ km 23 — fountain (San Lorenzo)
-- ⛲ km 23 — fountain (San Lorenzo)
 **km 30 — Suvereto** · 14 eat · 4 fountains
 - 🍝 km 37 — Bar Cafaggio (Cafaggio)

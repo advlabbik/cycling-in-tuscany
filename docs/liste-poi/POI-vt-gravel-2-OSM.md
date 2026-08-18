@@ -2,6 +2,7 @@
 
 Centri con molti servizi raggruppati in una riga. Km indicativi.
 
+- 🛏️ km 0 — Villa Toscana
 - 🍝 km 3 — I Gelsi Ristorante - Pizzeria
 - 🍝 km 4 — Conad
 - 🍝 km 4 — Cocktail Bar
@@ -25,4 +26,3 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 - 🍝 km 38 — I Tretruschi
 - 🍝 km 42 — Zia Seconda
 - 🍝 km 42 — cafe (Populonia Stazione)
-- 🛏️ km 47 — Villa Toscana

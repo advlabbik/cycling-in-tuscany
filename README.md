@@ -77,6 +77,19 @@ solo sul Tuscany Trail; se funziona si estende a tutti gli eventi. Prima dello
 sviluppo servono codici sconto, link shop e testi IT/EN. Nota gemella nel
 README di tg-guida.
 
+**Form richieste noleggio e tour — test della domanda (Andrea, 18/8/2026).**
+Due form curati (noleggio bici e tour/viaggio) per raccogliere richieste e
+rispondere con un'email di cortesia, gestendole a mano: serve a **misurare
+quanto è calda la domanda prima di avere il servizio**, e con quei numeri
+trattare poi con un partner erogatore dove marginiamo. Fattibile con lo stack
+attuale in 1-2 giorni: endpoint gemello di `functions/api/lead.js`, email
+transazionale Brevo per la risposta automatica e per la notifica a `collab@`,
+Turnstile + honeypot contro i bot, consenso come nel gate GPX. Attenzione a non
+calpestare i partner (PuntAla ha già noleggio interno: sulle sue pagine il
+pulsante deve portare a lei) e a rispettare un tempo di risposta dichiarato.
+Campi, misure e rischi nel doc Notion "TT365 — Richieste noleggio e tour: test
+della domanda": https://app.notion.com/p/3c0f88ad0121818ea1a2fbb686aa72e9
+
 **Email post-acquisto Tuscany Trail — "due piccioni con una fava" (Andrea, 14/8/2026).**
 Nell'email di avvenuto acquisto TT il link prenotazioni porta alla mappa
 **Stay22 centrata sulla fiera di Venturina** (il quartier generale dell'evento),

@@ -7,7 +7,9 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 - ⛲ km 21 — fountain (Ampio)
 - 🍝 km 28 — Bar (Ponti di Badia)
 - 🍝 km 28 — Ristorante pizzeria Ponti di Badia (Ponti di Badia)
-**km 38 — Castiglione della Pescaia** · 84 eat · 11 fountains
+- 🚲 km 38 — Easy Bike
+**km 38 — Castiglione della Pescaia** · 83 eat · 11 fountains
+- 🚲 km 38 — Bagnoli Bike
 **km 40 — Riva del Sole** · 5 eat
 - 🍝 km 41 — Cafe Beach Camping Maremma Sanssouci
 - 🍝 km 43 — Da Anna (Roccamare)

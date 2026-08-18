@@ -2,7 +2,7 @@
 
 Centri con molti servizi raggruppati in una riga. Km indicativi.
 
-- 🛏️ km 3 — Villa Toscana
+- 🛏️ km 0 — Villa Toscana
 - 🍝 km 12 — restaurant
 **km 16 — Suvereto** · 14 eat · 5 fountains
 - ⛲ km 22 — fountain

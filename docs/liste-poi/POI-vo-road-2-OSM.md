@@ -14,4 +14,3 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 - 🍝 km 62 — Ristorante Pratella
 - 🍝 km 71 — Agriturismo Il Palazzotto
 - ⛲ km 73 — fountain (San Lorenzo)
-- ⛲ km 73 — fountain (San Lorenzo)
