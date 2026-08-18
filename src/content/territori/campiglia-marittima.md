@@ -98,7 +98,7 @@ extraSections:
       - label: "What the numbers say"
         text: "Fifty-four mountain bike trails, 76 kilometres of them, and 4,146 metres of descent across the whole area. Grading follows the UK and European system — 8 white, 17 green, 11 blue, 6 red and a single black, plus 11 access roads to link them together. That spread is the character of the place, a network built for progression rather than for extremes."
       - label: "Who builds and looks after it"
-        text: "ASD Sdegnetors MTB Clan, the local riding association, digs and maintains these trails. Trail conditions and closures are posted by them on the map above, so a look before you ride is worth the minute it takes. If the area gives you a good day, the club is who to thank."
+        text: "ASD Sdegnetors MTB Clan, the local riding association, digs and maintains these trails. Trail conditions and closures are posted by them on the map below, so a look before you ride is worth the minute it takes. If the area gives you a good day, the club is who to thank."
 trailforksMap:
   rid: 33427
   href: "https://www.trailforks.com/region/monte-calvi-trail-area-33427/"
