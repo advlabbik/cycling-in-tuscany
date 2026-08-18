@@ -5,8 +5,8 @@ tagline: Pine-forest resort with Trail Center and Blue-Flag beach
 intro: 'Four-star campground in a coastal pine forest, with a private Blue-Flag beach. An MTB historic venue: in 2013 it hosted the first round of the Enduro World Series. Full Trail Center, workshop, bike rentals, and permanent pump track.'
 site: https://www.campingpuntala.it/
 coords:
-  lat: 42.811
-  lng: 10.741
+  lat: 42.84327
+  lng: 10.77969
 heroImage: ../../assets/images/punta-ala.jpg
 card:
   categoria: Bike Resort & Trail Center

@@ -5,8 +5,8 @@ tagline: "Seaside base camp on the Gulf of Follonica"
 intro: "Direct beach access in the Sterpaia Coastal Park — sea and cycling on the same day. Perfect for families seeking a comfortable base on the Etruscan Coast."
 site: "https://www.villaggioorizzonte.it/"
 coords:
-  lat: 42.945
-  lng: 10.624
+  lat: 42.96662
+  lng: 10.62669
 heroImage: ../../assets/images/villaggio-orizzonte.jpg
 card:
   categoria: "Family & Groups"
