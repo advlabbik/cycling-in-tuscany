@@ -55,7 +55,11 @@ const { src, color } = Astro.props;
      {position:absolute}, stessa specificita' della nostra regola. Nel CSS
      bundlato la nostra veniva DOPO e vinceva, i marker uscivano dal flusso
      della mappa e finivano in colonna (pin "in mare", 18/8). Il badge .n resta
-     ancorato perche' un elemento absolute e' gia' blocco contenitore. */
+     ancorato perche' un elemento absolute e' gia' blocco contenitore.
+     Il posizionamento del marker dipende quindi da una classe che NON e' nostra:
+     oltre a non ridichiarare `position`, non va mai riscritto `className` da JS
+     su questi elementi (secondo caso dello stesso bug, 18/8 — vedi
+     refreshMapMarkers). Regola: si tocca solo classList, mai l'attributo intero. */
   .rvw-mk{width:28px;height:28px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.35)}
   .rvw-mk.partner{width:34px;height:34px;box-shadow:0 0 0 4px rgba(245,166,35,.35),0 2px 10px rgba(0,0,0,.35)}
   .rvw-tip{position:absolute;transform:translate(-50%,-100%);background:#1a1a1a;color:#fff;font-size:.76rem;padding:7px 10px;border-radius:8px;pointer-events:none;white-space:nowrap;z-index:5}
@@ -246,7 +250,14 @@ const { src, color } = Astro.props;
         g.el!.style.display = visibili.length ? 'flex' : 'none';
         const capo = visibili.find((e) => e.partner) || visibili.find((e) => e.t === 'c') || visibili[0];
         if (capo) {
-          g.el!.className = 'rvw-mk' + (capo.partner ? ' partner' : '');
+          /* MAI `el.className = ...` qui: dopo addTo() l'elemento porta anche le
+             classi di MapLibre (maplibregl-marker, -anchor-center) e riscrivere
+             l'attributo intero le cancella. Senza .maplibregl-marker il marker
+             perde `position:absolute`, esce dal piano della mappa e si impila nel
+             flusso del documento portandosi dietro la sua `transform`: i pin
+             scendono in diagonale e finiscono in mare. Si toccano solo le classi
+             nostre, una per una. */
+          g.el!.classList.toggle('partner', !!capo.partner);
           g.el!.style.background = TCOL[capo.t];
           g.el!.innerHTML = icon(capo.t, 14) + (visibili.length > 1 ? `<i class="n">${visibili.length}</i>` : '');
           g.el!.setAttribute('aria-label', visibili.map((e) => nameOf(e)).join(', '));
