@@ -70,6 +70,23 @@ const territori = defineCollection({
        * incassa le commissioni al 30%) — è fissato nel template, qui solo
        * posizione, testi e campagna per l'attribuzione nel CSV Stay22.
        */
+      /**
+       * Mappa Trailforks di una bike area vicina (Andrea, 18/8). Serve dove la
+       * bici da fare NON e' quella del sito: i sentieri li mantengono i rider
+       * locali e la mappa e' la loro, sempre aggiornata, cosi' non copiamo
+       * tracciati che cambiano. `rid` sta nello slug dell'URL Trailforks.
+       */
+      trailforksMap: z
+        .object({
+          rid: z.number(),
+          href: z.string().url(),
+          badge: z.string().optional(),
+          title: z.string(),
+          text: z.string(),
+          note: z.string().optional(),
+        })
+        .nullable()
+        .default(null),
       stay22Map: z
         .object({
           lat: z.number(),

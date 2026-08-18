@@ -26,7 +26,7 @@ cosaVedere:
     descrizione: "Natural thermal waters at 36°C and a Silence Area for meditation and nature — just minutes from the borough."
     image: "../../assets/images/campiglia/terme-calidario.jpg"
   - titolo: "Bike Area Monte Calvi"
-    descrizione: "9 enduro trails and 4 cross-country routes across the slopes of Monte Calvi, fully integrated with the Tuscany Trail network."
+    descrizione: "Fifty-four mountain bike trails on the slopes above the borough, from flowing berms to steep enduro singletrack, dug and maintained by the local riding association."
     image: "../../assets/images/campiglia/bike-area-monte-calvi.jpg"
 ridePack: null
 # Provenienza: questo blocco NON viene dai dati del prototipo — _dati-partner.json
@@ -88,6 +88,24 @@ extraSections:
         text: "Run with passion by the Sdegnetors ASD, the trail network on Monte Calvi grades from flowing lines with shaped berms and small jumps up to black enduro singletrack that demands precision and courage — with views from the Archipelago to the inland hills the whole way."
       - label: "Part of the Tuscany Trail network"
         text: "The white roads and trails around the borough are the same ones ridden by thousands at the Tuscany Trail. The bike park, the mining park trails and the event route weave into one riding playground."
+  - title: "Monte Calvi Trail Area"
+    sub: "The mountain bike side of Campiglia — a different bike from the one this site usually talks about."
+    cards:
+      - label: "Bring a mountain bike"
+        text: "This is gravity terrain built by an enduro club, not a gravel network. The lines run from flowing berms to steep technical singletrack, and most of them ask for a full mountain bike. Trailforks does flag 22 of the trails as gravel-rideable and 50 as e-bike friendly, so a lighter setup is not shut out — but the heart of this place is mountain biking, and it rewards arriving with the right bike rather than the one you packed for the white roads."
+      - label: "You start from the square"
+        text: "The trailhead car park sits about 200 metres from Piazza della Repubblica, which makes this the rare trail area you reach on foot from the village. From there the network climbs the slopes of Monte Calvi, with the bulk of it around three and a half kilometres north of the borough and the highest trailhead at 634 metres."
+      - label: "What the numbers say"
+        text: "Fifty-four mountain bike trails, 76 kilometres of them, and 4,146 metres of descent across the whole area. Grading follows the UK and European system — 8 white, 17 green, 11 blue, 6 red and a single black, plus 11 access roads to link them together. That spread is the character of the place, a network built for progression rather than for extremes."
+      - label: "Who builds and looks after it"
+        text: "ASD Sdegnetors MTB Clan, the local riding association, digs and maintains these trails. Trail conditions and closures are posted by them on the map above, so a look before you ride is worth the minute it takes. If the area gives you a good day, the club is who to thank."
+trailforksMap:
+  rid: 33427
+  href: "https://www.trailforks.com/region/monte-calvi-trail-area-33427/"
+  badge: "Mountain biking · Monte Calvi"
+  title: "The trails of Monte Calvi, live from Trailforks"
+  text: "The singletrack network on the slopes above the borough, mapped and kept current by the riders who build it. Move the map to explore, tap a line to read its grade and its condition."
+  note: "Grades, conditions and closures come straight from the local riders, so this map stays truer than anything we could copy across."
 stay22Map:
   lat: 43.0302
   lng: 10.6055

@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import RouteCard from '../../components/RouteCard.astro';
 import Stay22MapSection from '../../components/Stay22MapSection.astro';
+import TrailforksMapSection from '../../components/TrailforksMapSection.astro';
 import { bgUrl } from '../../lib/images';
 
 export async function getStaticPaths() {
@@ -27,6 +28,11 @@ const magazine = territorio.data.magazine;
 // non tutti i territori hanno l'articolo nel body: senza questo controllo
 // `.editorial` renderizzerebbe un riquadro bianco vuoto (es. Campiglia)
 const hasArticle = Boolean(territorio.body?.trim());
+const tf = territorio.data.trailforksMap;
+/* i fondi si alternano bianco/crema. La mappa Trailforks si infila DOPO le
+   sezioni extra, attaccata a quella che la spiega, quindi prende il fondo
+   opposto all'ultima e sposta di uno la parita' della fascia finale */
+const shift = tf ? 1 : 0;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -164,7 +170,19 @@ const schema = {
     </section>
   ))}
 
-  <section style={territorio.data.extraSections.length % 2 === 1 ? undefined : 'background:#fff'}>
+  {tf && (
+    <TrailforksMapSection
+      rid={tf.rid}
+      href={tf.href}
+      badge={tf.badge}
+      title={tf.title}
+      text={tf.text}
+      note={tf.note}
+      white={territorio.data.extraSections.length % 2 === 0}
+    />
+  )}
+
+  <section style={(territorio.data.extraSections.length + shift) % 2 === 1 ? undefined : 'background:#fff'}>
     <div class="wrap">
       <div class="cta-band">
         <div>

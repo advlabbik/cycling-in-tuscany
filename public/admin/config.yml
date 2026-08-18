@@ -74,6 +74,24 @@ collections:
             widget: string
             required: false
             hint: "Es. /itinerari/mr-gravel-1 — se presente, la card porta lì invece che su Ride with GPS."
+      - name: trailforksMap
+        label: "Mappa Trailforks (bike area vicina)"
+        widget: object
+        required: false
+        hint: >-
+          La mappa dei sentieri di una bike area, presa da Trailforks e sempre
+          aggiornata da chi li cura. Vuota = niente mappa. L'id regione sta nello
+          slug dell'URL Trailforks, es. monte-calvi-trail-area-33427 -> 33427.
+        fields:
+          - { name: rid, label: "ID regione Trailforks", widget: number, value_type: int }
+          - name: href
+            label: "URL della pagina Trailforks"
+            widget: string
+            pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
+          - { name: badge, label: Badge (opzionale), widget: string, required: false }
+          - { name: title, label: Titolo sezione, widget: string }
+          - { name: text, label: Testo sezione, widget: text }
+          - { name: note, label: "Nota sotto la mappa (opzionale)", widget: text, required: false }
       - name: stay22Map
         label: "Mappa prenotazioni Stay22 (testa pagina)"
         widget: object
