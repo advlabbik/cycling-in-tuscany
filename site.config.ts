@@ -17,6 +17,17 @@ export const site = {
     email: 'hello@cyclingintuscany.com',
     instagram: '@cyclingintuscany_official',
   },
+  /**
+   * Date di ripiego della mappa prenotazioni, per quando il link non ne porta.
+   * La mappa non deve mai aprirsi con le caselle vuote: senza date Stay22 non
+   * mostra né prezzi né disponibilità. Regola decisa con Andrea (18/8): si mette
+   * la notte prima della PRIMA partenza, chi arriva per altre date se la cambia.
+   * La mail di conferma iscrizione può sovrascriverle per singolo partecipante
+   * passando ?checkin=&checkout= (vedi Stay22MapSection.astro).
+   * ⚠️ DA CONFERMARE sul calendario TT27 ufficiale: qui c'è il 18 maggio 2027,
+   * ipotizzando partenze 19-20-21 (nel 2026 furono 20-21-22 maggio).
+   */
+  defaultStayDates: { checkin: '2027-05-18', checkout: '2027-05-19' },
   map: { center: [10.68, 42.98], zoom: 9 },
   /** ordine delle strutture nella home — era STR_ORDER in _prototipo/build_pages.py */
   struttureOrder: ['punta-ala', 'villaggio-orizzonte', 'villa-toscana'],

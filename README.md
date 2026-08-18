@@ -136,6 +136,28 @@ Prese dal README/CLAUDE.md di `advlabbik/tg-guida`, valgono anche qui:
   portano su Airbnb. Il metodo andrebbe cercato con Francesco o col supporto
   Stay22 (nel repo stay22-gpx non c'è, verificato 15/8).
 
+## Date della mappa prenotazioni (18 agosto 2026)
+
+La mappa Stay22 non si apre mai con le caselle date vuote: senza date non mostra
+né prezzi né disponibilità, e chi arriva dalla mail se ne va.
+
+- **Ripiego**: `defaultStayDates` in `site.config.ts` — la notte prima della prima
+  partenza TT. Chi arriva per altre date se la cambia (scelta di Andrea: meglio una
+  data cambiabile che due caselle vuote). ⚠️ Le date lì dentro sono **ipotizzate**
+  sul 2026, vanno confermate sul calendario TT27 ufficiale.
+- **Data personale dalla mail**: basta che il link porti
+  `?checkin=YYYY-MM-DD&checkout=YYYY-MM-DD` e la mappa si apre su quella notte.
+  Funziona su home e pagine territorio, in automatico.
+  Il dato per costruirlo esiste già: il meta d'ordine **`datapartenza`** è presente
+  sul 100% delle righe TT (6.494 su 6.494 nel 2026), in forma `20/05mattina` /
+  `20/05pomeriggio` — tre giorni di partenza, mattina e pomeriggio. Chi scrive la
+  mail deve solo mappare i tre giorni sulle rispettive notti precedenti, e tollerare
+  due valori sporchi (`20/05mattino`, `21/0mattina` — 2 righe su 6.494).
+- Le date si prendono **in coppia da una fonte sola**: se il link ne porta una
+  sbagliata, invertita o singola, si torna al ripiego invece di mescolare le due
+  fonti (arrivo dal ripiego + partenza dal link darebbe tre notti invece di una,
+  senza che nessuno se ne accorga).
+
 ## Trappole delle mappe (condivise con tutti i progetti BAS che hanno mappe)
 
 **Il posizionamento di un marker non è roba nostra: lo fa la libreria, con una sua

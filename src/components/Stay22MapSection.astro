@@ -7,6 +7,7 @@
  * troverà il parametro.
  */
 import { stay22EmbedUrl } from '../lib/stay22';
+import { site } from '../../site.config';
 
 interface Props {
   lat: number;
@@ -30,6 +31,11 @@ interface Props {
 
 const { lat, lng, venue, campaign, title, text, badge, id, white = false, gpx, gpxColor, note } = Astro.props;
 const embedUrl = stay22EmbedUrl(lat, lng, campaign, venue, { gpx, gpxColor });
+/* Date di ripiego: la mappa non deve mai aprirsi con le caselle vuote, perche'
+   senza date Stay22 non mostra prezzi ne' disponibilita' e chi arriva dalla mail
+   se ne va. Se il link porta ?checkin=&checkout= vincono quelle (una data per
+   partecipante, vedi lo script sotto); altrimenti si usano queste. */
+const fallback = site.defaultStayDates;
 ---
 
 <section id={id} style={white ? 'background:#fff' : undefined}>
@@ -38,12 +44,55 @@ const embedUrl = stay22EmbedUrl(lat, lng, campaign, venue, { gpx, gpxColor });
     <h2 class="sec">{title}</h2>
     <p class="sub">{text}</p>
     <div class="s22card">
-      <iframe src={embedUrl} title={title} allow="geolocation" loading="lazy"></iframe>
+      <iframe
+        src={embedUrl}
+        data-s22
+        data-checkin={fallback?.checkin}
+        data-checkout={fallback?.checkout}
+        title={title}
+        allow="geolocation"
+        loading="lazy"></iframe>
     </div>
     <p class="muted small" style="margin-top:12px">{note || 'Everything on the map is bookable.'}</p>
     <slot />
   </div>
 </section>
+
+<script>
+  /**
+   * Date della mappa prenotazioni, decise a runtime.
+   *
+   * Il sito e' statico: l'URL dell'iframe viene scritto al build, quindi da solo
+   * non puo' sapere quando arriva chi lo apre. La mail di conferma iscrizione,
+   * pero', la data della persona ce l'ha (meta `datapartenza` dell'ordine, 100%
+   * di copertura): basta che il link porti ?checkin=YYYY-MM-DD&checkout=YYYY-MM-DD
+   * e la mappa si apre gia' sulla notte giusta, una per partecipante.
+   *
+   * Senza parametri restano le date di ripiego di site.config (la notte prima
+   * della prima partenza): meglio una data cambiabile che due caselle vuote.
+   * Si riscrive `src` PRIMA che l'iframe carichi davvero — sono tutti
+   * loading="lazy", quindi qui la richiesta non e' ancora partita.
+   */
+  /* Le date si prendono in COPPIA da una sola fonte: due valide e in ordine, o
+     niente. Mescolare le fonti darebbe soggiorni improbabili senza che nessuno
+     se ne accorga (arrivo dal ripiego, partenza dal link = tre notti invece di
+     una), e un link malfatto non deve mai lasciare la mappa a caselle vuote:
+     in quel caso si torna al ripiego. */
+  const ISO = /^\d{4}-\d{2}-\d{2}$/;
+  const coppia = (dal?: string | null, al?: string | null) =>
+    ISO.test(dal || '') && ISO.test(al || '') && dal! < al! ? { checkin: dal!, checkout: al! } : null;
+
+  const qs = new URLSearchParams(location.search);
+  const dalLink = coppia(qs.get('checkin'), qs.get('checkout'));
+  document.querySelectorAll<HTMLIFrameElement>('iframe[data-s22]').forEach((f) => {
+    const date = dalLink || coppia(f.dataset.checkin, f.dataset.checkout);
+    if (!date) return;
+    const url = new URL(f.src);
+    url.searchParams.set('checkin', date.checkin);
+    url.searchParams.set('checkout', date.checkout);
+    f.src = url.toString();
+  });
+</script>
 
 <style>
   .s22card{border-radius:16px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-md);background:var(--surface);transform:translateZ(0)}
