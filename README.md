@@ -136,6 +136,32 @@ Prese dal README/CLAUDE.md di `advlabbik/tg-guida`, valgono anche qui:
   portano su Airbnb. Il metodo andrebbe cercato con Francesco o col supporto
   Stay22 (nel repo stay22-gpx non c'è, verificato 15/8).
 
+## Trappole delle mappe (condivise con tutti i progetti BAS che hanno mappe)
+
+**Il posizionamento di un marker non è roba nostra: lo fa la libreria, con una sua
+classe** — `.maplibregl-marker{position:absolute}` in MapLibre, `.leaflet-marker-icon`
+in Leaflet. Da lì due regole, che qui sono costate due bug identici nello stesso
+giorno (18/8/2026):
+
+1. **Mai dichiarare `position` su un elemento passato al costruttore del marker.**
+   La nostra regola ha la stessa specificità di quella della libreria e nel CSS
+   bundlato vince perché viene dopo. In dev l'ordine dei fogli è diverso, quindi i
+   test locali passano e il bug si vede solo in produzione.
+2. **Mai riscrivere `className` su un marker già aggiunto alla mappa.** Le classi
+   della libreria vengono messe *dopo* `addTo()`, e assegnare l'attributo intero le
+   cancella. Si toccano solo le classi nostre, con `classList.add/remove/toggle`.
+   Era il caso di `refreshMapMarkers`: cambiando filtro POI, 13 marker su 14
+   perdevano `position:absolute`.
+
+**Sintomo, riconoscibile a occhio:** i pin lasciano il tracciato, si dispongono **in
+diagonale** e finiscono fuori mappa — in mare, nei progetti costieri. È l'elemento
+che, perso l'`absolute`, rientra nel flusso del documento portandosi dietro la
+`transform` che la libreria gli scrive addosso.
+
+**Come non ricascarci:** quando cambia un filtro, ricostruire i layer (il metodo di
+tg-guida con Leaflet) è più sicuro che ritoccare gli elementi a mano. Se si ritocca,
+solo `classList` e `style.display`.
+
 ## I tier dei territori
 
 `tier` non è decorativo, è la gerarchia commerciale: chi paga di più sta più in alto.
