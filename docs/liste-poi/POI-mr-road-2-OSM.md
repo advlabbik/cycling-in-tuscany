@@ -15,6 +15,4 @@ Centri con molti servizi raggruppati in una riga. Km indicativi.
 **km 62 — Castelnuovo di Val di Cecina** · 8 eat · 1 stays · 4 fountains
 - ⛲ km 71 — fountain (Sasso Pisano)
 - 🍝 km 72 — Il tinaio (Sasso Pisano)
-- ⛲ km 72 — fountain (Sasso Pisano)
-- ⛲ km 72 — fountain (Sasso Pisano)
 - 🍝 km 72 — Vapori di birra (Sasso Pisano)

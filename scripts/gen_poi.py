@@ -34,7 +34,11 @@ os.makedirs(OUTDIR, exist_ok=True)
 PARTNER = {
     "vt-": {"t": "d", "name": "Villa Toscana",
             "desc": "Your base — Official Bike-Friendly Stay",
-            "lat": 42.99, "lng": 10.606, "partner": True,
+            # partenza delle 4 tracce = la porta della struttura. NON le
+            # coordinate della scheda (42.99,10.606), che stanno 5,5 km piu' a
+            # sud e mettevano il segno del partner fuori dal percorso: da
+            # verificare quale delle due sia la posizione vera (18/8).
+            "lat": 43.02884, "lng": 10.56358, "partner": True,
             "url": "https://www.villatoscanavacanze.it/"},
     "pacr-": {"t": "d", "name": "PuntAla Camp & Resort",
               "desc": "Your base — Official Bike-Friendly Stay",
