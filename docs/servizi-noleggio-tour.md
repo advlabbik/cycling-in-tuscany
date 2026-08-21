@@ -33,6 +33,11 @@ servire davvero tramite le strutture ufficiali.
 - [ ] Verificare che `collab@tuscanytrail.it` riceva la notifica e non finisca
       in spam. È posta che arriva da un dominio nostro spedita da Brevo, quindi
       è la prima a essere filtrata se l'autorizzazione a spedire non è a posto.
+- [ ] **Quando il sito passerà a `365.tuscanytrail.it`** (spostamento in carico a
+      Francesco, discusso in #cycling-in-tuscany il 20/8): aggiornare la costante
+      `SITE` in `functions/api/service-request.js`, altrimenti il link dentro la
+      conferma automatica continua a puntare al vecchio host. L'indirizzo
+      mittente invece non si tocca, sta sul dominio radice apposta.
 - [ ] Brevo → Contacts → Settings → Contact attributes → creare
       `CIT_SERVICE` (testo) e `CIT_SERVICE_INFO` (testo).
 - [ ] Mandare una richiesta di prova da `/services/` e controllare che arrivino
