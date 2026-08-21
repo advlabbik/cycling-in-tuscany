@@ -14,7 +14,16 @@ export const site = {
    */
   ga4MeasurementId: 'G-FELFB9W37W',
   brand: {
-    email: 'hello@cyclingintuscany.com',
+    /**
+     * Il brand Cycling in Tuscany non esiste più (è diventato Tuscany Trail 365)
+     * e il sito vive su tuscanytrail.it, quindi l'indirizzo sta sullo stesso
+     * dominio delle pagine — che è anche un dominio mittente già autorizzato.
+     * ⚠️ Da creare e validare in Brevo prima di andare live: è lo stesso
+     * indirizzo da cui partono le email del form servizi (Andrea, 21/8).
+     */
+    email: 'hello@tuscanytrail.it',
+    /* L'handle Instagram resta questo: è un account vero e rinominarlo qui
+       romperebbe il link, non lo aggiornerebbe. */
     instagram: '@cyclingintuscany_official',
   },
   /**
