@@ -10,10 +10,12 @@ servire davvero tramite le strutture ufficiali.
 
 1. Il visitatore compila uno dei due form su `/services/` (noleggio o tour).
 2. `functions/api/service-request.js` fa tre cose, via API Brevo:
-   - **notifica interna** a `SERVICE_NOTIFY_EMAIL` (default `hello@cyclingintuscany.com`),
+   - **notifica interna** a `SERVICE_NOTIFY_EMAIL` (default `collab@tuscanytrail.it`),
      con reply-to del richiedente → si risponde direttamente col client di posta;
    - **conferma automatica** al richiedente ("verifichiamo coi partner, risposta
-     entro 2 giorni lavorativi");
+     entro 2 giorni lavorativi"), spedita da `hello@tuscanytrail.it` ma con
+     reply-to sulla casella di lavoro, così una risposta del cliente atterra
+     dove sta già la richiesta;
    - **tagging del contatto** su Brevo (`CIT_SERVICE`, `CIT_SERVICE_INFO`), best-effort.
 3. **La seconda email è SEMPRE manuale.** Prima si sentono davvero i partner,
    poi si risponde. Mai un no automatico — il richiedente ha lasciato dati veri
@@ -23,9 +25,14 @@ servire davvero tramite le strutture ufficiali.
 
 - [ ] Cloudflare Pages → Environment variables → verificare `BREVO_API_KEY`
       (già usata da lead.js); opzionale `SERVICE_NOTIFY_EMAIL` se la casella
-      di lavoro non è hello@.
-- [ ] Brevo → Senders & domains → verificare che `hello@cyclingintuscany.com`
-      sia un mittente validato (il dominio è già tra i domini aziendali).
+      di lavoro non è collab@tuscanytrail.it.
+- [ ] Creare la casella `hello@tuscanytrail.it` e validarla in Brevo
+      (Senders & domains). Il dominio tuscanytrail.it è già autorizzato a
+      spedire, quindi manca solo l'indirizzo. Finché non esiste, le due email
+      non partono — ed è il modo classico di perdere richieste in silenzio.
+- [ ] Verificare che `collab@tuscanytrail.it` riceva la notifica e non finisca
+      in spam. È posta che arriva da un dominio nostro spedita da Brevo, quindi
+      è la prima a essere filtrata se l'autorizzazione a spedire non è a posto.
 - [ ] Brevo → Contacts → Settings → Contact attributes → creare
       `CIT_SERVICE` (testo) e `CIT_SERVICE_INFO` (testo).
 - [ ] Mandare una richiesta di prova da `/services/` e controllare che arrivino

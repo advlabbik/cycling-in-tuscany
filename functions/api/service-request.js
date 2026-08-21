@@ -4,7 +4,7 @@
  * Gemella di lead.js ma con un lavoro in piu': oltre a taggare il contatto
  * su Brevo, spedisce DUE email transazionali (API smtp/email di Brevo):
  *   1. la notifica interna a chi risponde alle richieste (SERVICE_NOTIFY_EMAIL,
- *      default hello@) con reply-to = il richiedente, cosi' si risponde
+ *      default collab@) con reply-to = il richiedente, cosi' si risponde
  *      direttamente dal client di posta;
  *   2. la conferma automatica al richiedente ("stiamo verificando coi partner,
  *      ti rispondiamo entro due giorni lavorativi").
@@ -17,14 +17,27 @@
  * interna e' il canale primario; il tagging Brevo e' best-effort e non blocca.
  *
  * Env su Cloudflare Pages: BREVO_API_KEY (gia' presente per lead.js),
- * SERVICE_NOTIFY_EMAIL (opzionale, default hello@cyclingintuscany.com).
- * Il mittente hello@cyclingintuscany.com deve essere validato in Brevo
- * (Senders & domains); il dominio e' gia' tra i domini mittente aziendali.
+ * SERVICE_NOTIFY_EMAIL (opzionale, default collab@tuscanytrail.it).
+ * Il mittente hello@tuscanytrail.it deve esistere come casella ed essere
+ * validato in Brevo (Senders & domains); tuscanytrail.it e' gia' tra i domini
+ * mittente aziendali, quindi la firma del dominio e' a posto.
  * NB: gli attributi CIT_SERVICE e CIT_SERVICE_INFO vanno creati una volta in
  * Brevo (Contacts → Settings → Contact attributes), come i CIT_* di lead.js.
  */
 
-const SENDER = { name: 'Tuscany Trail 365', email: 'hello@cyclingintuscany.com' };
+/* Mittente delle due email. Sta su tuscanytrail.it, il dominio su cui il sito
+   vive davvero (cyclingintuscany.tuscanytrail.it) e gia' autorizzato a
+   spedire. NON e' collab@ di proposito: da quella casella non deve partire
+   posta automatica verso i clienti (Andrea, 21/8). */
+const SENDER = { name: 'Tuscany Trail 365', email: 'hello@tuscanytrail.it' };
+/* Dove atterra il lavoro da fare. collab@ e' la casella condivisa Andrea +
+   Francesca, cioe' chi poi telefona ai partner per cercare disponibilita', e
+   le sue email rimbalzano anche in Slack su #email-collab: le richieste si
+   vedono senza aprire la posta. */
+const NOTIFY_FALLBACK = 'collab@tuscanytrail.it';
+/* I link dentro le email puntano all'host che serve davvero le pagine, non al
+   vecchio cyclingintuscany.com che oggi e' soltanto un redirect. */
+const SITE = 'https://cyclingintuscany.tuscanytrail.it';
 
 export async function onRequestPost(context) {
   let body;
@@ -63,7 +76,7 @@ export async function onRequestPost(context) {
 
   const key = context.env.BREVO_API_KEY;
   if (!key) return json({ ok: true, demo: true });
-  const notifyTo = String(context.env.SERVICE_NOTIFY_EMAIL || SENDER.email);
+  const notifyTo = String(context.env.SERVICE_NOTIFY_EMAIL || NOTIFY_FALLBACK);
 
   const label = service === 'rental' ? 'Bike rental' : 'Custom tour';
   const rows = [['Name', name], ['Email', email], ...fields, ['Newsletter consent', consent ? 'yes' : 'no']]
@@ -91,10 +104,13 @@ export async function onRequestPost(context) {
 
   // 2) conferma automatica al richiedente — best-effort, la richiesta e' gia' da noi
   const ack = ackEmail(service, name, fields);
+  /* Se il richiedente risponde alla conferma, la risposta deve atterrare dove
+     sta gia' la richiesta — la casella presidiata — e non su hello@, che puo'
+     benissimo essere un'identita' di sola spedizione. */
   const auto = await sendEmail(key, {
     sender: SENDER,
     to: [{ email, name }],
-    replyTo: { email: SENDER.email },
+    replyTo: { email: notifyTo },
     subject: ack.subject,
     htmlContent: ack.html,
   });
@@ -136,8 +152,8 @@ function ackEmail(service, name, fields) {
       (recap ? `<p>Here's what you asked for.</p><ul>${recap}</ul>` : '') +
       `<p>We're now checking availability with our partner network in the area. ` +
       `A real person will get back to you within two working days, with an option or an honest answer.</p>` +
-      `<p>In the meantime, our verified routes are free to browse and download at ` +
-      `<a href="https://www.cyclingintuscany.com/itinerari/">cyclingintuscany.com/itinerari</a>.</p>` +
+      `<p>In the meantime, our verified routes are free to browse and download on ` +
+      `<a href="${SITE}/itinerari/">Tuscany Trail 365</a>.</p>` +
       `<p>Ride on,<br>The Tuscany Trail 365 team</p>` +
       `</div>`,
   };
