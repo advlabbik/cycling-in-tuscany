@@ -55,9 +55,9 @@ channels:
     url: "https://www.parchivaldicornia.it/info-e-servizi/orari-e-tariffe/?selected=2552"
 numeriUtili:
   - label: "Tourist Office"
-    value: "0565 838470 — Via Cavour"
+    value: "+39 0565 838470 — Via Cavour"
   - label: "Town Hall"
-    value: "0565 839111 — Via Roma 5"
+    value: "+39 0565 839111 — Via Roma 5"
 extraSections:
   - title: "The stories behind the sights"
     sub: "From the official Campiglia Marittima guide — the depth that makes this borough worth more than a photo stop."
@@ -78,7 +78,7 @@ extraSections:
       - label: "One perfect day"
         text: "Breakfast outdoors in a bar of the borough, then the Rocca while the light is still low. Lunch among the alleys, an afternoon guided tour of the Temperino mine and the miners' village, and a sunset soak in the thermal lake to close the loop."
       - label: "Guided tours"
-        text: "The Parco Archeominerario runs guided tours year-round, in several languages, with special events and workshops for groups and families. The tourist office in Via Cavour (0565 838470) helps with bookings and tailored itineraries."
+        text: "The Parco Archeominerario runs guided tours year-round, in several languages, with special events and workshops for groups and families. The tourist office in Via Cavour (+39 0565 838470) helps with bookings and tailored itineraries."
       - label: "A walk of oil and wine"
         text: "From the restored Fonte Corboli washhouse, with the valley and the sea on the horizon, a food-and-wine trail links olive groves, vineyards and organic farms around the borough — the slow-day alternative when the bike rests."
   - title: "For riders"

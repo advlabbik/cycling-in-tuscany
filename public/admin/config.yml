@@ -138,7 +138,10 @@ collections:
         required: false
         fields:
           - { name: label, label: Label, widget: string }
-          - { name: value, label: Value, widget: string }
+          - name: value
+            label: Value
+            widget: string
+            hint: "Sempre col prefisso internazionale, per esempio +39 0565 838470 — chi legge il sito è straniero e da telefono chiama con un tocco"
       # I PDF restano in public/: sono serviti così come sono, non passano da astro:assets.
       # Dal 15/8 il campo è facoltativo: le guide non si scaricano più, i contenuti
       # vivono nelle sezioni extra della pagina.

@@ -29,7 +29,7 @@ magazine:
     - titolo: "The Biancane and steam vents"
       testo: "The geothermal phenomenon that made this territory famous: fumaroles, lagoons and Lagone Cerchiaio. MUBIA tells the story of boric acid and the first power plants."
     - titolo: "The Renato Fucini Narrative Museum"
-      testo: "Dedicated to the Tuscan writer; municipal library 0566 906391, biblioteca@comune.monterotondomarittimo.gr.it."
+      testo: "Dedicated to the Tuscan writer; municipal library +39 0566 906391, biblioteca@comune.monterotondomarittimo.gr.it."
     - titolo: "Massa Marittima"
       testo: "Just a few kilometers away: Fonte dell'Abbondanza, Torre del Candeliere, the Duomo and the medieval Zecca."
     - titolo: "Geothermal flavors"
@@ -40,7 +40,7 @@ channels:
     url: "https://www.comune.monterotondomarittimo.gr.it/"
 numeriUtili:
   - label: "Library / Fucini Museum"
-    value: "0566 906391"
+    value: "+39 0566 906391"
 stay22Map:
   lat: 43.143
   lng: 10.857

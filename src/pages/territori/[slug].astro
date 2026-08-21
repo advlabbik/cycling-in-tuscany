@@ -209,9 +209,28 @@ const schema = {
           <h3>Contacts & materials</h3>
           <ul style="margin:8px 0 14px;padding-left:18px">
             {territorio.data.numeriUtili.length > 0 ? (
-              territorio.data.numeriUtili.map((item) => (
-                <li><b>{item.label}:</b> {item.value}</li>
-              ))
+              territorio.data.numeriUtili.map((item) => {
+                /* Chi legge il sito e' quasi sempre straniero (due terzi dei
+                   partecipanti al Tuscany Trail): il numero sta in `value` col
+                   prefisso internazionale e da telefono si chiama con un tocco.
+                   L'href vuole le cifre attaccate, il testo resta spaziato, e
+                   quel che segue il numero (l'indirizzo) resta fuori dal link.
+                   Senza un numero in testa la voce si stampa com'e'. */
+                const tel = item.value.match(/^(\+\d[\d\s]*\d)(.*)$/);
+                return (
+                  <li>
+                    <b>{item.label}:</b>{' '}
+                    {tel ? (
+                      <>
+                        <a href={`tel:${tel[1].replace(/\s/g, '')}`}>{tel[1]}</a>
+                        {tel[2]}
+                      </>
+                    ) : (
+                      item.value
+                    )}
+                  </li>
+                );
+              })
             ) : (
               <li class="muted">—</li>
             )}
