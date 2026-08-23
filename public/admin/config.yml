@@ -320,3 +320,79 @@ collections:
           - { name: lat, label: Latitude, widget: number, value_type: float }
           - { name: lng, label: Longitude, widget: number, value_type: float }
       - { name: body, label: Body, widget: markdown, required: false }
+
+  - name: articoli
+    label: Articoli
+    folder: src/content/articoli
+    create: true
+    slug: "{{title}}"
+    media_folder: ../../assets/images
+    public_folder: ../../assets/images
+    fields:
+      - { name: title, label: "Titolo (come si cerca, non come sul magazine)", widget: string }
+      - name: question
+        label: "La domanda a cui risponde"
+        widget: string
+        hint: "Scritta come la scriverebbe un lettore in un motore di ricerca."
+      - name: answer
+        label: "Risposta breve (~40 parole)"
+        widget: text
+        hint: "Va in cima alla pagina. E' il pezzo che gli assistenti AI citano: deve rispondere da solo, senza il resto dell'articolo."
+      - { name: description, label: "Meta description", widget: text }
+      - { name: area, label: "Area (es. Val d'Orcia - Provincia di Siena)", widget: string }
+      - { name: pubDate, label: Data, widget: datetime, format: "yyyy-MM-dd", date_format: "yyyy-MM-dd", time_format: false }
+      - { name: updatedDate, label: "Data aggiornamento", widget: datetime, required: false, format: "yyyy-MM-dd", date_format: "yyyy-MM-dd", time_format: false }
+      - { name: author, label: Autore, widget: string, default: "Luciano Coluccia" }
+      - name: track
+        label: Binario
+        widget: select
+        options: [partner, editorial]
+        hint: "partner = pezzo dovuto per contratto, vale come deliverable nel report al territorio. editorial = pezzo che risponde a una domanda cercata, si misura in visite e lead."
+      - name: sponsor
+        label: "Partner che paga il pezzo"
+        widget: object
+        required: false
+        hint: "Se compilato, la pagina dichiara il contenuto sponsorizzato e il link esce con rel=sponsored."
+        fields:
+          - { name: name, label: Nome, widget: string }
+          - name: url
+            label: Sito
+            widget: string
+            required: false
+            pattern: ['^https?://', "Serve un URL completo, con https:// davanti"]
+      - { name: heroImage, label: Hero image, widget: image, required: false }
+      - name: fastFacts
+        label: "Fatti in breve"
+        widget: list
+        required: false
+        hint: "Solo fatti presenti nell'articolo. Non aggiungere nulla che il testo non dica."
+        fields:
+          - { name: label, label: Etichetta, widget: string }
+          - { name: value, label: Valore, widget: string }
+      - name: boxes
+        label: "Riquadri del magazine"
+        widget: list
+        required: false
+        fields:
+          - { name: titolo, label: Titolo, widget: string }
+          - { name: testo, label: Testo, widget: text }
+      - name: faq
+        label: "Domande e risposte"
+        widget: list
+        required: false
+        hint: "Le risposte si ricavano dal testo dell'articolo, non si inventano."
+        fields:
+          - { name: q, label: Domanda, widget: string }
+          - { name: a, label: Risposta, widget: text }
+      - name: related
+        label: "Continua a leggere"
+        widget: list
+        required: false
+        fields:
+          - { name: label, label: Etichetta, widget: string }
+          - { name: href, label: "Link interno (es. /articoli/slug/)", widget: string }
+      - { name: source, label: "Fonte del testo", widget: string, required: false }
+      - name: body
+        label: "Articolo"
+        widget: markdown
+        hint: "Il testo del magazine, parola per parola. Si aggiungono solo i sottotitoli H2: la prosa non si riscrive."

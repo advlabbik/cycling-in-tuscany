@@ -195,6 +195,61 @@ const itinerari = defineCollection({
     }),
 });
 
+/**
+ * Gli articoli del magazine Cycling in Tuscany portati sul sito (23/8/2026).
+ *
+ * Due binari, e il campo `track` li distingue perché servono a cose diverse:
+ * `partner` è un pezzo dovuto per contratto — esiste a prescindere dal
+ * traffico, e nel report al territorio vale come deliverable; `editorial` è un
+ * pezzo che risponde a una domanda che il pubblico cerca davvero, e si misura
+ * in visite e lead. Senza questo campo il report per territorio non si può
+ * generare da solo, e l'argomento di vendita B2B resta uno slogan.
+ *
+ * Il corpo dell'articolo è il markdown del file, e il testo del magazine NON
+ * si riscrive: arriva parola per parola dai documenti di Luciano. Tutto quello
+ * che serve a farsi trovare — domanda, risposta breve in cima, fatti, FAQ —
+ * vive nel frontmatter e viene renderizzato *intorno* al testo. È la regola
+ * che tiene insieme le due cose: ottimizzare senza mettere le mani nella prosa.
+ */
+const articoli = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/articoli' }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      /** la domanda a cui il pezzo risponde: è ciò che si cerca, non il titolo del magazine */
+      question: z.string(),
+      /**
+       * La risposta in ~40 parole, renderizzata sopra l'articolo. Sta lì per un
+       * motivo misurato: il 44% delle citazioni degli assistenti AI viene dal
+       * primo 30% della pagina, e la prosa del magazine parte sempre di lato.
+       */
+      answer: z.string(),
+      description: z.string(),
+      area: z.string(),
+      pubDate: z.coerce.date(),
+      updatedDate: z.coerce.date().optional(),
+      author: z.string(),
+      track: z.enum(['partner', 'editorial']),
+      /**
+       * Se c'è, la pagina dichiara il contenuto sponsorizzato e i link al
+       * partner escono con rel="sponsored". Vale la stessa regola che Ilaria
+       * aveva posto per il magazine: chi paga va detto.
+       */
+      sponsor: z
+        .object({ name: z.string(), url: z.string().url().optional() })
+        .nullable()
+        .default(null),
+      heroImage: image().optional(),
+      fastFacts: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
+      /** i riquadri laterali del magazine, testo originale */
+      boxes: z.array(z.object({ titolo: z.string(), testo: z.string() })).default([]),
+      faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
+      related: z.array(z.object({ label: z.string(), href: z.string() })).default([]),
+      /** da dove viene il testo, per il credito in pagina */
+      source: z.string().optional(),
+    }),
+});
+
 const faq = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/faq' }),
   schema: z.object({
@@ -213,5 +268,6 @@ export const collections = {
   territori,
   strutture,
   itinerari,
+  articoli,
   faq,
 };

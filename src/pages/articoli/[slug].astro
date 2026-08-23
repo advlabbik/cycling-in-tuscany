@@ -1,0 +1,220 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { bgUrl } from '../../lib/images';
+
+/**
+ * Pagina di un articolo del magazine.
+ *
+ * La regola di questa pagina: il testo del magazine non si tocca. Il corpo è il
+ * markdown del file, così com'è uscito dai documenti di Luciano. Tutto ciò che
+ * serve a farsi trovare — risposta breve in testa, fatti, FAQ, JSON-LD — è
+ * costruito INTORNO al testo, dal frontmatter. Se un giorno serve ottimizzare
+ * di più, si aggiunge frontmatter, non si riscrive la prosa.
+ */
+export async function getStaticPaths() {
+  const articoli = await getCollection('articoli');
+  return articoli.map((articolo) => ({
+    params: { slug: articolo.id.replace(/\.md$/, '') },
+    props: { articolo },
+  }));
+}
+
+const { articolo } = Astro.props;
+const { Content } = await render(articolo);
+const a = articolo.data;
+
+const heroImage = await bgUrl(a.heroImage, 1600);
+const base = Astro.site ?? Astro.url.origin;
+const pageUrl = new URL(Astro.url.pathname, base).href;
+const abs = (path: string) => new URL(path, base).href;
+
+const dateLabel = a.pubDate.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+
+/* Article + FAQPage + BreadcrumbList. Il FAQPage si emette solo se le domande
+   ci sono davvero: uno schema con mainEntity vuoto è un invito a essere
+   ignorati dai crawler, non una formalità innocua. */
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: a.title,
+    description: a.description,
+    inLanguage: 'en',
+    datePublished: a.pubDate.toISOString(),
+    ...(a.updatedDate ? { dateModified: a.updatedDate.toISOString() } : {}),
+    author: { '@type': 'Person', name: a.author },
+    publisher: { '@type': 'Organization', name: 'Tuscany Trail 365', url: abs('/') },
+    mainEntityOfPage: pageUrl,
+    about: a.area,
+    ...(heroImage ? { image: abs(heroImage) } : {}),
+    ...(a.sponsor ? { sponsor: { '@type': 'Organization', name: a.sponsor.name } } : {}),
+  },
+  ...(a.faq.length
+    ? [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: a.faq.map((item) => ({
+            '@type': 'Question',
+            name: item.q,
+            acceptedAnswer: { '@type': 'Answer', text: item.a },
+          })),
+        },
+      ]
+    : []),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: abs('/') },
+      { '@type': 'ListItem', position: 2, name: 'Journal', item: abs('/articoli/') },
+      { '@type': 'ListItem', position: 3, name: a.title, item: pageUrl },
+    ],
+  },
+];
+---
+
+<Base title={`${a.title} — Tuscany Trail 365`} description={a.description} schema={schema} ogImage={a.heroImage}>
+  <div
+    class="hero"
+    style={heroImage
+      ? `background-image:linear-gradient(rgba(20,10,15,.55),rgba(20,10,15,.8)),url(${heroImage});background-size:cover;background-position:center`
+      : undefined}
+  >
+    <div class="wrap">
+      <nav class="art-crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a> <span aria-hidden="true">/</span> <a href="/articoli/">Journal</a>
+      </nav>
+      {a.sponsor && <span class="badge-verif">Sponsored content · {a.sponsor.name}</span>}
+      <div class="kick">{a.area}</div>
+      <h1>{a.title}</h1>
+      <p class="lead">{a.answer}</p>
+      <p class="art-meta">
+        By {a.author} · <time datetime={a.pubDate.toISOString()}>{dateLabel}</time>
+        {a.source && <> · {a.source}</>}
+      </p>
+    </div>
+  </div>
+
+  {a.fastFacts.length > 0 && (
+    <section>
+      <div class="wrap">
+        <h2 class="sec">{a.question}</h2>
+        <p class="sub">The short version, before the story.</p>
+        <dl class="art-facts">
+          {a.fastFacts.map((fact) => (
+            <div class="art-fact">
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  )}
+
+  <section style="background:#fff">
+    <div class="wrap">
+      <article class="editorial article-body">
+        <Content />
+      </article>
+
+      {a.sponsor && (
+        <p class="art-disclosure">
+          This article was produced as part of the Cycling in Tuscany magazine, in agreement with {a.sponsor.name}.
+          {a.sponsor.url && (
+            <>
+              {' '}Visit them at{' '}
+              <a href={a.sponsor.url} target="_blank" rel="sponsored noopener">{a.sponsor.name}</a>.
+            </>
+          )}
+        </p>
+      )}
+    </div>
+  </section>
+
+  {a.boxes.length > 0 && (
+    <section>
+      <div class="wrap">
+        <h2 class="sec">Worth knowing</h2>
+        <p class="sub">The sidebars from the magazine, kept as they were written.</p>
+        <div class="grid g2">
+          {a.boxes.map((box) => (
+            <div class="card">
+              <h3>{box.titolo}</h3>
+              <p>{box.testo}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {a.faq.length > 0 && (
+    <section style="background:#fff">
+      <div class="wrap">
+        <h2 class="sec">Questions riders ask</h2>
+        <p class="sub">Answered from this article, so you don't have to read it all to plan.</p>
+        <div class="grid">
+          {a.faq.map((item) => (
+            <div class="card">
+              <h3>{item.q}</h3>
+              <p>{item.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section>
+    <div class="wrap">
+      {a.related.length > 0 && (
+        <>
+          <h2 class="sec">Keep reading</h2>
+          <div class="chips" style="margin-bottom:34px">
+            {a.related.map((link) => (
+              <a class="chip" href={link.href}>{link.label} →</a>
+            ))}
+          </div>
+        </>
+      )}
+
+      <div class="cta-band">
+        <div>
+          <h3>Ride this, don't just read it</h3>
+          <p>Every route on this site is designed, ridden and verified by the people behind the Tuscany Trail.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn gold" href="/itinerari/">See the verified routes →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  /* ===== ARTICOLI ===== */
+  .art-crumbs{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:16px}
+  .art-crumbs a{color:rgba(255,255,255,.75);text-decoration:none}
+  .art-crumbs a:hover{color:#fff;text-decoration:underline}
+  .art-crumbs span{margin:0 7px;opacity:.5}
+  .art-meta{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.06em;color:rgba(255,255,255,.6);margin:18px 0 0}
+
+  .art-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin:0}
+  .art-fact{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow-sm)}
+  .art-fact dt{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  .art-fact dd{margin:0;font-size:.98rem;font-weight:500;line-height:1.4}
+
+  /* Il corpo dell'articolo è prosa lunga, non una card: misura piu' stretta e
+     interlinea piu' alta delle .editorial brevi delle schede territorio. */
+  .editorial.article-body{max-width:46rem;padding:34px 38px}
+  .editorial.article-body p{font-size:1.05rem;line-height:1.72;color:#333;margin:0 0 1.15em}
+  .editorial.article-body h2{font-size:1.5rem;line-height:1.22;margin:1.9em 0 .55em}
+  .editorial.article-body h2:first-child{margin-top:0}
+  .editorial.article-body a{text-decoration-thickness:1px;text-underline-offset:2px}
+  @media (max-width:640px){.editorial.article-body{padding:24px 22px}}
+
+  .art-disclosure{max-width:46rem;margin:18px 0 0;padding:13px 17px;background:var(--cream-light);border:1px solid var(--border);border-radius:12px;font-size:.85rem;color:var(--muted)}
+</style>

@@ -1,0 +1,81 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+/**
+ * L'indice del journal. Ordinato per data, piu' recente in cima: il contenuto
+ * fresco e' quello che gli assistenti AI vanno a prendere, quindi la pagina
+ * deve mostrare per prima l'ultima uscita, non la piu' importante.
+ */
+const articoli = (await getCollection('articoli')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const base = Astro.site ?? Astro.url.origin;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Journal — Tuscany Trail 365',
+  description: 'Stories and practical guides to riding Tuscany, from the people who ride it all year round.',
+  inLanguage: 'en',
+  hasPart: articoli.map((articolo) => ({
+    '@type': 'Article',
+    headline: articolo.data.title,
+    description: articolo.data.description,
+    datePublished: articolo.data.pubDate.toISOString(),
+    url: new URL(`/articoli/${articolo.id.replace(/\.md$/, '')}/`, base).href,
+  })),
+};
+---
+
+<Base
+  title="Journal — Tuscany Trail 365"
+  description="Stories and practical guides to riding Tuscany, written by the people who ride it all year round and organise the world's largest bikepacking event."
+  schema={schema}
+>
+  <div class="hero">
+    <div class="wrap">
+      <a class="badge-verif" href="https://www.tuscanytrail.it" target="_blank" rel="noopener" style="text-decoration:none">✔ Written by the people behind the Tuscany Trail →</a>
+      <div class="kick">Journal</div>
+      <h1>We don't write about Tuscany. We ride it, then write it down.</h1>
+      <p class="lead">
+        Places, estates and roads we know first-hand, because we ride here all year and bring
+        thousands of people through every May. No stock photos, no rewritten guidebooks.
+      </p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="grid g2">
+        {articoli.map((articolo) => {
+          const a = articolo.data;
+          const href = `/articoli/${articolo.id.replace(/\.md$/, '')}/`;
+          return (
+            <a class="artcard" href={href}>
+              <span class="artcard-area">{a.area}</span>
+              <b>{a.title}</b>
+              <span class="artcard-answer">{a.answer}</span>
+              <span class="artcard-meta">
+                <time datetime={a.pubDate.toISOString()}>
+                  {a.pubDate.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </time>
+                {a.sponsor && <span class="artcard-spon">Sponsored · {a.sponsor.name}</span>}
+              </span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .artcard{display:flex;flex-direction:column;gap:9px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow-sm);text-decoration:none;color:inherit;transition:transform .25s cubic-bezier(.25,1,.5,1),box-shadow .25s}
+  .artcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+  .artcard-area{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .artcard b{font-family:var(--font-display);font-size:1.32rem;line-height:1.18}
+  .artcard-answer{font-size:.92rem;color:#4a4a4a;line-height:1.6}
+  .artcard-meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:.76rem;color:var(--muted);margin-top:4px}
+  .artcard-spon{background:var(--cream);border:1px solid var(--border);border-radius:999px;padding:3px 10px}
+</style>
