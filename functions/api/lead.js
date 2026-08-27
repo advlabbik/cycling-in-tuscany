@@ -3,13 +3,15 @@
  *
  * Dal 27/8/2026 (decisione di Andrea) IL FILE VIAGGIA NELL'EMAIL: niente piu'
  * download in pagina. Il form manda { email, consent, itinerary, name, gpx,
- * rwgps, lang, area, type, diff }; qui si fa, in ordine:
- *   1. iscrizione/aggiornamento del contatto su Brevo con gli attributi di
- *      provenienza (il tagging degli intenti del doc TT365) — in lista SOLO
- *      col consenso, chi non spunta riceve il GPX ma resta fuori dal nurture;
+ * lang, area, type, diff }; qui si fa, in ordine:
+ *   1. iscrizione del contatto su Brevo con gli attributi di provenienza (il
+ *      tagging degli intenti del doc TT365). IL CONSENSO E' OBBLIGATORIO
+ *      (Andrea, 27/8): senza spunta non parte niente e si risponde errore.
+ *      Lo scambio e' dichiarato in pagina — il GPX in cambio dell'iscrizione —
+ *      e la spunta resta vuota di default, mai pre-selezionata;
  *   2. email transazionale da hello@tuscanytrail.it col LINK DI DOWNLOAD del
- *      GPX in evidenza, piu' il link Ride with GPS (lo sponsor resta
- *      visibile, ma DENTRO l'email — il gate non si aggira).
+ *      GPX in evidenza. NIENTE Ride with GPS: su TT365 non e' sponsor
+ *      (Andrea, 27/8), quindi non si cita ne' in pagina ne' nell'email.
  *      NB: l'allegato .gpx e' stato provato il 27/8 e Brevo lo RIFIUTA — gli
  *      attachment (url o content) accettano solo una whitelist di estensioni
  *      e .gpx non c'e'; rinominarlo .xml romperebbe l'import sui ciclocomputer.
@@ -43,6 +45,12 @@ export async function onRequestPost(context) {
   const email = String(body.email || '').trim();
   if (!email.includes('@')) return json({ ok: false, error: 'invalid email' }, 400);
 
+  /* Senza consenso non si fa NIENTE — ne' contatto ne' file. Il controllo sta
+     anche qui e non solo nel `required` del form, perche' l'HTML si aggira in
+     tre secondi con la console aperta. */
+  const consent = Boolean(body.consent);
+  if (!consent) return json({ ok: false, error: 'consent required' }, 400);
+
   /* Il path del GPX arriva dal client ma NON ci si fida: si accetta solo un
      file dentro /gpx/ del NOSTRO host, ricostruito qui. Senza questo controllo
      chiunque potrebbe farci spedire allegati arbitrari a nome nostro. */
@@ -57,19 +65,18 @@ export async function onRequestPost(context) {
   const routePage = /^\/itinerari\/[A-Za-z0-9._/-]*$/.test(String(body.itinerary || ''))
     ? origin + String(body.itinerary)
     : origin + '/itinerari/';
-  const rwgps = /^https:\/\/ridewithgps\.com\//.test(String(body.rwgps || '')) ? String(body.rwgps) : '';
 
   const key = context.env.BREVO_API_KEY;
   if (!key) return json({ ok: true, demo: true });
 
   // 1) contatto su Brevo — se fallisce ci si ferma: il lead E' il valore
-  const consent = Boolean(body.consent);
   const listId = Number(context.env.BREVO_LIST_ID);
   const payload = {
     email,
     updateEnabled: true,
-    // in lista solo col consenso, e solo se BREVO_LIST_ID e' un numero valido
-    ...(consent && Number.isFinite(listId) && listId > 0 ? { listIds: [listId] } : {}),
+    // il consenso e' gia' obbligatorio piu' sopra: qui resta solo il controllo
+    // che BREVO_LIST_ID sia un numero valido
+    ...(Number.isFinite(listId) && listId > 0 ? { listIds: [listId] } : {}),
     attributes: {
       CIT_ITINERARY: String(body.itinerary || ''),
       CIT_CONSENT: consent,
@@ -110,7 +117,6 @@ export async function onRequestPost(context) {
           `<p>Thanks for riding with us — here's the GPX of <b>${esc(routeName)}</b>, ready to load on your bike computer.</p>` +
           `<p style="margin:24px 0"><a href="${gpxUrl}" style="background:#f5a623;color:#1a0e12;font-weight:700;text-decoration:none;padding:14px 28px;border-radius:999px;display:inline-block">Download the GPX &darr;</a></p>` +
           `<p style="color:#666;font-size:13px">Button not working? Copy this link — ${gpxUrl}</p>` +
-          (rwgps ? `<p>Prefer riding with the Ride with GPS app? <a href="${esc(rwgps)}">Open this route on Ride with GPS</a>.</p>` : '') +
           `<p>Planning where to sleep along the loop? Every stay on the map of <a href="${routePage}">the route page</a> is bookable.</p>` +
           `<p>Ride on,<br>The Tuscany Trail 365 team</p>` +
           `</div>`,

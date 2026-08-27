@@ -157,7 +157,7 @@ const schema = {
         <div class="pack-dl-bar-right">
           {/* method="post": se lo script muore prima di agganciare il submit,
               il browser NON deve fare un GET con l'email in chiaro nell'URL */}
-          <form id="gpx-gate" class="it-gate" method="post" novalidate data-area={d.area} data-type={d.type} data-diff={d.diff} data-gpx={d.gpx} data-name={d.name} data-rwgps={d.rwgpsUrl || ''}>
+          <form id="gpx-gate" class="it-gate" method="post" novalidate data-area={d.area} data-type={d.type} data-diff={d.diff} data-gpx={d.gpx} data-name={d.name}>
             <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;overflow:hidden" />
             <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address" />
             <button type="submit" class="pack-dl-btn" style="border:0;cursor:pointer">
@@ -170,10 +170,14 @@ const schema = {
               </span>
               <span id="gpx-btn-label">Get the GPX</span>
             </button>
+            {/* Consenso OBBLIGATORIO (Andrea, 27/8): il GPX si ottiene
+                iscrivendosi, e lo scambio va detto qui in chiaro invece di
+                farlo passare per una spunta facoltativa. Mai pre-selezionata. */}
             <label class="it-consent">
-              <input type="checkbox" name="consent" />
-              <span>Send me new verified routes and Tuscany riding tips (a few emails a year, no spam)</span>
+              <input type="checkbox" name="consent" required />
+              <span>Yes, email me the GPX and keep me posted with new verified routes and Tuscany riding tips — a few emails a year, unsubscribe any time.</span>
             </label>
+            <p id="gpx-consent-err" class="it-err" hidden>Tick the box above and the GPX is yours — it's how we send it.</p>
             <p id="gpx-err" class="it-err" hidden>Something went wrong on our side — give it another try in a minute.</p>
           </form>
           <div id="gpx-sent" class="it-sent" hidden>
@@ -206,6 +210,7 @@ const schema = {
      CSS bundlato — lo stato nascosto va imposto, sennò si vedono form e
      conferma insieme */
   .it-gate[hidden],.it-sent[hidden],.it-err[hidden]{display:none!important}
+  .it-gate:has(input[name='consent']:not(:checked)) .pack-dl-btn{opacity:.55}
   .it-rwgps{margin:18px 0 0;font-size:.88rem;color:var(--muted)}
 </style>
 
@@ -232,6 +237,7 @@ const schema = {
     const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
     const btnLabel = document.getElementById('gpx-btn-label');
     const err = document.getElementById('gpx-err');
+    const consentErr = document.getElementById('gpx-consent-err');
     const last = store.get('cit-gpx-email');
     if (last && !emailInput.value) emailInput.value = last;
 
@@ -240,6 +246,10 @@ const schema = {
       const email = emailInput.value.trim();
       if (!email || !email.includes('@')) return;
       const consent = (form.elements.namedItem('consent') as HTMLInputElement).checked;
+      /* senza spunta non si chiama nemmeno il server: il file si ottiene
+         iscrivendosi, e chi non spunta merita di sapere perche' */
+      consentErr.hidden = consent;
+      if (!consent) return;
       const meta = form.dataset;
       err.hidden = true;
       btn.disabled = true;
@@ -254,7 +264,7 @@ const schema = {
             website: (form.elements.namedItem('website') as HTMLInputElement)?.value || '',
             itinerary: location.pathname, lang: 'en',
             area: meta.area, type: meta.type, diff: meta.diff,
-            gpx: meta.gpx, name: meta.name, rwgps: meta.rwgps,
+            gpx: meta.gpx, name: meta.name,
           }),
         });
         ok = res.ok && (await res.json()).ok === true;

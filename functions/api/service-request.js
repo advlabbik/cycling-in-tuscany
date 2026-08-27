@@ -52,9 +52,13 @@ export async function onRequestPost(context) {
 
   const email = String(body.email || '').trim();
   if (!email.includes('@')) return json({ ok: false, error: 'invalid email' }, 400);
+  /* Consenso obbligatorio (Andrea, 27/8), come sul gate GPX. Il controllo sta
+     anche qui e non solo nel `required` del form: l'HTML si aggira in tre
+     secondi con la console aperta. */
+  const consent = Boolean(body.consent);
+  if (!consent) return json({ ok: false, error: 'consent required' }, 400);
   const service = body.service === 'tour' ? 'tour' : 'rental';
   const name = clip(body.name, 80) || 'rider';
-  const consent = Boolean(body.consent);
 
   // i campi variano tra i due form; si tengono solo quelli attesi, accorciati
   const fields =
@@ -126,7 +130,8 @@ export async function onRequestPost(context) {
       body: JSON.stringify({
         email,
         updateEnabled: true,
-        ...(consent && Number.isFinite(listId) && listId > 0 ? { listIds: [listId] } : {}),
+        // il consenso e' gia' obbligatorio piu' sopra
+        ...(Number.isFinite(listId) && listId > 0 ? { listIds: [listId] } : {}),
         attributes: { CIT_SERVICE: service, CIT_SERVICE_INFO: info.slice(0, 500), CIT_CONSENT: consent },
       }),
     });

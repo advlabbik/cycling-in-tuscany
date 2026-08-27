@@ -79,9 +79,11 @@ const schema = {
             </div>
             <label>Pickup area<input type="text" name="area" placeholder="e.g. Campiglia Marittima, Punta Ala…" /></label>
             <label>Anything else?<textarea name="notes" rows="3" placeholder="Frame size, pedals, kids' bikes…"></textarea></label>
+            {/* Consenso OBBLIGATORIO (Andrea, 27/8), come sul gate GPX: si
+                risponde per email, quindi l'email ce la si deve poter mandare. */}
             <label class="sv-consent">
-              <input type="checkbox" name="consent" />
-              <span>Send me new verified routes and Tuscany riding tips (a few emails a year, no spam)</span>
+              <input type="checkbox" name="consent" required />
+              <span>Yes, email me about my request and keep me posted with new verified routes and Tuscany riding tips — a few emails a year, unsubscribe any time.</span>
             </label>
             <button type="submit" class="btn gold">Check availability for me →</button>
             <p class="sv-error" hidden>Something went wrong on our side. Please try again, or write to <a href="mailto:hello@tuscanytrail.it">hello@tuscanytrail.it</a>.</p>
@@ -127,8 +129,8 @@ const schema = {
             </div>
             <label>The trip you have in mind<textarea name="notes" rows="4" placeholder="Where you'd like to ride, how hard, what matters to you — food, sea, quiet roads…"></textarea></label>
             <label class="sv-consent">
-              <input type="checkbox" name="consent" />
-              <span>Send me new verified routes and Tuscany riding tips (a few emails a year, no spam)</span>
+              <input type="checkbox" name="consent" required />
+              <span>Yes, email me about my request and keep me posted with new verified routes and Tuscany riding tips — a few emails a year, unsubscribe any time.</span>
             </label>
             <button type="submit" class="btn gold">Tell us your trip →</button>
             <p class="sv-error" hidden>Something went wrong on our side. Please try again, or write to <a href="mailto:hello@tuscanytrail.it">hello@tuscanytrail.it</a>.</p>
