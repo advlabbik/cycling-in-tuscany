@@ -229,8 +229,8 @@ Build command `npm run build`, output `dist`. **Vale la pena ricontrollarli ogni
 | Host | Cosa fa |
 |---|---|
 | `365.tuscanytrail.it` | **Il sito.** È l'unico host che serve pagine, ed è il valore di `site` in `astro.config.mjs` |
-| `cyclingintuscany.tuscanytrail.it` | 301 verso `365`, path conservato — è il vecchio host, in giro ci sono ancora link |
-| `cyclingintuscany.com` e `www.` | 301 verso `365`, path conservato (regola nella zona `cyclingintuscany.com`) |
+| `cyclingintuscany.tuscanytrail.it` | Il vecchio host. **Serve ancora il sito** — deve diventare un 301 verso `365`, vedi sotto |
+| `cyclingintuscany.com` e `www.` | 301, ma verso il **vecchio** host: da correggere, punta a `365` (regola nella zona `cyclingintuscany.com`) |
 | `cycling-in-tuscany-astro.pages.dev` | Lo stesso build, ma il CMS non ci fa il login. Non si usa e non si dà in giro |
 
 Il cutover del 27/8/2026 ha spostato il sito da `cyclingintuscany.tuscanytrail.it` a `365.tuscanytrail.it`: il nome dice cosa è il sito, cioè la costola che tiene vivo il Tuscany Trail negli undici mesi fuori evento. Cambiare host tocca **quattro** posti oltre alla repo, e saltarne uno non dà errore, dà un pezzo rotto:
@@ -239,6 +239,13 @@ Il cutover del 27/8/2026 ha spostato il sito da `cyclingintuscany.tuscanytrail.i
 2. il record DNS nella zona `tuscanytrail.it` — `CNAME` proxato verso `cycling-in-tuscany-astro.pages.dev`;
 3. gli `ALLOWED_DOMAINS` del worker del CMS (qui sotto), altrimenti `/admin/` si apre e il login muore;
 4. il flusso di dati GA4 `G-FELFB9W37W`, che ha ancora l'URL vecchio.
+
+**Ancora da fare al 27/8/2026 — due regole di redirect, tutte e due dalla dashboard.** Il token API risponde `10000: Authentication error` su ogni scrittura ai ruleset, come su Pages, quindi non si automatizzano:
+
+- *Zona `tuscanytrail.it`* → Rules → Redirect Rules → una regola nuova: quando `Hostname` è `cyclingintuscany.tuscanytrail.it`, redirect **dinamico** 301 a `concat("https://365.tuscanytrail.it", http.request.uri.path)`, «preserve query string» acceso. **L'espressione deve nominare quell'unico hostname**: allargarla alla zona spegnerebbe anche `www.tuscanytrail.it`, che è il sito del Tuscany Trail.
+- *Zona `cyclingintuscany.com`* → la regola esiste già e manda al vecchio host: basta cambiare la destinazione in `365.tuscanytrail.it`, altrimenti chi arriva da lì fa due salti.
+
+Finché non ci sono, il vecchio terzo livello continua a servire il sito. Non è rotto — il canonical, l'og:url e la sitemap dicono già `365` da entrambi gli host, quindi Google consolida lì — ma sono due URL per la stessa pagina.
 
 ## Autenticazione del CMS
 
