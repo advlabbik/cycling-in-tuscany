@@ -108,8 +108,17 @@ la lista completa degli argomenti e' nel commit "Marker stabili su mobile...").
 
 Prese dal README/CLAUDE.md di `advlabbik/tg-guida`, valgono anche qui:
 
-- **Sempre branch dedicato + merge**, mai commit diretti su `main` (che qui è
-  produzione via Cloudflare Pages). Ogni branch ha il suo preview automatico.
+- **Mai mergiare su `main` senza review** (regola di Francesco, 27/8/2026, che
+  sostituisce la precedente "branch + merge"). Qui `main` **è** produzione via
+  Cloudflare Pages: il merge pubblica, e un errore lo vedono i clienti prima di
+  noi. Si sta sul branch — che ha il suo preview automatico —, si fa la review,
+  e **solo quando si è sicuri al 100% si va su main**. Il merge lo decide una
+  persona: chi porta il lavoro porta il branch e la preview, e si ferma lì.
+- **Il lavoro tecnico si documenta in una issue GitHub, non su Slack** (Francesco,
+  27/8/2026). Su Slack va solo un alert di due righe col link alla issue.
+  Scrivere i dettagli nel messaggio "raddoppia tutto": la stessa informazione
+  finisce in due posti e nessuno dei due resta la fonte vera. La issue invece
+  resta agganciata al codice, cercabile e collegabile ai commit.
 - **Tag di ritorno prima di ogni pubblicazione grossa** (`v-...`): il rollback
   è un force-push della tag vecchia su main, un comando solo.
 - **Verificare in locale prima di pushare**: main non è l'ambiente di anteprima.
@@ -283,6 +292,12 @@ Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttam
 **Il consenso è OBBLIGATORIO su tutti e tre i form** (decisione di Andrea, 27/8/2026 — prima era facoltativo e chi non spuntava riceveva comunque il file): senza spunta non parte niente, né il contatto né il GPX né la richiesta di servizio, e la function risponde `consent required`. La spunta è `required` nel form **e** ricontrollata lato server nelle due function, perché il `required` dell'HTML si aggira in tre secondi con la console aperta. Il testo della checkbox dichiara lo scambio invece di far passare l'iscrizione per una cortesia facoltativa, non è mai pre-selezionata, e l'unsubscribe sta in ogni email. La privacy policy descrive i tre form e la base giuridica (consenso, art. 6(1)(a)).
 
 **Non c'è double opt-in.** La function scrive con l'id lista dentro la chiamata, quindi il contatto entra subito: il documento del consenso è la spunta sul sito, non una mail di conferma. Se un giorno si vuole il DOI va cambiata la chiamata, non basta una impostazione in Brevo.
+
+### Dove gira il codice, e cosa NON è protetto
+
+Domanda che è già venuta una volta (Francesco, 27/8/2026) e che il nome dei file rende facile sbagliare: **le Pages Functions in `functions/api/` SONO Workers.** Girano sul runtime Cloudflare lato server, non nel browser. La `BREVO_API_KEY` sta nelle env di Pages, il client non la vede mai e non c'è una sola chiamata a `api.brevo.com` dentro `src/` — il browser fa solo un `POST` al nostro endpoint. Su questo fronte non c'è niente di esposto.
+
+**Quello che manca davvero è la protezione dell'endpoint.** `/api/lead` e `/api/service-request` sono pubblici e hanno solo un honeypot, che ferma i bot pigri e nient'altro. Chi conosce l'endpoint può chiamarlo a ripetizione con indirizzi altrui e farci spedire email a suo piacimento **a nome nostro** — reputazione del dominio bruciata, quota Brevo consumata, lista inquinata di contatti falsi. **Turnstile era previsto** dal documento di progetto ("antispam obbligatorio: campo esca invisibile più Cloudflare Turnstile, nativo su Pages e gratuito") e non è mai stato messo. Va aggiunto prima di spingere traffico sui form, insieme a un limite per IP.
 
 **Il mittente non è una proprietà della lista.** In Brevo le liste non hanno un mittente: ce l'hanno le campagne, le automazioni e il DOI. Alla data di scrittura sulla lista 29 **non è mai stato inviato niente** — le tre campagne che compaiono nelle sue statistiche sono campagne Tuscany Trail e TGE dove una persona della lista si è disiscritta, `sent: 0` su tutte e tre — e non esiste nessuna automazione. `hello@tuscanytrail.it` è quindi la scelta registrata in `sender_funnel_map` sul DB marketing, da applicare alla prima campagna o automazione che nascerà.
 
