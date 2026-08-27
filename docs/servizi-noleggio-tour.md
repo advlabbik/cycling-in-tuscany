@@ -13,9 +13,11 @@ servire davvero tramite le strutture ufficiali.
    - **notifica interna** a `SERVICE_NOTIFY_EMAIL` (default `collab@tuscanytrail.it`),
      con reply-to del richiedente → si risponde direttamente col client di posta;
    - **conferma automatica** al richiedente ("verifichiamo coi partner, risposta
-     entro 2 giorni lavorativi"), spedita da `365@tuscanytrail.it` ma con
-     reply-to sulla casella di lavoro, così una risposta del cliente atterra
-     dove sta già la richiesta;
+     entro 2 giorni lavorativi"), spedita da `365@tuscanytrail.it` con reply-to
+     sullo stesso indirizzo: `365@` inoltra a `collab@`, quindi la risposta del
+     cliente atterra dove sta già la richiesta e il cliente vede un solo
+     recapito. La **notifica interna** resta su `collab@`: è posta verso di noi,
+     non verso il cliente;
    - **tagging del contatto** su Brevo (`CIT_SERVICE`, `CIT_SERVICE_INFO`), best-effort.
 3. **La seconda email è SEMPRE manuale.** Prima si sentono davvero i partner,
    poi si risponde. Mai un no automatico — il richiedente ha lasciato dati veri
@@ -33,7 +35,9 @@ servire davvero tramite le strutture ufficiali.
       fatto quando il mittente era ancora `hello@` (id 9).
 - [x] `collab@tuscanytrail.it` riceve — verificato 27/8 col collaudo qui sotto:
       notifica interna E conferma automatica arrivate in inbox (non spam),
-      entrambe spedite da hello@ via Brevo (mittente di allora).
+      entrambe spedite da hello@ via Brevo (mittente di allora). Dopo lo swap a
+      `365@` (27/8) è stata rifatta la prova sulla parte cambiata: invio da
+      `365@` a `365@`, esito `delivered` sui log Brevo — vedi README.
 - [x] Costante `SITE` in `functions/api/service-request.js` aggiornata a
       `365.tuscanytrail.it` al momento del merge (27/8, dopo il cutover).
       L'indirizzo mittente non si tocca, sta sul dominio radice apposta.
