@@ -7,9 +7,13 @@
  *   1. iscrizione/aggiornamento del contatto su Brevo con gli attributi di
  *      provenienza (il tagging degli intenti del doc TT365) — in lista SOLO
  *      col consenso, chi non spunta riceve il GPX ma resta fuori dal nurture;
- *   2. email transazionale da hello@tuscanytrail.it col GPX IN ALLEGATO,
- *      piu' un link di riserva al file e il link Ride with GPS (lo sponsor
- *      resta visibile, ma DENTRO l'email — il gate non si aggira).
+ *   2. email transazionale da hello@tuscanytrail.it col LINK DI DOWNLOAD del
+ *      GPX in evidenza, piu' il link Ride with GPS (lo sponsor resta
+ *      visibile, ma DENTRO l'email — il gate non si aggira).
+ *      NB: l'allegato .gpx e' stato provato il 28/8 e Brevo lo RIFIUTA — gli
+ *      attachment (url o content) accettano solo una whitelist di estensioni
+ *      e .gpx non c'e'; rinominarlo .xml romperebbe l'import sui ciclocomputer.
+ *      Quindi il file viaggia come link, che era l'alternativa gia' approvata.
  * Se una delle due chiamate fallisce si risponde errore: il form lo dice e
  * l'utente riprova — mai perdere un lead o una consegna in silenzio.
  *
@@ -48,7 +52,6 @@ export async function onRequestPost(context) {
   }
   const origin = new URL(context.request.url).origin;
   const gpxUrl = origin + gpxPath;
-  const gpxFile = gpxPath.slice(gpxPath.lastIndexOf('/') + 1);
 
   const routeName = clip(body.name, 80) || 'your route';
   const routePage = /^\/itinerari\/[A-Za-z0-9._/-]*$/.test(String(body.itinerary || ''))
@@ -92,7 +95,7 @@ export async function onRequestPost(context) {
     return json({ ok: false, error: 'brevo unreachable' });
   }
 
-  // 2) email col GPX allegato — se fallisce il form lo dice, niente promesse a vuoto
+  // 2) email col link di download — se fallisce il form lo dice, niente promesse a vuoto
   try {
     const res = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
@@ -102,11 +105,11 @@ export async function onRequestPost(context) {
         to: [{ email }],
         replyTo: { email: REPLY_TO },
         subject: `Your GPX — ${routeName}`,
-        attachment: [{ url: gpxUrl, name: gpxFile }],
         htmlContent:
           `<div style="font-family:sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">` +
-          `<p>Thanks for riding with us — attached is the GPX of <b>${esc(routeName)}</b>, ready to load on your bike computer.</p>` +
-          `<p>If the attachment doesn't show up, <a href="${gpxUrl}">download the file from here</a>.</p>` +
+          `<p>Thanks for riding with us — here's the GPX of <b>${esc(routeName)}</b>, ready to load on your bike computer.</p>` +
+          `<p style="margin:24px 0"><a href="${gpxUrl}" style="background:#f5a623;color:#1a0e12;font-weight:700;text-decoration:none;padding:14px 28px;border-radius:999px;display:inline-block">Download the GPX &darr;</a></p>` +
+          `<p style="color:#666;font-size:13px">Button not working? Copy this link — ${gpxUrl}</p>` +
           (rwgps ? `<p>Prefer riding with the Ride with GPS app? <a href="${esc(rwgps)}">Open this route on Ride with GPS</a>.</p>` : '') +
           `<p>Planning where to sleep along the loop? Every stay on the map of <a href="${routePage}">the route page</a> is bookable.</p>` +
           `<p>Ride on,<br>The Tuscany Trail 365 team</p>` +
