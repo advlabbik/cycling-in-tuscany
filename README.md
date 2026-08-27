@@ -77,19 +77,6 @@ solo sul Tuscany Trail; se funziona si estende a tutti gli eventi. Prima dello
 sviluppo servono codici sconto, link shop e testi IT/EN. Nota gemella nel
 README di tg-guida.
 
-**Form richieste noleggio e tour — test della domanda (Andrea, 18/8/2026).**
-Due form curati (noleggio bici e tour/viaggio) per raccogliere richieste e
-rispondere con un'email di cortesia, gestendole a mano: serve a **misurare
-quanto è calda la domanda prima di avere il servizio**, e con quei numeri
-trattare poi con un partner erogatore dove marginiamo. Fattibile con lo stack
-attuale in 1-2 giorni: endpoint gemello di `functions/api/lead.js`, email
-transazionale Brevo per la risposta automatica e per la notifica a `collab@`,
-Turnstile + honeypot contro i bot, consenso come nel gate GPX. Attenzione a non
-calpestare i partner (PuntAla ha già noleggio interno: sulle sue pagine il
-pulsante deve portare a lei) e a rispettare un tempo di risposta dichiarato.
-Campi, misure e rischi nel doc Notion "TT365 — Richieste noleggio e tour: test
-della domanda": https://app.notion.com/p/3c0f88ad0121818ea1a2fbb686aa72e9
-
 **Email post-acquisto Tuscany Trail — "due piccioni con una fava" (Andrea, 14/8/2026).**
 Nell'email di avvenuto acquisto TT il link prenotazioni porta alla mappa
 **Stay22 centrata sulla fiera di Venturina** (il quartier generale dell'evento),
@@ -303,6 +290,10 @@ Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttam
 **Nessuno è ancora passato di qui.** Al 27/8/2026 non esiste un solo contatto con l'attributo `CIT_ITINERARY`: i ~1.220 della lista vengono da una raccolta precedente, l'ultimo entrato il 19 giugno. L'impianto funziona, non è ancora stato usato.
 
 **Le chiavi non sono nella repo** — `BREVO_API_KEY` e `BREVO_LIST_ID` stanno nelle env **production** di Cloudflare Pages, come secret. Sulle **preview non ci sono**, quindi lì la function risponde `{ok: true, demo: true}` senza chiamare Brevo: un test su un deploy di anteprima non prova niente. L'account ha l'allowlist IP: le chiamate API manuali vanno fatte dal VPS Hetzner, non dal Mac.
+
+## Il form noleggio e tour (live dal 27/8/2026)
+
+Il test di domanda deciso da Andrea il 18/8: due form su `/services/` (noleggio bici e tour su misura), gestiti da `functions/api/service-request.js` — notifica interna a `collab@tuscanytrail.it` con reply-to del richiedente, conferma automatica da `hello@tuscanytrail.it`, tagging Brevo best-effort (`CIT_SERVICE`, `CIT_SERVICE_INFO`). **La seconda risposta è sempre manuale**: prima si sentono i partner, poi si risponde — mai un no automatico, e le richieste in zona Punta Ala si girano a PuntAla Camp che il noleggio ce l'ha già. Template delle risposte, regole, checklist di setup e cosa misurare in [`docs/servizi-noleggio-tour.md`](docs/servizi-noleggio-tour.md); contesto business nel doc Notion "TT365 — Richieste noleggio e tour: test della domanda": https://app.notion.com/p/3c0f88ad0121818ea1a2fbb686aa72e9
 
 ## Decisioni ecosistema — 16 agosto 2026
 
