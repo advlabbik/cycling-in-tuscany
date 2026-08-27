@@ -266,11 +266,34 @@ Due cose da sapere quando il login smette di funzionare:
 
 2. La org GitHub `advlabbik` ha attive le *OAuth App access restrictions*: la app di auth va approvata a livello di org.
 
+## Il gate email e Brevo
+
+Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttamente** su Brevo via API. Verificato end-to-end il 27/8/2026 mandando una submission vera al sito in produzione:
+
+| | |
+|---|---|
+| Lista | **29 — "Cycling in Tuscany"**, ~1.220 iscritti |
+| Attributi | i sei `CIT_*` (itinerario, consenso, lingua, area, tipo, difficoltà), tutti valorizzati |
+| Mittente | **`hello@tuscanytrail.it`** — sender già validato e attivo nell'account (id 9) |
+| `funnel_code` | `cycling_tuscany` |
+
+**Il consenso è l'unica cosa che decide l'iscrizione**, ed è rispettato: con la spunta il contatto entra in lista 29, senza spunta viene creato in Brevo con gli attributi ma **fuori** dalla lista (`listIds: []`), quindi scarica il GPX e non finisce nel nurture.
+
+**Non c'è double opt-in.** La function scrive con l'id lista dentro la chiamata, quindi il contatto entra subito: il documento del consenso è la spunta sul sito, non una mail di conferma. Se un giorno si vuole il DOI va cambiata la chiamata, non basta una impostazione in Brevo.
+
+**Il mittente non è una proprietà della lista.** In Brevo le liste non hanno un mittente: ce l'hanno le campagne, le automazioni e il DOI. Alla data di scrittura sulla lista 29 **non è mai stato inviato niente** — le tre campagne che compaiono nelle sue statistiche sono campagne Tuscany Trail e TGE dove una persona della lista si è disiscritta, `sent: 0` su tutte e tre — e non esiste nessuna automazione. `hello@tuscanytrail.it` è quindi la scelta registrata in `sender_funnel_map` sul DB marketing, da applicare alla prima campagna o automazione che nascerà.
+
+⚠️ **Il sito pubblica un indirizzo diverso.** `site.config.ts` → `brand.email` è `hello@cyclingintuscany.com`, e compare nel footer, nella privacy policy, nella cookie policy e nella affiliate disclosure — anche come contatto per le richieste GDPR. Chi riceverà la newsletter da `hello@tuscanytrail.it` leggerà sul sito un indirizzo che non è quello da cui gli è arrivata. Da allineare, è una riga di `site.config.ts`.
+
+**Nessuno è ancora passato di qui.** Al 27/8/2026 non esiste un solo contatto con l'attributo `CIT_ITINERARY`: i ~1.220 della lista vengono da una raccolta precedente, l'ultimo entrato il 19 giugno. L'impianto funziona, non è ancora stato usato.
+
+**Le chiavi non sono nella repo** — `BREVO_API_KEY` e `BREVO_LIST_ID` stanno nelle env **production** di Cloudflare Pages, come secret. Sulle **preview non ci sono**, quindi lì la function risponde `{ok: true, demo: true}` senza chiamare Brevo: un test su un deploy di anteprima non prova niente. L'account ha l'allowlist IP: le chiamate API manuali vanno fatte dal VPS Hetzner, non dal Mac.
+
 ## Decisioni ecosistema — 16 agosto 2026
 
 Analisi completa dei 4 progetti digitali e registro decisioni con le motivazioni nella pagina Notion [Ecosistema App BAS — analisi e registro decisioni](https://app.notion.com/p/3bef88ad0121819487aceb41d1a89781). Qui solo ciò che tocca questo repo.
 
-- **~~PRIORITÀ 1~~ FATTO (24/8)** — `BREVO_API_KEY` e `BREVO_LIST_ID` (lista 29 "Cycling in Tuscany") sono nelle env production di Cloudflare Pages, e i 6 attributi `CIT_*` esistono in Brevo. Nota operativa: l'account Brevo ha l'allowlist IP, le chiamate API manuali vanno fatte dal VPS Hetzner (IP autorizzato), non dal Mac.
+- **~~PRIORITÀ 1~~ FATTO (24/8), verificato end-to-end il 27/8** — vedi [Il gate email e Brevo](#il-gate-email-e-brevo) qui sopra per lista, mittente, consenso e trappole.
 - **Privacy policy da riscrivere** — dichiara "this site has no forms" mentre il gate email è live; da sistemare anche il paragrafo Airbnb rimasto nella affiliate disclosure.
 - **UTM anche nei bottoni partner dentro il RouteViewer** — oggi i "Book …" di popup e card usano l'URL grezzo del JSON — traffico non attribuito, e il report di attribuzione è l'argomento di rinnovo dei partner.
 - **Stay22 — si resta, si negozia lo split** — Booking ha chiuso gli affiliati diretti sotto €1k/mese (giu 2025), 37 delle nostre 38 prenotazioni sono Booking, e nessun altro ha l'embed lungo-GPX multi-OTA. Call post-evento TG col dossier dati per salire dal tier d'ingresso (30%) + domanda Airbnb-dentro-l'embed. `src/lib/stay22.ts` è il candidato a modulo condiviso per le app evento.
