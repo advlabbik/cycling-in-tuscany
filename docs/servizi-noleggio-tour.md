@@ -13,7 +13,7 @@ servire davvero tramite le strutture ufficiali.
    - **notifica interna** a `SERVICE_NOTIFY_EMAIL` (default `collab@tuscanytrail.it`),
      con reply-to del richiedente → si risponde direttamente col client di posta;
    - **conferma automatica** al richiedente ("verifichiamo coi partner, risposta
-     entro 2 giorni lavorativi"), spedita da `hello@tuscanytrail.it` ma con
+     entro 2 giorni lavorativi"), spedita da `365@tuscanytrail.it` ma con
      reply-to sulla casella di lavoro, così una risposta del cliente atterra
      dove sta già la richiesta;
    - **tagging del contatto** su Brevo (`CIT_SERVICE`, `CIT_SERVICE_INFO`), best-effort.
@@ -27,17 +27,20 @@ servire davvero tramite le strutture ufficiali.
       env **production** (verificata end-to-end il 27/8 col gate GPX di lead.js;
       sulle preview non c'è, lì la function risponde `{ok, demo}`).
       `SERVICE_NOTIFY_EMAIL` non impostata → vale il default collab@tuscanytrail.it.
-- [x] Casella `hello@tuscanytrail.it` creata e validata in Brevo come sender
-      (id 9, attivo — README, sezione «Il gate email e Brevo»).
+- [x] Casella `365@tuscanytrail.it` creata e validata in Brevo come sender
+      (id 10, attivo dal 27/8/2026 — il dominio è autenticato, quindi nessuna
+      email di validazione da cliccare). Il collaudo del 27/8 qui sotto è stato
+      fatto quando il mittente era ancora `hello@` (id 9).
 - [x] `collab@tuscanytrail.it` riceve — verificato 27/8 col collaudo qui sotto:
       notifica interna E conferma automatica arrivate in inbox (non spam),
-      entrambe spedite da hello@ via Brevo.
+      entrambe spedite da hello@ via Brevo (mittente di allora).
 - [x] Costante `SITE` in `functions/api/service-request.js` aggiornata a
       `365.tuscanytrail.it` al momento del merge (27/8, dopo il cutover).
       L'indirizzo mittente non si tocca, sta sul dominio radice apposta.
-- [ ] Brevo → Contacts → Settings → Contact attributes → creare
-      `CIT_SERVICE` (testo) e `CIT_SERVICE_INFO` (testo). Non verificabile da
-      questo PC (allowlist IP sull'API Brevo — serve il VPS o la dashboard).
+- [x] Brevo → Contacts → Settings → Contact attributes → `CIT_SERVICE` (testo)
+      e `CIT_SERVICE_INFO` (testo) **creati il 27/8/2026**, via API dal VPS
+      Hetzner (l'allowlist IP dell'account rifiuta le chiamate dal portatile).
+      Prima esistevano solo i sei `CIT_*` del gate GPX.
       Se mancano NON si perdono richieste: le due email partono comunque, salta
       solo il tagging del contatto (best-effort, errore ignorato).
 - [x] Collaudo end-to-end fatto il 27/8/2026, subito dopo il merge: richiesta

@@ -18,7 +18,7 @@
  *
  * Env su Cloudflare Pages: BREVO_API_KEY (gia' presente per lead.js),
  * SERVICE_NOTIFY_EMAIL (opzionale, default collab@tuscanytrail.it).
- * Il mittente hello@tuscanytrail.it deve esistere come casella ed essere
+ * Il mittente 365@tuscanytrail.it deve esistere come casella ed essere
  * validato in Brevo (Senders & domains); tuscanytrail.it e' gia' tra i domini
  * mittente aziendali, quindi la firma del dominio e' a posto.
  * NB: gli attributi CIT_SERVICE e CIT_SERVICE_INFO vanno creati una volta in
@@ -26,10 +26,11 @@
  */
 
 /* Mittente delle due email. Sta sul dominio radice tuscanytrail.it, gia'
-   autorizzato a spedire in Brevo (sender validato, id 9), cosi' resta buono
-   qualunque sia l'host del sito. NON e' collab@ di proposito: da quella
-   casella non deve partire posta automatica verso i clienti (Andrea, 21/8). */
-const SENDER = { name: 'Tuscany Trail 365', email: 'hello@tuscanytrail.it' };
+   autorizzato a spedire in Brevo (sender id 10, attivo dal 27/8/2026), cosi'
+   resta buono qualunque sia l'host del sito. NON e' collab@ di proposito: da
+   quella casella non deve partire posta automatica verso i clienti (Andrea,
+   21/8). */
+const SENDER = { name: 'Tuscany Trail 365', email: '365@tuscanytrail.it' };
 /* Dove atterra il lavoro da fare. collab@ e' la casella condivisa Andrea +
    Francesca, cioe' chi poi telefona ai partner per cercare disponibilita', e
    le sue email rimbalzano anche in Slack su #email-collab: le richieste si
