@@ -32,8 +32,8 @@ public/
 ├─ admin/              # Sveltia CMS: index.html + config.yml
 ├─ guide-pdf/          # PDF serviti così come sono, fuori da astro:assets
 ├─ data/itinerari/     # traccia+POI per itinerario, GENERATI da scripts/gen_poi.py — mai a mano
-└─ gpx/                # GPX scaricabili (dietro il gate email)
-functions/api/lead.js  # Pages Function del gate email → Brevo (chiavi nelle env Cloudflare)
+└─ gpx/                # i file GPX (il gate li SPEDISCE via email, in pagina non si scaricano)
+functions/api/lead.js  # gate email: contatto Brevo + email col GPX allegato (chiavi nelle env Cloudflare)
 scripts/gen_poi.py     # genera public/data/itinerari/<slug>.json da GPX + OpenStreetMap
 site.config.ts         # aid Stay22, brand, centro mappa, ordine strutture in home
 docs/fonti/            # brief, sorgenti magazine, dati partner del vecchio prototipo
@@ -46,12 +46,13 @@ docs/liste-poi/        # liste POI leggibili per la revisione umana, una per iti
 
 Ogni itinerario in `src/content/itinerari/` è una pagina con il RouteViewer
 (mappa MapLibre + altimetria + POI filtrabili), la sezione Good to know coi
-contenuti che prima stavano nel PDF, e il gate email che sblocca il solo GPX.
+contenuti che prima stavano nel PDF, e il gate email che spedisce il GPX.
 Regole decise da Andrea il 14/8/2026:
 
 - **Il Ride Base Pack non si scarica**: i contenuti vivono nelle pagine
   (Good to know per itinerario, `extraSections` nella scheda struttura).
-  L'unico download è il GPX, dietro email.
+  L'unico file che si ottiene è il GPX, e dal 28/8/2026 **arriva via email**
+  — in pagina non c'è nessun download.
 - **Esclusiva partner**: sugli itinerari con `base` (la struttura pagante)
   non compaiono Stay22, Airbnb né alloggi concorrenti nei POI — si dorme solo
   dal partner. Il blocco Stay22+Airbnb esiste nel template solo per itinerari
@@ -270,7 +271,7 @@ Due cose da sapere quando il login smette di funzionare:
 
 ## Il gate email e Brevo
 
-Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttamente** su Brevo via API. Verificato end-to-end il 27/8/2026 mandando una submission vera al sito in produzione:
+Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttamente** su Brevo via API. **Dal 28/8/2026 il GPX non si scarica più in pagina: arriva via email** (decisione di Andrea) — la function iscrive il contatto e poi manda un'email transazionale da `hello@tuscanytrail.it` (reply-to `collab@`) col file **in allegato**, un link di riserva al file e il link Ride with GPS, che vive solo lì dentro così lo sponsor resta visibile ma il gate non si aggira. Il path del GPX arriva dal client ma viene validato contro `/gpx/*.gpx` del nostro host, sennò chiunque potrebbe farci spedire allegati arbitrari a nome nostro. Impianto verificato end-to-end il 27/8/2026 mandando una submission vera al sito in produzione:
 
 | | |
 |---|---|
@@ -279,7 +280,7 @@ Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttam
 | Mittente | **`hello@tuscanytrail.it`** — sender già validato e attivo nell'account (id 9) |
 | `funnel_code` | `cycling_tuscany` |
 
-**Il consenso è l'unica cosa che decide l'iscrizione**, ed è rispettato: con la spunta il contatto entra in lista 29, senza spunta viene creato in Brevo con gli attributi ma **fuori** dalla lista (`listIds: []`), quindi scarica il GPX e non finisce nel nurture.
+**Il consenso è l'unica cosa che decide l'iscrizione**, ed è rispettato: con la spunta il contatto entra in lista 29, senza spunta viene creato in Brevo con gli attributi ma **fuori** dalla lista (`listIds: []`), quindi riceve comunque l'email col GPX (è transazionale, non newsletter) ma non finisce nel nurture.
 
 **Non c'è double opt-in.** La function scrive con l'id lista dentro la chiamata, quindi il contatto entra subito: il documento del consenso è la spunta sul sito, non una mail di conferma. Se un giorno si vuole il DOI va cambiata la chiamata, non basta una impostazione in Brevo.
 
