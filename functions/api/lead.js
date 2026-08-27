@@ -1,7 +1,7 @@
-/**
+﻿/**
  * Gate email degli itinerari — Cloudflare Pages Function.
  *
- * Dal 28/8/2026 (decisione di Andrea) IL FILE VIAGGIA NELL'EMAIL: niente piu'
+ * Dal 27/8/2026 (decisione di Andrea) IL FILE VIAGGIA NELL'EMAIL: niente piu'
  * download in pagina. Il form manda { email, consent, itinerary, name, gpx,
  * rwgps, lang, area, type, diff }; qui si fa, in ordine:
  *   1. iscrizione/aggiornamento del contatto su Brevo con gli attributi di
@@ -10,7 +10,7 @@
  *   2. email transazionale da hello@tuscanytrail.it col LINK DI DOWNLOAD del
  *      GPX in evidenza, piu' il link Ride with GPS (lo sponsor resta
  *      visibile, ma DENTRO l'email — il gate non si aggira).
- *      NB: l'allegato .gpx e' stato provato il 28/8 e Brevo lo RIFIUTA — gli
+ *      NB: l'allegato .gpx e' stato provato il 27/8 e Brevo lo RIFIUTA — gli
  *      attachment (url o content) accettano solo una whitelist di estensioni
  *      e .gpx non c'e'; rinominarlo .xml romperebbe l'import sui ciclocomputer.
  *      Quindi il file viaggia come link, che era l'alternativa gia' approvata.

@@ -1,4 +1,4 @@
-# Cycling in Tuscany
+﻿# Cycling in Tuscany
 
 Guida di destinazione per il cicloturismo in Toscana: territori selezionati, strutture bike-friendly e ride pack pronti da scaricare. Sito **statico**, generato con [Astro](https://astro.build), editabile a form con [Sveltia CMS](https://github.com/sveltia/sveltia-cms), pubblicato su Cloudflare Pages.
 
@@ -51,7 +51,7 @@ Regole decise da Andrea il 14/8/2026:
 
 - **Il Ride Base Pack non si scarica**: i contenuti vivono nelle pagine
   (Good to know per itinerario, `extraSections` nella scheda struttura).
-  L'unico file che si ottiene è il GPX, e dal 28/8/2026 **arriva via email**
+  L'unico file che si ottiene è il GPX, e dal 27/8/2026 **arriva via email**
   — in pagina non c'è nessun download.
 - **Esclusiva partner**: sugli itinerari con `base` (la struttura pagante)
   non compaiono Stay22, Airbnb né alloggi concorrenti nei POI — si dorme solo
@@ -271,7 +271,7 @@ Due cose da sapere quando il login smette di funzionare:
 
 ## Il gate email e Brevo
 
-Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttamente** su Brevo via API. **Dal 28/8/2026 il GPX non si scarica più in pagina: arriva via email** (decisione di Andrea) — la function iscrive il contatto e poi manda un'email transazionale da `hello@tuscanytrail.it` (reply-to `collab@`) col **link di download in evidenza** e il link Ride with GPS, che vive solo lì dentro così lo sponsor resta visibile ma il gate non si aggira. **Niente allegato, ed è un vincolo di Brevo, non una scelta**: gli attachment accettano solo una whitelist di estensioni e `.gpx` non c'è (provato il 28/8, l'invio moriva con `send failed`); rinominare il file `.xml` romperebbe l'import sui ciclocomputer. Il path del GPX arriva dal client ma viene validato contro `/gpx/*.gpx` del nostro host, sennò chiunque potrebbe farci spedire email con link arbitrari a nome nostro. Impianto verificato end-to-end il 27/8/2026 mandando una submission vera al sito in produzione:
+Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttamente** su Brevo via API. **Dal 27/8/2026 il GPX non si scarica più in pagina: arriva via email** (decisione di Andrea) — la function iscrive il contatto e poi manda un'email transazionale da `hello@tuscanytrail.it` (reply-to `collab@`) col **link di download in evidenza** e il link Ride with GPS, che vive solo lì dentro così lo sponsor resta visibile ma il gate non si aggira. **Niente allegato, ed è un vincolo di Brevo, non una scelta**: gli attachment accettano solo una whitelist di estensioni e `.gpx` non c'è (provato il 27/8, l'invio moriva con `send failed`); rinominare il file `.xml` romperebbe l'import sui ciclocomputer. Il path del GPX arriva dal client ma viene validato contro `/gpx/*.gpx` del nostro host, sennò chiunque potrebbe farci spedire email con link arbitrari a nome nostro. Impianto verificato end-to-end il 27/8/2026 mandando una submission vera al sito in produzione:
 
 | | |
 |---|---|
