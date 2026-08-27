@@ -31,15 +31,18 @@
 /* Stessa coppia di service-request.js: mittente sul dominio radice (sender
    Brevo id 10, creato e gia' attivo il 27/8/2026 — il dominio e' autenticato,
    quindi non c'e' stata nessuna email di validazione da cliccare), reply-to
-   sulla STESSA casella — se uno risponde all'email del GPX deve leggerlo una
-   persona, e 365@ e' una casella vera che inoltra a collab@ (verificato il
-   27/8/2026, vedi README): chi risponde atterra dove si lavora gia', e non
-   vede mai un secondo indirizzo. Prima del 27/8 il reply-to era collab@
-   perche' il mittente hello@ poteva essere una sola identita' di spedizione.
-   Da qui esce anche il mailto: dell'unsubscribe, quindi cambiarlo li' e
-   lasciarlo qui darebbe due recapiti diversi nella stessa email. */
+   sulla casella presidiata — se uno risponde all'email del GPX deve leggerlo
+   una persona, non un'identita' di spedizione.
+
+   ⚠️ NON mettere 365@ nel reply-to, per quanto sia tentante avere un
+   indirizzo solo: 365@ inoltra a **info@tuscanytrail.it**, NON a collab@
+   (verificato il 27/8/2026). Le risposte dei clienti finirebbero in una
+   casella diversa da quella dove le richieste vengono lavorate, mentre la
+   notifica interna continua ad arrivare in collab@: richiesta di qua,
+   risposta di la'. Se un giorno viene aggiunto l'inoltro 365@ -> collab@,
+   allora si', e da qui esce anche il mailto: dell'unsubscribe. */
 const SENDER = { name: 'Tuscany Trail 365', email: '365@tuscanytrail.it' };
-const REPLY_TO = '365@tuscanytrail.it';
+const REPLY_TO = 'collab@tuscanytrail.it';
 
 export async function onRequestPost(context) {
   let body;

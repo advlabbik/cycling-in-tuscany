@@ -34,15 +34,12 @@ const SENDER = { name: 'Tuscany Trail 365', email: '365@tuscanytrail.it' };
 /* Dove atterra il lavoro da fare. collab@ e' la casella condivisa Andrea +
    Francesca, cioe' chi poi telefona ai partner per cercare disponibilita', e
    le sue email rimbalzano anche in Slack su #email-collab: le richieste si
-   vedono senza aprire la posta. Questa e' posta INTERNA, verso di noi: resta
-   collab@ e non diventa 365@, perche' e' l'indirizzo di lavoro e non quello
-   che il cliente deve vedere. */
+   vedono senza aprire la posta. E' anche dove risponde il cliente: il
+   reply-to della conferma automatica segue questa casella, non il mittente.
+   ⚠️ NON usare 365@ come reply-to: inoltra a info@tuscanytrail.it e non a
+   collab@ (verificato il 27/8/2026), quindi la risposta si staccherebbe
+   dalla richiesta. */
 const NOTIFY_FALLBACK = 'collab@tuscanytrail.it';
-/* Dove risponde il CLIENTE. Dal 27/8/2026 e' 365@, la casella unica del
-   progetto, che inoltra a collab@: la risposta atterra dove sta gia' la
-   richiesta e il cliente vede un solo indirizzo, quello da cui gli e'
-   arrivata la posta. */
-const REPLY_TO = '365@tuscanytrail.it';
 /* I link dentro le email puntano all'host che serve davvero le pagine — dal
    cutover del 27/8/2026 e' 365.tuscanytrail.it; i vecchi host sono redirect. */
 const SITE = 'https://365.tuscanytrail.it';
@@ -117,12 +114,12 @@ export async function onRequestPost(context) {
   // 2) conferma automatica al richiedente — best-effort, la richiesta e' gia' da noi
   const ack = ackEmail(service, name, fields);
   /* Se il richiedente risponde alla conferma, la risposta deve atterrare dove
-     sta gia' la richiesta. Dal 27/8/2026 ci si arriva via 365@, che inoltra a
-     collab@: stesso approdo di prima, ma il cliente vede un indirizzo solo. */
+     sta gia' la richiesta — la casella presidiata — e non su 365@, che inoltra
+     altrove (vedi il commento su NOTIFY_FALLBACK). */
   const auto = await sendEmail(key, {
     sender: SENDER,
     to: [{ email, name }],
-    replyTo: { email: REPLY_TO },
+    replyTo: { email: notifyTo },
     subject: ack.subject,
     htmlContent: ack.html,
   });

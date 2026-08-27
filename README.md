@@ -271,14 +271,14 @@ Due cose da sapere quando il login smette di funzionare:
 
 ## Il gate email e Brevo
 
-Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttamente** su Brevo via API. **Dal 27/8/2026 il GPX non si scarica più in pagina: arriva via email** (decisione di Andrea) — la function iscrive il contatto e poi manda un'email transazionale da `365@tuscanytrail.it` (reply-to `365@`, che inoltra a `collab@`) col **link di download in evidenza**. **Niente Ride with GPS**, né in pagina né nell'email — su TT365 non è sponsor (Andrea, 27/8), lo è sul Tuscany Trail, e i due progetti non si mescolano. **Niente allegato, ed è un vincolo di Brevo, non una scelta**: gli attachment accettano solo una whitelist di estensioni e `.gpx` non c'è (provato il 27/8, l'invio moriva con `send failed`); rinominare il file `.xml` romperebbe l'import sui ciclocomputer. Il path del GPX arriva dal client ma viene validato contro `/gpx/*.gpx` del nostro host, sennò chiunque potrebbe farci spedire email con link arbitrari a nome nostro. Impianto verificato end-to-end il 27/8/2026 mandando una submission vera al sito in produzione:
+Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttamente** su Brevo via API. **Dal 27/8/2026 il GPX non si scarica più in pagina: arriva via email** (decisione di Andrea) — la function iscrive il contatto e poi manda un'email transazionale da `365@tuscanytrail.it` (reply-to `collab@`) col **link di download in evidenza**. **Niente Ride with GPS**, né in pagina né nell'email — su TT365 non è sponsor (Andrea, 27/8), lo è sul Tuscany Trail, e i due progetti non si mescolano. **Niente allegato, ed è un vincolo di Brevo, non una scelta**: gli attachment accettano solo una whitelist di estensioni e `.gpx` non c'è (provato il 27/8, l'invio moriva con `send failed`); rinominare il file `.xml` romperebbe l'import sui ciclocomputer. Il path del GPX arriva dal client ma viene validato contro `/gpx/*.gpx` del nostro host, sennò chiunque potrebbe farci spedire email con link arbitrari a nome nostro. Impianto verificato end-to-end il 27/8/2026 mandando una submission vera al sito in produzione:
 
 | | |
 |---|---|
 | Lista | **29 — "Cycling in Tuscany"**, ~1.220 iscritti |
 | Attributi | i sei `CIT_*` (itinerario, consenso, lingua, area, tipo, difficoltà), tutti valorizzati |
 | Mittente | **`365@tuscanytrail.it`** — sender id 10 |
-| Reply-to | **`365@tuscanytrail.it`**, che inoltra a `collab@`: il cliente vede un indirizzo solo, la risposta atterra dove si lavora |
+| Reply-to | **`collab@tuscanytrail.it`** — la casella presidiata. ⚠️ NON `365@`: vedi sotto |
 | `funnel_code` | `cycling_tuscany` |
 
 **Il mittente è stato ricollaudato dopo lo swap.** Il verbale qui sopra è del collaudo end-to-end del 27/8/2026, fatto quando il mittente era ancora `hello@` (sender id 9). Passando a `365@` il 27/8 si è rifatta la prova sulla parte cambiata — cioè che il nuovo mittente spedisca davvero e che l'indirizzo riceva: invio transazionale da `365@` a `365@` via API, e riscontro sui log Brevo (`/v3/smtp/statistics/events`):
@@ -288,7 +288,11 @@ Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttam
 2026-08-27T16:46:27+02:00  requests   365@tuscanytrail.it
 ```
 
-`delivered` dice che Brevo ha spedito e che l'MX di `365@` ha accettato, quindi la casella esiste e riceve. **Non dice dove è finita dopo**: che l'inoltro verso `collab@` consegni davvero si vede solo aprendo `collab@`. Se un domani il reply-to sembra ingoiare le risposte, è lì che si guarda per primo, non in Brevo.
+`delivered` dice che Brevo ha spedito e che l'MX di `365@` ha accettato, quindi la casella esiste e riceve. **Non dice dove è finita dopo** — ed è esattamente lì che la prima ipotesi era sbagliata.
+
+**⚠️ `365@` inoltra a `info@tuscanytrail.it`, NON a `collab@`** (verificato il 27/8/2026 andando a vedere dove era atterrata la prova). Per questo il **reply-to di tutte le email resta `collab@`**, anche se il mittente è `365@`: il cliente vede due indirizzi diversi, ma la sua risposta atterra dove la richiesta viene davvero lavorata — e `collab@` rimbalza in Slack su `#email-collab`. Mettere `365@` nel reply-to per avere un indirizzo solo manderebbe le risposte in `info@`, mentre la notifica interna continua ad arrivare in `collab@`: richiesta di qua, risposta di là.
+
+Se un giorno viene aggiunto l'inoltro `365@` → `collab@`, allora il reply-to può diventare `365@` e con lui il `mailto:` dell'unsubscribe, che esce dalla stessa costante. Fino ad allora no.
 
 **Il consenso è OBBLIGATORIO su tutti e tre i form** (decisione di Andrea, 27/8/2026 — prima era facoltativo e chi non spuntava riceveva comunque il file): senza spunta non parte niente, né il contatto né il GPX né la richiesta di servizio, e la function risponde `consent required`. La spunta è `required` nel form **e** ricontrollata lato server nelle due function, perché il `required` dell'HTML si aggira in tre secondi con la console aperta. Il testo della checkbox dichiara lo scambio invece di far passare l'iscrizione per una cortesia facoltativa, non è mai pre-selezionata, e l'unsubscribe sta in ogni email. La privacy policy descrive i tre form e la base giuridica (consenso, art. 6(1)(a)).
 

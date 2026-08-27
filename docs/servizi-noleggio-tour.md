@@ -13,11 +13,11 @@ servire davvero tramite le strutture ufficiali.
    - **notifica interna** a `SERVICE_NOTIFY_EMAIL` (default `collab@tuscanytrail.it`),
      con reply-to del richiedente → si risponde direttamente col client di posta;
    - **conferma automatica** al richiedente ("verifichiamo coi partner, risposta
-     entro 2 giorni lavorativi"), spedita da `365@tuscanytrail.it` con reply-to
-     sullo stesso indirizzo: `365@` inoltra a `collab@`, quindi la risposta del
-     cliente atterra dove sta già la richiesta e il cliente vede un solo
-     recapito. La **notifica interna** resta su `collab@`: è posta verso di noi,
-     non verso il cliente;
+     entro 2 giorni lavorativi"), spedita da `365@tuscanytrail.it` ma con
+     reply-to sulla casella di lavoro `collab@`, così una risposta del cliente
+     atterra dove sta già la richiesta. ⚠️ Il reply-to **non** è `365@`: quella
+     casella inoltra a `info@tuscanytrail.it` e non a `collab@` (verificato il
+     27/8/2026), quindi le risposte si staccherebbero dalle richieste;
    - **tagging del contatto** su Brevo (`CIT_SERVICE`, `CIT_SERVICE_INFO`), best-effort.
 3. **La seconda email è SEMPRE manuale.** Prima si sentono davvero i partner,
    poi si risponde. Mai un no automatico — il richiedente ha lasciato dati veri
