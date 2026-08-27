@@ -25,19 +25,19 @@
  * Brevo (Contacts → Settings → Contact attributes), come i CIT_* di lead.js.
  */
 
-/* Mittente delle due email. Sta su tuscanytrail.it, il dominio su cui il sito
-   vive davvero (cyclingintuscany.tuscanytrail.it) e gia' autorizzato a
-   spedire. NON e' collab@ di proposito: da quella casella non deve partire
-   posta automatica verso i clienti (Andrea, 21/8). */
+/* Mittente delle due email. Sta sul dominio radice tuscanytrail.it, gia'
+   autorizzato a spedire in Brevo (sender validato, id 9), cosi' resta buono
+   qualunque sia l'host del sito. NON e' collab@ di proposito: da quella
+   casella non deve partire posta automatica verso i clienti (Andrea, 21/8). */
 const SENDER = { name: 'Tuscany Trail 365', email: 'hello@tuscanytrail.it' };
 /* Dove atterra il lavoro da fare. collab@ e' la casella condivisa Andrea +
    Francesca, cioe' chi poi telefona ai partner per cercare disponibilita', e
    le sue email rimbalzano anche in Slack su #email-collab: le richieste si
    vedono senza aprire la posta. */
 const NOTIFY_FALLBACK = 'collab@tuscanytrail.it';
-/* I link dentro le email puntano all'host che serve davvero le pagine, non al
-   vecchio cyclingintuscany.com che oggi e' soltanto un redirect. */
-const SITE = 'https://cyclingintuscany.tuscanytrail.it';
+/* I link dentro le email puntano all'host che serve davvero le pagine — dal
+   cutover del 27/8/2026 e' 365.tuscanytrail.it; i vecchi host sono redirect. */
+const SITE = 'https://365.tuscanytrail.it';
 
 export async function onRequestPost(context) {
   let body;

@@ -21,27 +21,28 @@ servire davvero tramite le strutture ufficiali.
    poi si risponde. Mai un no automatico — il richiedente ha lasciato dati veri
    e merita una risposta vera.
 
-## Setup una tantum (da fare al primo deploy)
+## Setup una tantum (stato al go-live del 27/8/2026)
 
-- [ ] Cloudflare Pages → Environment variables → verificare `BREVO_API_KEY`
-      (già usata da lead.js); opzionale `SERVICE_NOTIFY_EMAIL` se la casella
-      di lavoro non è collab@tuscanytrail.it.
-- [ ] Creare la casella `hello@tuscanytrail.it` e validarla in Brevo
-      (Senders & domains). Il dominio tuscanytrail.it è già autorizzato a
-      spedire, quindi manca solo l'indirizzo. Finché non esiste, le due email
-      non partono — ed è il modo classico di perdere richieste in silenzio.
+- [x] Cloudflare Pages → Environment variables → `BREVO_API_KEY` presente nelle
+      env **production** (verificata end-to-end il 27/8 col gate GPX di lead.js;
+      sulle preview non c'è, lì la function risponde `{ok, demo}`).
+      `SERVICE_NOTIFY_EMAIL` non impostata → vale il default collab@tuscanytrail.it.
+- [x] Casella `hello@tuscanytrail.it` creata e validata in Brevo come sender
+      (id 9, attivo — README, sezione «Il gate email e Brevo»).
 - [ ] Verificare che `collab@tuscanytrail.it` riceva la notifica e non finisca
       in spam. È posta che arriva da un dominio nostro spedita da Brevo, quindi
       è la prima a essere filtrata se l'autorizzazione a spedire non è a posto.
-- [ ] **Quando il sito passerà a `365.tuscanytrail.it`** (spostamento in carico a
-      Francesco, discusso in #cycling-in-tuscany il 20/8): aggiornare la costante
-      `SITE` in `functions/api/service-request.js`, altrimenti il link dentro la
-      conferma automatica continua a puntare al vecchio host. L'indirizzo
-      mittente invece non si tocca, sta sul dominio radice apposta.
+- [x] Costante `SITE` in `functions/api/service-request.js` aggiornata a
+      `365.tuscanytrail.it` al momento del merge (27/8, dopo il cutover).
+      L'indirizzo mittente non si tocca, sta sul dominio radice apposta.
 - [ ] Brevo → Contacts → Settings → Contact attributes → creare
-      `CIT_SERVICE` (testo) e `CIT_SERVICE_INFO` (testo).
-- [ ] Mandare una richiesta di prova da `/services/` e controllare che arrivino
-      sia la notifica interna sia la conferma automatica.
+      `CIT_SERVICE` (testo) e `CIT_SERVICE_INFO` (testo). Non verificabile da
+      questo PC (allowlist IP sull'API Brevo — serve il VPS o la dashboard).
+      Se mancano NON si perdono richieste: le due email partono comunque, salta
+      solo il tagging del contatto (best-effort, errore ignorato).
+- [ ] Mandare una richiesta di prova da `/services/` **in produzione** e
+      controllare che arrivino sia la notifica interna sia la conferma
+      automatica (un test su un deploy di preview non prova niente, vedi sopra).
 
 ## Regole di risposta
 
