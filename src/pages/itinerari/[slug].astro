@@ -152,12 +152,13 @@ const schema = {
         <div class="pack-dl-bar-left">
           <div class="pack-dl-label">GPX track · free</div>
           <h3 class="pack-dl-title">Take this route with you</h3>
-          <p class="it-gatehint">Leave your email and the GPX file is yours, ready for your bike computer.</p>
+          <p class="it-gatehint">Leave your email and we'll send you the GPX file, ready for your bike computer.</p>
         </div>
         <div class="pack-dl-bar-right">
           {/* method="post": se lo script muore prima di agganciare il submit,
               il browser NON deve fare un GET con l'email in chiaro nell'URL */}
-          <form id="gpx-gate" class="it-gate" method="post" novalidate data-area={d.area} data-type={d.type} data-diff={d.diff}>
+          <form id="gpx-gate" class="it-gate" method="post" novalidate data-area={d.area} data-type={d.type} data-diff={d.diff} data-gpx={d.gpx} data-name={d.name} data-rwgps={d.rwgpsUrl || ''}>
+            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;overflow:hidden" />
             <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address" />
             <button type="submit" class="pack-dl-btn" style="border:0;cursor:pointer">
               <span class="pack-dl-circle">
@@ -167,23 +168,19 @@ const schema = {
                   <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
               </span>
-              Get the GPX
+              <span id="gpx-btn-label">Get the GPX</span>
             </button>
             <label class="it-consent">
               <input type="checkbox" name="consent" />
               <span>Send me new verified routes and Tuscany riding tips (a few emails a year, no spam)</span>
             </label>
+            <p id="gpx-err" class="it-err" hidden>Something went wrong on our side — give it another try in a minute.</p>
           </form>
-          <div id="gpx-unlocked" class="it-unlocked" hidden>
-            <a class="pack-dl-btn" href={d.gpx} download>Download the GPX</a>
+          <div id="gpx-sent" class="it-sent" hidden>
+            <p><b>The GPX is on its way.</b> Check the inbox of <span id="gpx-sent-email"></span> — the file arrives attached, from hello@tuscanytrail.it. No email in a few minutes? Have a look in spam.</p>
           </div>
         </div>
       </div>
-      {d.rwgpsUrl && (
-        <p class="it-rwgps">
-          Already ride with a GPS account? <a href={d.rwgpsUrl} target="_blank" rel="noopener">Open this route on Ride with GPS →</a>
-        </p>
-      )}
       <p class="it-rwgps">
         No bike with you, or want to ride this loop with local support? <a href="/services/">Ask about rental & custom tours →</a>
       </p>
@@ -201,66 +198,78 @@ const schema = {
   .it-gate input[type='email']::placeholder{color:rgba(255,255,255,.5)}
   .it-consent{display:flex;gap:8px;align-items:flex-start;font-size:.72rem;color:#e6ccd4;line-height:1.4;max-width:400px;cursor:pointer}
   .it-consent input{margin-top:2px}
-  .it-unlocked{display:flex;gap:12px;flex-wrap:wrap}
+  .it-sent{max-width:420px;color:#fff;font-size:.92rem;line-height:1.55}
+  .it-sent p{margin:0}
+  .it-sent b{color:#f5a623}
+  .it-err{flex-basis:100%;margin:2px 0 0;color:#ffb3b3;font-size:.8rem}
+  /* la lezione del 18/8: un display dichiarato batte l'attributo hidden nel
+     CSS bundlato — lo stato nascosto va imposto, sennò si vedono form e
+     conferma insieme */
+  .it-gate[hidden],.it-sent[hidden],.it-err[hidden]{display:none!important}
   .it-rwgps{margin:18px 0 0;font-size:.88rem;color:var(--muted)}
 </style>
 
 <script>
   /**
-   * Gate email del GPX. Regole:
-   * - lo sblocco e' immediato e il lead parte in background (keepalive):
-   *   niente attese sulla CTA di conversione;
-   * - lo sblocco e' globale (un'email sola per sempre) ma il TAG di intento
-   *   parte per OGNI percorso scaricato — e' il dato che vale per i territori
-   *   ("X contatti hanno cercato percorsi da te", doc TT365);
-   * - localStorage puo' essere bloccato dal browser: tutto in try/catch,
-   *   senza storage il gate funziona comunque (solo, richiede l'email ogni volta).
+   * Gate email del GPX — dal 28/8/2026 IL FILE ARRIVA VIA EMAIL (decisione di
+   * Andrea): in pagina non si scarica niente, mai. Regole:
+   * - si ASPETTA la risposta del server prima di dire "fatto": la promessa e'
+   *   un'email in arrivo, e se l'invio fallisce l'utente deve saperlo e
+   *   riprovare, non fissare una inbox vuota;
+   * - il TAG di intento parte per OGNI percorso richiesto — e' il dato che
+   *   vale per i territori ("X contatti hanno cercato percorsi da te");
+   * - localStorage solo come cortesia (precompila l'email dell'ultima volta);
+   *   bloccato dal browser? tutto in try/catch, il gate funziona uguale.
    */
   const form = document.getElementById('gpx-gate') as HTMLFormElement | null;
-  const unlocked = document.getElementById('gpx-unlocked');
+  const sent = document.getElementById('gpx-sent');
   const store = {
     get(k: string) { try { return localStorage.getItem(k); } catch { return null; } },
     set(k: string, v: string) { try { localStorage.setItem(k, v); } catch { /* niente storage, pazienza */ } },
   };
-  if (form && unlocked) {
-    const routeKey = 'cit-lead:' + location.pathname;
-    const sendLead = (email: string, consent: boolean) => {
-      const meta = form.dataset;
-      try {
-        fetch('/api/lead', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          keepalive: true,
-          body: JSON.stringify({
-            email, consent,
-            itinerary: location.pathname, lang: 'en',
-            area: meta.area, type: meta.type, diff: meta.diff,
-          }),
-        }).catch(() => {});
-      } catch { /* offline: il download resta sbloccato comunque */ }
-      store.set(routeKey, '1');
-    };
-    if (store.get('cit-gpx-unlocked')) {
-      form.hidden = true;
-      unlocked.hidden = false;
-      const email = store.get('cit-gpx-email');
-      if (email && !store.get(routeKey)) {
-        unlocked.addEventListener('click', () => {
-          if (!store.get(routeKey)) sendLead(email, store.get('cit-gpx-consent') === '1');
-        }, { once: true });
-      }
-    }
-    form.addEventListener('submit', (ev) => {
+  if (form && sent) {
+    const emailInput = form.elements.namedItem('email') as HTMLInputElement;
+    const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const btnLabel = document.getElementById('gpx-btn-label');
+    const err = document.getElementById('gpx-err');
+    const last = store.get('cit-gpx-email');
+    if (last && !emailInput.value) emailInput.value = last;
+
+    form.addEventListener('submit', async (ev) => {
       ev.preventDefault();
-      const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
+      const email = emailInput.value.trim();
       if (!email || !email.includes('@')) return;
       const consent = (form.elements.namedItem('consent') as HTMLInputElement).checked;
-      store.set('cit-gpx-unlocked', '1');
-      store.set('cit-gpx-email', email);
-      store.set('cit-gpx-consent', consent ? '1' : '0');
-      sendLead(email, consent);
-      form.hidden = true;
-      unlocked.hidden = false;
+      const meta = form.dataset;
+      err.hidden = true;
+      btn.disabled = true;
+      if (btnLabel) btnLabel.textContent = 'Sending…';
+      let ok = false;
+      try {
+        const res = await fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email, consent,
+            website: (form.elements.namedItem('website') as HTMLInputElement)?.value || '',
+            itinerary: location.pathname, lang: 'en',
+            area: meta.area, type: meta.type, diff: meta.diff,
+            gpx: meta.gpx, name: meta.name, rwgps: meta.rwgps,
+          }),
+        });
+        ok = res.ok && (await res.json()).ok === true;
+      } catch { /* rete giu': si mostra l'errore e si riprova */ }
+      if (ok) {
+        store.set('cit-gpx-email', email);
+        const slot = document.getElementById('gpx-sent-email');
+        if (slot) slot.textContent = email;
+        form.hidden = true;
+        sent.hidden = false;
+      } else {
+        err.hidden = false;
+        btn.disabled = false;
+        if (btnLabel) btnLabel.textContent = 'Get the GPX';
+      }
     });
   }
 </script>
