@@ -3,4 +3,4 @@ Allow: /
 
 # Stesso host di `site` in astro.config.mjs (#40). Prima puntava a
 # cycling-in-tuscany.com — con i trattini — che è un sito di terzi.
-Sitemap: https://cyclingintuscany.tuscanytrail.it/sitemap-index.xml
+Sitemap: https://365.tuscanytrail.it/sitemap-index.xml

@@ -4,15 +4,15 @@ Guida di destinazione per il cicloturismo in Toscana: territori selezionati, str
 
 | | |
 |---|---|
-| Produzione | <https://cyclingintuscany.tuscanytrail.it> |
-| CMS | <https://cyclingintuscany.tuscanytrail.it/admin/> |
+| Produzione | <https://365.tuscanytrail.it> |
+| CMS | <https://365.tuscanytrail.it/admin/> |
 | Spec tecnica | [`docs/superpowers/specs/2026-07-24-refactor-astro-cms-design.md`](docs/superpowers/specs/2026-07-24-refactor-astro-cms-design.md) |
 
 ## Come si modifica il sito
 
 Due strade, stesso risultato: **un commit su `main`**. Cloudflare Pages builda da lì e pubblica.
 
-**Dal CMS** — <https://cyclingintuscany.tuscanytrail.it/admin/>, login con GitHub. **Va usato questo dominio, non `cycling-in-tuscany-astro.pages.dev/admin/`**: il `pages.dev` serve lo stesso build e l'interfaccia si apre, ma il worker di auth non lo ha negli `ALLOWED_DOMAINS`, quindi il login GitHub muore con `UNSUPPORTED_DOMAIN` (vedi [Autenticazione del CMS](#autenticazione-del-cms)). Salvare **è** pubblicare: Sveltia non ha editorial workflow, non esistono bozze. Il salvataggio scrive un commit, il commit fa partire il build, il build va live in un paio di minuti.
+**Dal CMS** — <https://365.tuscanytrail.it/admin/>, login con GitHub. **Va usato questo dominio, non `cycling-in-tuscany-astro.pages.dev/admin/`**: il `pages.dev` serve lo stesso build e l'interfaccia si apre, ma il worker di auth non lo ha negli `ALLOWED_DOMAINS`, quindi il login GitHub muore con `UNSUPPORTED_DOMAIN` (vedi [Autenticazione del CMS](#autenticazione-del-cms)). Salvare **è** pubblicare: Sveltia non ha editorial workflow, non esistono bozze. Il salvataggio scrive un commit, il commit fa partire il build, il build va live in un paio di minuti.
 
 **Da editor** — si toccano i `.md` in `src/content/`, si committa, si pusha. Stesso identico effetto.
 
@@ -224,13 +224,39 @@ Cloudflare Pages, progetto `cycling-in-tuscany-astro`, collegato alla repo. `mai
 
 Build command `npm run build`, output `dist`. **Vale la pena ricontrollarli ogni tanto:** il flusso "autoconfig" di Cloudflare Workers li ha già azzerati una volta, e con quei campi vuoti Pages pubblica la root della repo al posto del sito.
 
+## Domini
+
+| Host | Cosa fa |
+|---|---|
+| `365.tuscanytrail.it` | **Il sito.** È l'unico host che serve pagine, ed è il valore di `site` in `astro.config.mjs` |
+| `cyclingintuscany.tuscanytrail.it` | 301 verso `365`, path conservato — è il vecchio host, in giro ci sono ancora link |
+| `cyclingintuscany.com` e `www.` | 301 verso `365`, path conservato (regola nella zona `cyclingintuscany.com`) |
+| `cycling-in-tuscany-astro.pages.dev` | Lo stesso build, ma il CMS non ci fa il login. Non si usa e non si dà in giro |
+
+Il cutover del 27/8/2026 ha spostato il sito da `cyclingintuscany.tuscanytrail.it` a `365.tuscanytrail.it`: il nome dice cosa è il sito, cioè la costola che tiene vivo il Tuscany Trail negli undici mesi fuori evento. Cambiare host tocca **quattro** posti oltre alla repo, e saltarne uno non dà errore, dà un pezzo rotto:
+
+1. il dominio personalizzato nel progetto Pages `cycling-in-tuscany-astro` (**dalla dashboard**: l'API risponde `10000: Authentication error` a ogni scrittura su Pages, e `wrangler` non ha un comando per i domini);
+2. il record DNS nella zona `tuscanytrail.it` — `CNAME` proxato verso `cycling-in-tuscany-astro.pages.dev`;
+3. gli `ALLOWED_DOMAINS` del worker del CMS (qui sotto), altrimenti `/admin/` si apre e il login muore;
+4. il flusso di dati GA4 `G-FELFB9W37W`, che ha ancora l'URL vecchio.
+
 ## Autenticazione del CMS
 
 Il login GitHub passa dal worker `bikepacking-cms-auth`, **condiviso con bikepacking.it** — non è duplicato per questo progetto, e il client secret vive lì dentro, mai nella repo.
 
 Due cose da sapere quando il login smette di funzionare:
 
-1. Il dominio da cui si apre `/admin/` deve stare negli `ALLOWED_DOMAINS` del worker, altrimenti risponde `UNSUPPORTED_DOMAIN`. Per questo progetto l'unico dominio in lista è `cyclingintuscany.tuscanytrail.it`: da `cycling-in-tuscany-astro.pages.dev` e da `cyclingintuscany.com` il CMS si apre ma il login non parte. È un Secret: si aggiunge un dominio riscrivendo **tutta** la lista, quindi va ricopiata per intero o si cancellano i domini di bikepacking.it.
+1. Il dominio da cui si apre `/admin/` deve stare negli `ALLOWED_DOMAINS` del worker, altrimenti risponde `UNSUPPORTED_DOMAIN`. Per questo progetto il dominio in lista è `365.tuscanytrail.it`: da `cycling-in-tuscany-astro.pages.dev` e da `cyclingintuscany.com` il CMS si apre ma il login non parte.
+
+   È un Secret, e **i secret di Cloudflare non si rileggono** — né dall'API né dalla dashboard. Aggiungerne uno vuol dire riscrivere **tutta** la lista, quindi bisogna prima sapere cosa c'è dentro. Si scopre interrogando il worker un dominio alla volta: un `302` vuol dire ammesso, un `200` con `UNSUPPORTED_DOMAIN` vuol dire no.
+
+   ```bash
+   curl -s -o /dev/null -w '%{http_code}\n' \
+     "https://bikepacking-cms-auth.account-fe1.workers.dev/auth?provider=github&site_id=DOMINIO"
+   ```
+
+   Al 27/8/2026 la lista è, in quest'ordine: `bikepacking.it`, `www.bikepacking.it`, `tuscanytrail.it`, `www.tuscanytrail.it`, `new.tuscanytrail.it`, `cyclingintuscany.tuscanytrail.it`, `365.tuscanytrail.it`. Le prime due sono di bikepacking.it e le tre di mezzo del sito Tuscany Trail: **cancellarle rompe il CMS di altri due siti.** Si riscrive con `wrangler secret put ALLOWED_DOMAINS --name bikepacking-cms-auth` leggendo il valore **da un file** (`< lista.txt`): scritto a mano nel prompt carica una stringa vuota e dice comunque «Success».
+
 2. La org GitHub `advlabbik` ha attive le *OAuth App access restrictions*: la app di auth va approvata a livello di org.
 
 ## Decisioni ecosistema — 16 agosto 2026
