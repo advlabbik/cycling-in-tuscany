@@ -1,4 +1,4 @@
----
+﻿---
 import Base from '../layouts/Base.astro';
 import Stay22MapSection from '../components/Stay22MapSection.astro';
 import SectionHeader from '../components/SectionHeader.astro';
@@ -148,6 +148,9 @@ const faqSchema = {
     </div>
   </section>
 
+  {/* Campiglia paga il tier premium: la sua card sta DA SOLA sopra le altre,
+      grande quanto tutta la riga (Andrea, 27/8). Sotto, alla pari: Monterotondo
+      e due segnaposto "coming" — la gerarchia commerciale si deve vedere. */}
   <section id="territories" style="background:var(--cream);padding:80px 0">
     <div class="wrap">
       <div class="ter-carousel-hd">
@@ -160,16 +163,10 @@ const faqSchema = {
           <h2 style="font-size:2.8rem;margin:0 0 10px;color:var(--fg);font-family:var(--font-display);line-height:1.05">Territories to explore</h2>
           <p style="color:var(--muted);max-width:500px;font-size:.98rem;margin:0;line-height:1.55">The many souls of this corner of Tuscany, one ride at a time.<br />Campiglia leads — more territories are joining the map.</p>
         </div>
-        <div class="ter-nav-btns">
-          <button class="ter-nav-btn" id="ter-prev" aria-label="Previous"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5" /><path d="m12 19-7-7 7-7" /></svg></button>
-          <button class="ter-nav-btn" id="ter-next" aria-label="Next"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></button>
-        </div>
       </div>
-    </div>
 
-    <div class="ter-carousel-scroll" id="ter-carousel-scroll">
       {campiglia && (
-        <a class="ter-slide" href={`/territori/${getSlug(campiglia.id)}`}>
+        <a class="ter-featured" href={`/territori/${getSlug(campiglia.id)}`}>
           <div class="ter-slide-inner" style="box-shadow:0 8px 32px rgba(184,134,11,.35)">
             {campigliaSlideBg && <div class="ter-slide-img" style={`background-image:url('${campigliaSlideBg}')`}></div>}
             <div class="ter-slide-grad"></div>
@@ -182,50 +179,48 @@ const faqSchema = {
           </div>
         </a>
       )}
-      <a class="ter-slide" href={`/territori/${getSlug(monterotondo.id)}`}>
-        <div class="ter-slide-inner">
-          {monterotondoBg && <div class="ter-slide-img" style={`background-image:url('${monterotondoBg}')`}></div>}
-          <div class="ter-slide-grad"></div>
-          <div class="ter-slide-body">
-            <span class="ter-slide-tag">Official Territory</span>
-            <div class="ter-slide-title">{monterotondo.data.name}</div>
-            <div class="ter-slide-desc">Metalliferous Hills — geothermal landscape, white hills, routes that breathe.</div>
-            <div class="ter-slide-cta">Discover <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></div>
-          </div>
-        </div>
-      </a>
 
-      <div class="ter-slide ter-slide-soon">
-        <div class="ter-slide-inner">
-          <div class="ter-soon-glow"></div>
-          <div class="ter-soon-lines"></div>
-          <div class="ter-soon-icon">
-            <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="48" cy="48" r="44" stroke="rgba(245,166,35,.22)" stroke-width="1.5" stroke-dasharray="3 7" />
-              <circle cx="48" cy="48" r="30" stroke="rgba(255,255,255,.07)" stroke-width="1" />
-              <path d="M48 6 L53 43 L48 39 L43 43 Z" fill="#f5a623" />
-              <path d="M48 90 L43 53 L48 57 L53 53 Z" fill="rgba(255,255,255,.22)" />
-              <path d="M90 48 L53 43 L57 48 L53 53 Z" fill="rgba(255,255,255,.18)" />
-              <path d="M6 48 L43 53 L39 48 L43 43 Z" fill="rgba(255,255,255,.18)" />
-              <circle cx="48" cy="48" r="6" fill="#f5a623" opacity=".9" />
-              <circle cx="48" cy="48" r="2.5" fill="#1a0e12" />
-              <text x="48" y="24" text-anchor="middle" dominant-baseline="middle" fill="rgba(245,166,35,.55)" font-size="8" font-family="monospace" font-weight="700" letter-spacing="2">N</text>
-            </svg>
+      <div class="ter-grid">
+        <a class="ter-cell" href={`/territori/${getSlug(monterotondo.id)}`}>
+          <div class="ter-slide-inner">
+            {monterotondoBg && <div class="ter-slide-img" style={`background-image:url('${monterotondoBg}')`}></div>}
+            <div class="ter-slide-grad"></div>
+            <div class="ter-slide-body">
+              <span class="ter-slide-tag">Official Territory</span>
+              <div class="ter-slide-title">{monterotondo.data.name}</div>
+              <div class="ter-slide-desc">Metalliferous Hills — geothermal landscape, white hills, routes that breathe.</div>
+              <div class="ter-slide-cta">Discover <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></div>
+            </div>
           </div>
-          <div class="ter-slide-body">
-            <span class="soon-badge"><span class="soon-badge-dot"></span>Coming 2026</span>
-            <div class="ter-slide-title">New Territory</div>
-            <div class="ter-slide-desc">A new corner of Tuscany is joining the map — routes, stays and stories, curated as always.</div>
+        </a>
+
+        {[1, 2].map(() => (
+          <div class="ter-cell ter-slide-soon">
+            <div class="ter-slide-inner">
+              <div class="ter-soon-glow"></div>
+              <div class="ter-soon-lines"></div>
+              <div class="ter-soon-icon">
+                <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <circle cx="48" cy="48" r="44" stroke="rgba(245,166,35,.22)" stroke-width="1.5" stroke-dasharray="3 7" />
+                  <circle cx="48" cy="48" r="30" stroke="rgba(255,255,255,.07)" stroke-width="1" />
+                  <path d="M48 6 L53 43 L48 39 L43 43 Z" fill="#f5a623" />
+                  <path d="M48 90 L43 53 L48 57 L53 53 Z" fill="rgba(255,255,255,.22)" />
+                  <path d="M90 48 L53 43 L57 48 L53 53 Z" fill="rgba(255,255,255,.18)" />
+                  <path d="M6 48 L43 53 L39 48 L43 43 Z" fill="rgba(255,255,255,.18)" />
+                  <circle cx="48" cy="48" r="6" fill="#f5a623" opacity=".9" />
+                  <circle cx="48" cy="48" r="2.5" fill="#1a0e12" />
+                  <text x="48" y="24" text-anchor="middle" dominant-baseline="middle" fill="rgba(245,166,35,.55)" font-size="8" font-family="monospace" font-weight="700" letter-spacing="2">N</text>
+                </svg>
+              </div>
+              <div class="ter-slide-body">
+                <span class="soon-badge"><span class="soon-badge-dot"></span>Coming 2026</span>
+                <div class="ter-slide-title">New Territory</div>
+                <div class="ter-slide-desc">A new corner of Tuscany is joining the map — routes, stays and stories, curated as always.</div>
+              </div>
+            </div>
           </div>
-        </div>
+        ))}
       </div>
-
-    </div>
-
-    <div class="ter-dots">
-      <button class="ter-dot active" aria-label="Slide 1"></button>
-      <button class="ter-dot" aria-label="Slide 2"></button>
-      <button class="ter-dot" aria-label="Slide 3"></button>
     </div>
   </section>
 
@@ -272,58 +267,5 @@ const faqSchema = {
       var t = cards[i]; cards[i] = cards[j]; cards[j] = t;
     }
     cards.forEach(function (c) { grid.appendChild(c); });
-  })();
-</script>
-
-<script>
-  (function () {
-    var sc = document.getElementById('ter-carousel-scroll');
-    var prev = document.getElementById('ter-prev');
-    var next = document.getElementById('ter-next');
-    if (!sc || !prev || !next) return;
-
-    var slides = sc.querySelectorAll('.ter-slide');
-    var dots = document.querySelectorAll('.ter-dot');
-
-    function active() {
-      var best = 0;
-      var bestD = Infinity;
-      var cr = sc.getBoundingClientRect();
-      slides.forEach(function (s, i) {
-        var d = Math.abs(s.getBoundingClientRect().left - cr.left);
-        if (d < bestD) {
-          bestD = d;
-          best = i;
-        }
-      });
-      return best;
-    }
-
-    function upd() {
-      var a = active();
-      dots.forEach(function (d, i) {
-        d.classList.toggle('active', i === a);
-      });
-      (prev as HTMLButtonElement).disabled = sc.scrollLeft <= 2;
-      (next as HTMLButtonElement).disabled = sc.scrollLeft >= sc.scrollWidth - sc.clientWidth - 2;
-    }
-
-    function goTo(i) {
-      sc.scrollBy({ left: slides[i].getBoundingClientRect().left - sc.getBoundingClientRect().left, behavior: 'smooth' });
-    }
-
-    prev.addEventListener('click', function () {
-      goTo(Math.max(0, active() - 1));
-    });
-    next.addEventListener('click', function () {
-      goTo(Math.min(slides.length - 1, active() + 1));
-    });
-    dots.forEach(function (d, i) {
-      d.addEventListener('click', function () {
-        goTo(i);
-      });
-    });
-    sc.addEventListener('scroll', upd, { passive: true });
-    upd();
   })();
 </script>
