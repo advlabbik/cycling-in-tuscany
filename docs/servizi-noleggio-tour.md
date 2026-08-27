@@ -29,9 +29,9 @@ servire davvero tramite le strutture ufficiali.
       `SERVICE_NOTIFY_EMAIL` non impostata → vale il default collab@tuscanytrail.it.
 - [x] Casella `hello@tuscanytrail.it` creata e validata in Brevo come sender
       (id 9, attivo — README, sezione «Il gate email e Brevo»).
-- [ ] Verificare che `collab@tuscanytrail.it` riceva la notifica e non finisca
-      in spam. È posta che arriva da un dominio nostro spedita da Brevo, quindi
-      è la prima a essere filtrata se l'autorizzazione a spedire non è a posto.
+- [x] `collab@tuscanytrail.it` riceve — verificato 27/8 col collaudo qui sotto:
+      notifica interna E conferma automatica arrivate in inbox (non spam),
+      entrambe spedite da hello@ via Brevo.
 - [x] Costante `SITE` in `functions/api/service-request.js` aggiornata a
       `365.tuscanytrail.it` al momento del merge (27/8, dopo il cutover).
       L'indirizzo mittente non si tocca, sta sul dominio radice apposta.
@@ -40,9 +40,11 @@ servire davvero tramite le strutture ufficiali.
       questo PC (allowlist IP sull'API Brevo — serve il VPS o la dashboard).
       Se mancano NON si perdono richieste: le due email partono comunque, salta
       solo il tagging del contatto (best-effort, errore ignorato).
-- [ ] Mandare una richiesta di prova da `/services/` **in produzione** e
-      controllare che arrivino sia la notifica interna sia la conferma
-      automatica (un test su un deploy di preview non prova niente, vedi sopra).
+- [x] Collaudo end-to-end fatto il 27/8/2026, subito dopo il merge: richiesta
+      di prova (noleggio, marcata TEST, richiedente collab@, consenso NON
+      spuntato) inviata da `/services/` in produzione → `{ok: true}`, notifica
+      interna e conferma automatica entrambe arrivate in inbox su collab@.
+      Il contatto di prova NON è entrato in lista 29 (consenso assente).
 
 ## Regole di risposta
 
