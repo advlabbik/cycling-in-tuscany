@@ -144,29 +144,30 @@ h2.sec{font-size:1.9rem;margin:0 0 8px}
 @media(max-width:860px){.stays-grid{grid-template-columns:1fr}.dcard-outer{height:400px}}
 @media(max-width:560px){.dcard-outer{height:340px}}
 
-/* ===== TERRITORY CAROUSEL ===== */
+/* ===== TERRITORIES ===== */
+/* Campiglia (tier premium) sta DA SOLA in una card larga quanto la riga, sopra
+   le altre: la gerarchia commerciale si deve vedere (Andrea, 27/8). Sotto, la
+   griglia dei territori alla pari. Il carosello non esiste piu'. */
 .ter-carousel-hd{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:32px}
-.ter-nav-btns{display:flex;gap:10px;flex-shrink:0}
-.ter-nav-btn{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--fg);transition:background .2s,border-color .2s,color .2s,opacity .2s}
-.ter-nav-btn:hover{background:var(--fg);color:#fff;border-color:var(--fg)}
-.ter-nav-btn:disabled{opacity:.28;cursor:default;pointer-events:none}
-/* `safe center` (15/8): con tre slide che ci stanno tutte il carosello sta
-   centrato; se in futuro i territori crescono e sfora, torna a sinistra da
-   solo senza tagliare la prima slide */
-.ter-carousel-scroll{display:flex;gap:20px;justify-content:safe center;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-left:max(22px,calc((100vw - 1120px)/2 + 22px));padding-right:max(22px,calc((100vw - 1120px)/2 + 22px));padding-bottom:4px}
-.ter-carousel-scroll::-webkit-scrollbar{display:none}
-.ter-slide{flex:0 0 340px;scroll-snap-align:start;text-decoration:none;color:inherit;display:block}
-.ter-slide-inner{position:relative;height:490px;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 8px 32px rgba(0,0,0,.18);transition:transform .35s cubic-bezier(.25,1,.5,1),box-shadow .35s ease}
-.ter-slide:hover .ter-slide-inner{transform:scale(1.025);box-shadow:0 16px 52px rgba(0,0,0,.28)}
+.ter-featured{display:block;text-decoration:none;color:inherit;margin-bottom:20px}
+.ter-featured .ter-slide-inner{height:420px}
+.ter-featured .ter-slide-body{padding:34px;max-width:680px}
+.ter-featured .ter-slide-title{font-size:2.2rem}
+.ter-featured .ter-slide-desc{font-size:.95rem}
+.ter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.ter-cell{text-decoration:none;color:inherit;display:block}
+.ter-grid .ter-slide-inner{height:440px}
+.ter-slide-inner{position:relative;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 8px 32px rgba(0,0,0,.18);transition:transform .35s cubic-bezier(.25,1,.5,1),box-shadow .35s ease}
+.ter-featured:hover .ter-slide-inner,.ter-cell:hover .ter-slide-inner{transform:scale(1.025);box-shadow:0 16px 52px rgba(0,0,0,.28)}
 .ter-slide-img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .45s cubic-bezier(.25,1,.5,1)}
-.ter-slide:hover .ter-slide-img{transform:scale(1.08)}
+.ter-featured:hover .ter-slide-img,.ter-cell:hover .ter-slide-img{transform:scale(1.08)}
 .ter-slide-grad{position:absolute;inset:0;background:linear-gradient(transparent 20%,rgba(8,6,4,.48) 52%,rgba(8,6,4,.9) 100%)}
 .ter-slide-body{position:relative;z-index:2;padding:26px;color:#fff}
 .ter-slide-tag{display:block;font-size:.62rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#f5a623;font-family:var(--font-body);margin-bottom:8px}
 .ter-slide-title{font-size:1.55rem;font-weight:700;line-height:1.08;margin:0 0 7px;font-family:var(--font-display)}
 .ter-slide-desc{font-size:.86rem;color:rgba(255,255,255,.66);margin:0 0 18px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ter-slide-cta{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;font-weight:600;color:rgba(255,255,255,.88);letter-spacing:.02em;transition:gap .2s}
-.ter-slide:hover .ter-slide-cta{gap:14px}
+.ter-featured:hover .ter-slide-cta,.ter-cell:hover .ter-slide-cta{gap:14px}
 /* coming soon */
 .ter-slide-soon .ter-slide-inner{background:linear-gradient(160deg,#1a0e12 0%,#150b0e 55%,#1f1216 100%);border:1.5px dashed rgba(255,255,255,.1);cursor:default}
 .ter-slide-soon:hover .ter-slide-inner{transform:none;box-shadow:0 8px 32px rgba(0,0,0,.18)}
@@ -177,17 +178,8 @@ h2.sec{font-size:1.9rem;margin:0 0 8px}
 .soon-badge-dot{width:5px;height:5px;border-radius:50%;background:#f5a623;animation:syspulse 2s ease-in-out infinite;flex-shrink:0}
 .ter-soon-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-66%);animation:terfloat 3.6s ease-in-out infinite;pointer-events:none}
 @keyframes terfloat{0%,100%{transform:translate(-50%,-66%)}50%{transform:translate(-50%,-70%)}}
-/* dots — issue #13: geometria identica al prototipo (8px, gap 8px), ma l'area
-   cliccabile è portata a 24x24 (WCAG 2.5.8 AA) con uno pseudo-elemento che non
-   occupa spazio nel layout. Il passo tra i dots è 16px, quindi 24px è il massimo
-   che si può dare senza che l'area di un dot copra il pallino di quello accanto;
-   la navigazione da tastiera resta comunque sui bottoni prev/next da 44px. */
-.ter-dots{display:flex;justify-content:center;gap:8px;margin-top:28px}
-.ter-dot{position:relative;width:8px;height:8px;border-radius:50%;background:rgba(26,26,26,.16);border:none;cursor:pointer;padding:0;transition:background .2s,transform .2s;-webkit-tap-highlight-color:transparent}
-.ter-dot::after{content:"";position:absolute;inset:-8px}
-.ter-dot.active{background:var(--fg);transform:scale(1.35)}
-.ter-dot:focus-visible{outline:2px solid var(--ev);outline-offset:3px}
-@media(max-width:640px){.ter-slide{flex:0 0 min(300px,calc(100vw - 64px))}.ter-slide-inner{height:430px}}
+@media(max-width:900px){.ter-grid{grid-template-columns:1fr}.ter-featured .ter-slide-inner{height:400px}.ter-grid .ter-slide-inner{height:380px}}
+@media(max-width:640px){.ter-featured .ter-slide-body{padding:26px}.ter-featured .ter-slide-title{font-size:1.8rem}}
 
 /* map */
 #map-el{height:620px;margin-top:0}
