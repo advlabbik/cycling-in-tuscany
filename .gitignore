@@ -24,3 +24,9 @@ pnpm-debug.log*
 .idea/
 _osm_*.json
 _osm_*.json.parziale
+
+# spazio di lavoro di Claude Code: i worktree sono copie intere del repo e
+# settings.local.json e' personale. Senza queste righe un `git add -A` distratto
+# committa un repo dentro il repo.
+.claude/worktrees/
+.claude/settings.local.json
