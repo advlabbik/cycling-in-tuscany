@@ -9,7 +9,7 @@
  *      (Andrea, 27/8): senza spunta non parte niente e si risponde errore.
  *      Lo scambio e' dichiarato in pagina — il GPX in cambio dell'iscrizione —
  *      e la spunta resta vuota di default, mai pre-selezionata;
- *   2. email transazionale da hello@tuscanytrail.it col LINK DI DOWNLOAD del
+ *   2. email transazionale da 365@tuscanytrail.it col LINK DI DOWNLOAD del
  *      GPX. Testo di Andrea, UGUALE PER TUTTI — cambia solo il link, quindi in
  *      gpxEmailHtml() non entrano ne' il nome del percorso ne' la sua zona.
  *      NIENTE Ride with GPS: su TT365 non e' sponsor (Andrea, 27/8), quindi
@@ -29,9 +29,19 @@
  */
 
 /* Stessa coppia di service-request.js: mittente sul dominio radice (sender
-   Brevo validato, id 9), reply-to sulla casella presidiata — se uno risponde
-   all'email del GPX deve leggerlo una persona, non un'identita' di spedizione. */
-const SENDER = { name: 'Tuscany Trail 365', email: 'hello@tuscanytrail.it' };
+   Brevo id 10, creato e gia' attivo il 27/8/2026 — il dominio e' autenticato,
+   quindi non c'e' stata nessuna email di validazione da cliccare), reply-to
+   sulla casella presidiata — se uno risponde all'email del GPX deve leggerlo
+   una persona, non un'identita' di spedizione.
+
+   ⚠️ NON mettere 365@ nel reply-to, per quanto sia tentante avere un
+   indirizzo solo: 365@ inoltra a **info@tuscanytrail.it**, NON a collab@
+   (verificato il 27/8/2026). Le risposte dei clienti finirebbero in una
+   casella diversa da quella dove le richieste vengono lavorate, mentre la
+   notifica interna continua ad arrivare in collab@: richiesta di qua,
+   risposta di la'. Se un giorno viene aggiunto l'inoltro 365@ -> collab@,
+   allora si', e da qui esce anche il mailto: dell'unsubscribe. */
+const SENDER = { name: 'Tuscany Trail 365', email: '365@tuscanytrail.it' };
 const REPLY_TO = 'collab@tuscanytrail.it';
 
 export async function onRequestPost(context) {

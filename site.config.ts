@@ -17,17 +17,21 @@ export const site = {
    * L'indirizzo pubblico del sito — footer, privacy policy, cookie policy,
    * affiliate disclosure, e il contatto per le richieste GDPR.
    *
-   * Dal 27/8/2026 e' `hello@tuscanytrail.it` e non piu' `hello@cyclingintuscany.com`:
-   * deve essere lo STESSO indirizzo da cui parte la posta (mittente della lista
-   * Brevo 29, vedi README), altrimenti chi riceve la newsletter legge sul sito
-   * un recapito diverso da quello che gli ha scritto — e per il GDPR quello e'
-   * il canale con cui esercita i suoi diritti.
+   * Dal 27/8/2026 e' `365@tuscanytrail.it` (decisione di Andrea): l'indirizzo
+   * unico del progetto TT365, che risponde alle richieste, manda la posta ed e'
+   * il recapito pubblicato. `hello@` sul dominio radice resta libera per il
+   * Tuscany Trail, che e' l'ammiraglia.
+   *
+   * Deve essere lo STESSO indirizzo da cui parte la posta (le due `SENDER` in
+   * functions/api/, vedi README), altrimenti chi riceve la newsletter legge sul
+   * sito un recapito diverso da quello che gli ha scritto — e per il GDPR
+   * quello e' il canale con cui esercita i suoi diritti.
    *
    * L'handle Instagram resta `@cyclingintuscany_official`: e' un account vero,
    * non un recapito, e rinominarlo e' un'altra decisione.
    */
   brand: {
-    email: 'hello@tuscanytrail.it',
+    email: '365@tuscanytrail.it',
     instagram: '@cyclingintuscany_official',
   },
   /**
