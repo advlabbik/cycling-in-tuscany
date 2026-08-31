@@ -293,6 +293,15 @@ Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttam
 
 **⚠️ `365@` inoltra a `info@tuscanytrail.it`, NON a `collab@`** (verificato il 27/8/2026 andando a vedere dove era atterrata la prova). Per questo il **reply-to di tutte le email resta `collab@`**, anche se il mittente è `365@`: il cliente vede due indirizzi diversi, ma la sua risposta atterra dove la richiesta viene davvero lavorata — e `collab@` rimbalza in Slack su `#email-collab`. Mettere `365@` nel reply-to per avere un indirizzo solo manderebbe le risposte in `info@`, mentre la notifica interna continua ad arrivare in `collab@`: richiesta di qua, risposta di là.
 
+**Il giro è stato chiuso per davvero il 31/8/2026, con un'email vera.** Fino a quel giorno il reply-to su `collab@` era una deduzione — si era guardato dove atterrava una prova di invio, non si era mai risposto a un'email di consegna vista da un cliente. Il 31/8 una submission reale dal form ha prodotto l'email da `365@`, e la risposta è arrivata in `collab@`:
+
+```
+2026-08-31 11:25:59 CEST  #email-collab
+Re: Your route is ready, and it took us 20 years
+```
+
+Cioè richiesta e risposta finiscono nella stessa casella presidiata, che era il punto della decisione. **Chi in futuro vedrà due indirizzi diversi sarà tentato di "allinearli": non è una svista, è la ragione per cui la cosa funziona.** Allinearli manderebbe le risposte in `info@` lasciando le notifiche in `collab@`.
+
 Se un giorno viene aggiunto l'inoltro `365@` → `collab@`, allora il reply-to può diventare `365@` e con lui il `mailto:` dell'unsubscribe, che esce dalla stessa costante. Fino ad allora no.
 
 **Il consenso è OBBLIGATORIO su tutti e tre i form** (decisione di Andrea, 27/8/2026 — prima era facoltativo e chi non spuntava riceveva comunque il file): senza spunta non parte niente, né il contatto né il GPX né la richiesta di servizio, e la function risponde `consent required`. La spunta è `required` nel form **e** ricontrollata lato server nelle due function, perché il `required` dell'HTML si aggira in tre secondi con la console aperta. Il testo della checkbox dichiara lo scambio invece di far passare l'iscrizione per una cortesia facoltativa, non è mai pre-selezionata, e l'unsubscribe sta in ogni email. La privacy policy descrive i tre form e la base giuridica (consenso, art. 6(1)(a)).
@@ -303,7 +312,7 @@ Se un giorno viene aggiunto l'inoltro `365@` → `collab@`, allora il reply-to p
 
 **Il sito pubblica lo stesso indirizzo** (allineato il 27/8/2026): `site.config.ts` → `brand.email` è `365@tuscanytrail.it`, e da lì escono footer, privacy policy, cookie policy e affiliate disclosure, contatto GDPR compreso. Sono la stessa cosa di proposito: chi riceve la newsletter deve trovare sul sito il recapito da cui gli è arrivata, ed è il canale con cui esercita i diritti GDPR. **Se un giorno cambia il mittente, quella riga cambia con lui.** L'handle Instagram resta `@cyclingintuscany_official`: è un account vero, non un recapito.
 
-**Nessuno è ancora passato di qui.** Al 27/8/2026 non esiste un solo contatto con l'attributo `CIT_ITINERARY`: i ~1.220 della lista vengono da una raccolta precedente, l'ultimo entrato il 19 giugno. L'impianto funziona, non è ancora stato usato.
+**Nessun cliente vero è ancora passato di qui.** Al 27/8/2026 non esisteva un solo contatto con l'attributo `CIT_ITINERARY`: i ~1.220 della lista vengono da una raccolta precedente, l'ultimo entrato il 19 giugno. Il 31/8/2026 il primo `CIT_ITINERARY` è entrato, ma è **il contatto di collaudo** creato provando i form (vedi il verbale del reply-to qui sopra): quando si guarderanno i numeri della lista va scontato, non è domanda.
 
 **Le chiavi non sono nella repo** — `BREVO_API_KEY`, `BREVO_LIST_ID` e `GPX_LINK_SECRET` stanno nelle env **production** di Cloudflare Pages, come secret. Sulle **preview non ci sono**, quindi lì la function risponde `{ok: true, demo: true}` senza chiamare Brevo: un test su un deploy di anteprima non prova niente. L'account ha l'allowlist IP: le chiamate API manuali vanno fatte dal VPS Hetzner, non dal Mac.
 
