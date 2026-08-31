@@ -39,4 +39,8 @@ jobs:
         run: |
           npx --yes js-yaml public/admin/config.yml > /dev/null
 
+      # Le due function della posta non le prova nessun browser: il GPX firmato e
+      # l'arricchimento con i waypoint girano solo qui.
+      - run: npm test
+
       - run: npm run build

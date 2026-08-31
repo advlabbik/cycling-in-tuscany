@@ -205,6 +205,7 @@ Per lo stesso motivo, **il lockfile non va rigenerato da zero** per far passare 
 | `npm run dev` | dev server su `localhost:4321` |
 | `npm run build` | build di produzione in `./dist/` |
 | `npm run preview` | anteprima locale del build |
+| `npm test` | i test delle function della posta (token del GPX, waypoint). Girano anche in CI prima del build |
 
 ## Deploy
 
@@ -271,7 +272,7 @@ Due cose da sapere quando il login smette di funzionare:
 
 ## Il gate email e Brevo
 
-Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttamente** su Brevo via API. **Dal 27/8/2026 il GPX non si scarica più in pagina: arriva via email** (decisione di Andrea) — la function iscrive il contatto e poi manda un'email transazionale da `365@tuscanytrail.it` (reply-to `collab@`) col **link di download in evidenza**. **Niente Ride with GPS**, né in pagina né nell'email — su TT365 non è sponsor (Andrea, 27/8), lo è sul Tuscany Trail, e i due progetti non si mescolano. **Niente allegato, ed è un vincolo di Brevo, non una scelta**: gli attachment accettano solo una whitelist di estensioni e `.gpx` non c'è (provato il 27/8, l'invio moriva con `send failed`); rinominare il file `.xml` romperebbe l'import sui ciclocomputer. Il path del GPX arriva dal client ma viene validato contro `/gpx/*.gpx` del nostro host, sennò chiunque potrebbe farci spedire email con link arbitrari a nome nostro. Impianto verificato end-to-end il 27/8/2026 mandando una submission vera al sito in produzione:
+Il form GPX degli itinerari passa da `functions/api/lead.js` e scrive **direttamente** su Brevo via API. **Dal 27/8/2026 il GPX non si scarica più in pagina: arriva via email** (decisione di Andrea) — la function iscrive il contatto e poi manda un'email transazionale da `365@tuscanytrail.it` (reply-to `collab@`) col **link di download in evidenza**. Dal 31/8/2026 quel link non è più il file pubblico ma `/api/gpx?t=…`, firmato e a scadenza, e consegna una versione **arricchita coi waypoint** — vedi [Il GPX del form non è il GPX pubblico](#il-gpx-del-form-non-è-il-gpx-pubblico-dal-3182026). **Niente Ride with GPS**, né in pagina né nell'email — su TT365 non è sponsor (Andrea, 27/8), lo è sul Tuscany Trail, e i due progetti non si mescolano. **Niente allegato, ed è un vincolo di Brevo, non una scelta**: gli attachment accettano solo una whitelist di estensioni e `.gpx` non c'è (provato il 27/8, l'invio moriva con `send failed`); rinominare il file `.xml` romperebbe l'import sui ciclocomputer. Il path del GPX arriva dal client ma viene validato contro `/gpx/*.gpx` del nostro host, sennò chiunque potrebbe farci spedire email con link arbitrari a nome nostro. Impianto verificato end-to-end il 27/8/2026 mandando una submission vera al sito in produzione:
 
 | | |
 |---|---|
@@ -304,7 +305,32 @@ Se un giorno viene aggiunto l'inoltro `365@` → `collab@`, allora il reply-to p
 
 **Nessuno è ancora passato di qui.** Al 27/8/2026 non esiste un solo contatto con l'attributo `CIT_ITINERARY`: i ~1.220 della lista vengono da una raccolta precedente, l'ultimo entrato il 19 giugno. L'impianto funziona, non è ancora stato usato.
 
-**Le chiavi non sono nella repo** — `BREVO_API_KEY` e `BREVO_LIST_ID` stanno nelle env **production** di Cloudflare Pages, come secret. Sulle **preview non ci sono**, quindi lì la function risponde `{ok: true, demo: true}` senza chiamare Brevo: un test su un deploy di anteprima non prova niente. L'account ha l'allowlist IP: le chiamate API manuali vanno fatte dal VPS Hetzner, non dal Mac.
+**Le chiavi non sono nella repo** — `BREVO_API_KEY`, `BREVO_LIST_ID` e `GPX_LINK_SECRET` stanno nelle env **production** di Cloudflare Pages, come secret. Sulle **preview non ci sono**, quindi lì la function risponde `{ok: true, demo: true}` senza chiamare Brevo: un test su un deploy di anteprima non prova niente. L'account ha l'allowlist IP: le chiamate API manuali vanno fatte dal VPS Hetzner, non dal Mac.
+
+## Il GPX del form non è il GPX pubblico (dal 31/8/2026)
+
+Decisione di Andrea: il GPX deve arrivare **solo dal form**. Il modo ovvio — chiudere `/gpx/` — non si può fare, e il motivo va ricordato prima di riprovarci:
+
+**⚠️ I file in `/gpx/` non li scarica solo l'utente: se li scarica Stay22.** L'URL assoluto del GPX finisce nell'embed della mappa alloggi (`src/lib/stay22.ts`), e Stay22 **va a prenderlo dai suoi server** per disegnare la traccia e distribuirci sopra le strutture. Bloccare `/gpx/` spegne la traccia sulla mappa da cui arrivano **37 prenotazioni su 38**. Non è un dettaglio: è il pezzo che rende quell'embed diverso da una mappa qualsiasi.
+
+Quindi il gate non toglie, **aggiunge**:
+
+| | |
+|---|---|
+| `/gpx/*.gpx` — pubblico | La **traccia nuda**. È già oggi solo `<trkpt>` + `<ele>`, zero waypoint. Serve a Stay22, resta accessibile |
+| `/api/gpx?t=…` — dal form | La **stessa traccia più i waypoint**: fontane, ristori, officine, alloggi, paesi, ognuno col km a cui cade e col simbolo Garmin che fa comparire l'icona giusta sul ciclocomputer |
+
+I waypoint si costruiscono al volo dai POI di `public/data/itinerari/<slug>.json`, che erano già lì per la mappa in pagina. **Due terzi dei POI (240 su 363) non hanno lat/lng, solo il km**: la posizione si ricava agganciando il punto della traccia col km più vicino, come fa il RouteViewer. Senza quel passaggio si butterebbero via due POI su tre.
+
+Chi trova l'URL pubblico si porta a casa una linea; chi passa dal form si porta a casa la guida. **Non gli abbiamo tolto un permesso, gli abbiamo dato un file migliore** — ed è anche l'unica versione difendibile se qualcuno chiede perché.
+
+**⚠️ Il token è un deterrente, non una serratura.** Non c'è login: chi riceve l'email può inoltrare il link a un amico e quello scarica. Ferma lo scraping e chi indovina gli URL, non la condivisione tra persone. Se un giorno serve davvero chiudere, la strada è il login, non un token più lungo.
+
+**Scadenza 90 giorni** (`GIORNI_VALIDITA` in `lead.js`). Il vincolo è l'inbox: uno riapre l'email mesi dopo e il link deve funzionare. Scaduto, `/api/gpx` risponde una pagina che rimanda al form, non un errore secco.
+
+**⚠️ `GPX_LINK_SECRET` va creato nelle env var di Cloudflare Pages** (Settings → Environment variables, **production**), come `BREVO_API_KEY`. **Se manca, `lead.js` ripiega sul link pubblico e lo scrive nei log** (`GPX_LINK_SECRET assente`): l'utente riceve comunque il suo file — non si perde mai una consegna — ma il gate è spento e non se ne accorge nessuno guardando il sito. Sulle preview il secret non c'è, quindi lì il link è quello pubblico: **una prova su un deploy di anteprima non prova il gate.**
+
+I due percorsi di Monterotondo sono l'eccezione: `mr-gravel-1` ha **1** POI e `mr-gravel-2` ne ha **2**, contro i 30-48 degli altri. Per loro il file del form è quasi identico a quello pubblico, finché non si fa la rigenerazione POI in sospeso (vedi sopra).
 
 ## Il form noleggio e tour (live dal 27/8/2026)
 
