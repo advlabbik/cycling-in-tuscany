@@ -28,6 +28,8 @@
  * Settings → Contact attributes), altrimenti Brevo rifiuta la richiesta.
  */
 
+import { signGpxToken } from '../../lib/gpx-token.js';
+
 /* Stessa coppia di service-request.js: mittente sul dominio radice (sender
    Brevo id 10, creato e gia' attivo il 27/8/2026 — il dominio e' autenticato,
    quindi non c'e' stata nessuna email di validazione da cliccare), reply-to
@@ -43,6 +45,32 @@
    allora si', e da qui esce anche il mailto: dell'unsubscribe. */
 const SENDER = { name: 'Tuscany Trail 365', email: '365@tuscanytrail.it' };
 const REPLY_TO = 'collab@tuscanytrail.it';
+
+/* Quanto vive il link del download. Il vincolo e' l'inbox: uno riapre l'email
+   mesi dopo e il link deve ancora funzionare. 90 giorni copre il caso reale
+   senza lasciare in giro link eterni; scaduto, /api/gpx rimanda al form. */
+const GIORNI_VALIDITA = 90;
+
+/**
+ * Costruisce il link di download firmato.
+ *
+ * Se GPX_LINK_SECRET manca (tipicamente sulle preview, dove non ci sono i
+ * secret) si ripiega sul file pubblico invece di spedire un link morto: l'utente
+ * ha chiesto il suo percorso e lo deve ricevere. Il log dice che la
+ * configurazione e' incompleta — meglio un file non protetto che una promessa
+ * non mantenuta, ma va visto e sistemato.
+ */
+async function linkDownload(origin, gpxPath, routePage, secret) {
+  if (!secret) {
+    console.error('[lead] GPX_LINK_SECRET assente: link pubblico invece che firmato');
+    return origin + gpxPath;
+  }
+  const file = gpxPath.replace('/gpx/', '');
+  const slug = (routePage.match(/\/itinerari\/([a-z0-9-]+)\/?$/) || [])[1] || '';
+  const scadenza = Math.floor(Date.now() / 1000) + GIORNI_VALIDITA * 86400;
+  const token = await signGpxToken(slug, scadenza, secret, file);
+  return `${origin}/api/gpx?t=${token}`;
+}
 
 export async function onRequestPost(context) {
   let body;
@@ -71,7 +99,6 @@ export async function onRequestPost(context) {
     return json({ ok: false, error: 'invalid gpx' }, 400);
   }
   const origin = new URL(context.request.url).origin;
-  const gpxUrl = origin + gpxPath;
 
   const routePage = /^\/itinerari\/[A-Za-z0-9._/-]*$/.test(String(body.itinerary || ''))
     ? origin + String(body.itinerary)
@@ -112,6 +139,15 @@ export async function onRequestPost(context) {
     console.error('[lead] Brevo non raggiungibile', err);
     return json({ ok: false, error: 'brevo unreachable' });
   }
+
+  /* Il link di download e' firmato e a scadenza, e punta a /api/gpx: quello che
+     esce di li' e' la traccia PIU' i waypoint (fontane, ristori, officine,
+     alloggi, paesi). Il file pubblico in /gpx/ resta la traccia nuda e serve a
+     Stay22, che se lo scarica dai suoi server per disegnare il percorso sotto
+     gli alloggi: chiuderlo romperebbe la mappa da cui arrivano 37 prenotazioni
+     su 38. Chi passa dal form non ottiene un permesso in piu', ottiene un file
+     migliore. */
+  const gpxUrl = await linkDownload(origin, gpxPath, routePage, context.env.GPX_LINK_SECRET);
 
   // 2) email col link di download — se fallisce il form lo dice, niente promesse a vuoto
   try {
