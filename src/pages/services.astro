@@ -177,8 +177,9 @@ const schema = {
    *   da sbloccare): si aspetta la risposta e si mostra errore se fallisce,
    *   cosi' nessuna richiesta si perde in silenzio;
    * - il bottone si disabilita durante l'invio per evitare doppi invii;
-   * - evento GA4 best-effort, solo se gtag esiste e col consenso gia' gestito
-   *   dal Consent Mode del sito.
+   * - evento best-effort via zaraz.track, che Zaraz inoltra a GA4 CIT
+   *   tramite l'azione AllTracks (il consenso lo gestisce Zaraz, non piu'
+   *   uno script inline di analytics di questo sito).
    */
   document.querySelectorAll<HTMLFormElement>('.sv-form').forEach((form) => {
     form.addEventListener('submit', async (ev) => {
@@ -202,7 +203,11 @@ const schema = {
         ok = res.ok && (await res.json()).ok === true;
       } catch { ok = false; }
       if (ok) {
-        try { (window as any).gtag?.('event', 'service_request', { service: form.dataset.service }); } catch {}
+        try {
+          if (typeof (window as any).zaraz?.track === 'function') {
+            (window as any).zaraz.track('service_request', { service: form.dataset.service });
+          }
+        } catch {}
         form.hidden = true;
         const done = form.parentElement?.querySelector('.sv-done') as HTMLElement | null;
         if (done) done.hidden = false;

@@ -8,12 +8,6 @@ export const site = {
   stay22Aid: 'adventurelabsrl',
   stay22Campaign: 'cit-sito',
   /**
-   * GA4 Measurement ID (formato G-XXXXXXXXXX). Stringa vuota = analitica
-   * completamente spenta: niente gtag, niente banner consenso (issue #19).
-   * Si valorizza quando la proprietà GA4 del sito viene creata.
-   */
-  ga4MeasurementId: 'G-FELFB9W37W',
-  /**
    * L'indirizzo pubblico del sito — footer, privacy policy, cookie policy,
    * affiliate disclosure, e il contatto per le richieste GDPR.
    *
