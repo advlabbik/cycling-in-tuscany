@@ -4,12 +4,13 @@ import { site } from '../../site.config';
 
 /**
  * L'elenco dei cookie deve restare fedele a ciò che il sito fa davvero:
- * Base.astro monta gtag solo se `ga4MeasurementId` è valorizzato, e
- * ConsentBanner.astro salva la scelta in localStorage sotto la chiave
- * 'cit-consent' — che è storage locale, non un cookie. Se cambia il banner,
- * cambia questa pagina.
+ * il consenso non è più gestito da un banner nostro, ma da Cloudflare
+ * Zaraz (piattaforma di consent management della zona tuscanytrail.it):
+ * è Zaraz a decidere se e quando caricare Google Analytics 4, e a
+ * ricordare la scelta della visitatrice. Se cambia la configurazione
+ * Zaraz, cambia questa pagina.
  */
-const lastUpdated = 'August 2026';
+const lastUpdated = 'September 2026';
 ---
 
 <Base
@@ -35,10 +36,11 @@ const lastUpdated = 'August 2026';
         there are no technical cookies to tell you about.
       </p>
       <p>
-        The one thing we do keep is your answer to the consent banner. It is
-        saved as <code>cit-consent</code> in your browser's <strong>local
-        storage</strong> — not a cookie, and never sent to any server. It exists
-        only so the banner stops asking you the same question on every page.
+        The consent banner you see is not ours: it is run by Cloudflare
+        Zaraz, the consent management platform for the whole
+        tuscanytrail.it domain. Zaraz remembers your answer on your device
+        and decides whether Google Analytics is allowed to load — we never
+        see or store that choice ourselves.
       </p>
 
       <h2 class="sec" style="margin-top:34px">Analytics cookies — only after you accept</h2>
@@ -56,11 +58,10 @@ const lastUpdated = 'August 2026';
         </li>
       </ul>
       <p>
-        We run Google Consent Mode v2 with <code>analytics_storage</code> denied
-        by default, so the tag loads in a cookieless state and only starts
-        writing once consent is given. Ad storage, ad user data and ad
-        personalisation stay denied whatever you choose: we do not advertise and
-        we do not build profiles.
+        Cloudflare Zaraz keeps Google Analytics in a denied, cookieless state
+        by default and only lets it start writing once you accept. Ad
+        storage, ad user data and ad personalisation stay denied whatever you
+        choose: we do not advertise and we do not build profiles.
       </p>
       <p>
         One honest caveat about <code>_ga</code>. This site lives at
@@ -78,11 +79,13 @@ const lastUpdated = 'August 2026';
 
       <h2 class="sec" style="margin-top:34px">Changing your mind</h2>
       <p>
-        Clearing the site data for this domain in your browser removes the
-        <code>cit-consent</code> entry along with any analytics cookie: the
-        banner will greet you again on your next visit and you can answer
-        differently. In most browsers this lives under Settings → Privacy →
-        Cookies and site data, or in the padlock menu in the address bar.
+        Use the <a href="/cookie-policy/" data-cookie-prefs>Cookie preferences</a>
+        link in the footer of every page to reopen the consent choice at any
+        time. You can also clear the site data for this domain in your
+        browser, which removes any analytics cookie and makes the banner
+        greet you again on your next visit. In most browsers this lives
+        under Settings → Privacy → Cookies and site data, or in the padlock
+        menu in the address bar.
       </p>
       <p>
         You can also refuse cookies browser-wide, or install Google's
